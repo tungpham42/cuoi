@@ -23,7 +23,7 @@ export default function Auth() {
       });
     }
 
-    router.push("/settings");
+    router.push("/dashboard");
   };
 
   useEffect(() => {

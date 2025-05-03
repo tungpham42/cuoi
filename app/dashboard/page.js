@@ -59,7 +59,7 @@ function useAuth() {
   return { user, loading };
 }
 
-export default function SettingsPage() {
+export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState({
@@ -330,8 +330,7 @@ export default function SettingsPage() {
       className="py-5"
       style={{
         background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-        backgroundImage:
-          "url('/paper-fibers.png')",
+        backgroundImage: "url('/paper-fibers.png')",
         minHeight: "100vh",
       }}
     >

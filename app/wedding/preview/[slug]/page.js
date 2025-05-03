@@ -68,8 +68,8 @@ export default function PreviewPage({ params }) {
     fetchData();
   }, [slug]);
 
-  const handleBackToSettings = () => {
-    router.push("/settings");
+  const handleBackToDashboard = () => {
+    router.push("/dashboard");
   };
 
   if (loading) {
@@ -99,8 +99,7 @@ export default function PreviewPage({ params }) {
         className="py-5"
         style={{
           background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-          backgroundImage:
-            "url('/paper-fibers.png')",
+          backgroundImage: "url('/paper-fibers.png')",
           minHeight: "100vh",
         }}
       >
@@ -156,8 +155,7 @@ export default function PreviewPage({ params }) {
       className="py-5"
       style={{
         background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-        backgroundImage:
-          "url('/paper-fibers.png')",
+        backgroundImage: "url('/paper-fibers.png')",
         minHeight: "100vh",
       }}
     >
@@ -197,7 +195,7 @@ export default function PreviewPage({ params }) {
         <Card.Body className="p-4">
           <Button
             variant="secondary"
-            onClick={handleBackToSettings}
+            onClick={handleBackToDashboard}
             className="mb-4"
             style={{
               backgroundColor: "#BE123C",

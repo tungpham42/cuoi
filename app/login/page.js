@@ -29,7 +29,7 @@ export default function LoginPage() {
         });
       }
 
-      router.push("/settings");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
     }
