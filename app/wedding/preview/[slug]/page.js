@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { Container, Spinner, Alert, Button, Card } from "react-bootstrap";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { db, auth } from "@/firebase/config"; // Import auth from Firebase config
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth"; // Firebase auth state listener
 import WeddingHeader from "@/components/WeddingHeader";
 import Gallery from "@/components/Gallery";
 import LoveStory from "@/components/LoveStory";
@@ -18,9 +19,26 @@ export default function PreviewPage({ params }) {
   const [wishes, setWishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track auth status
 
   useEffect(() => {
-    if (!slug) return;
+    // Listen for auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // User is not authenticated, redirect to login
+        router.push("/login");
+      } else {
+        // User is authenticated
+        setIsAuthenticated(true);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [router]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !slug) return;
 
     const fetchData = async () => {
       try {
@@ -66,11 +84,16 @@ export default function PreviewPage({ params }) {
     };
 
     fetchData();
-  }, [slug]);
+  }, [slug, isAuthenticated]);
 
   const handleBackToDashboard = () => {
     router.push("/dashboard");
   };
+
+  if (!isAuthenticated) {
+    // Render nothing while redirecting to /login
+    return null;
+  }
 
   if (loading) {
     return (
@@ -142,6 +165,7 @@ export default function PreviewPage({ params }) {
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
               {error || "Không có dữ liệu để hiển thị."}
+              Tran{" "}
             </Alert>
           </Card.Body>
         </Card>
