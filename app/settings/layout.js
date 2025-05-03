@@ -1,13 +1,10 @@
-import "./globals.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 export const metadata = {
-  title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
+  title: "Tình Yêu Vĩnh Cửu - Quản Trị",
   description:
     "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
 };
 
-export default function RootLayout({ children }) {
+export default function SettingsLayout({ children }) {
   return (
     <html lang="vi">
       <body>{children}</body>
