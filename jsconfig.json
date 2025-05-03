@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": "/",
+    "paths": {
+      "@/styles/*": ["styles/*"],
+      "@/components/*": ["components/*"],
+      "@/data/*": ["data/*"],
+      "@/sounds/*": ["sounds/*"],
+      "@/utils/*": ["utils/*"],
+      "@/firebase/*": ["firebase/*"]
+    }
+  }
+}
