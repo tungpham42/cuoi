@@ -11,6 +11,7 @@ import {
   ListGroup,
   Image,
   FormSelect,
+  Card,
 } from "react-bootstrap";
 import {
   doc,
@@ -23,7 +24,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { slugify } from "@/utils/slug";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
@@ -82,6 +83,15 @@ export default function SettingsPage() {
     { value: "modern", label: "Modern" },
     { value: "elegant", label: "Elegant" },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/login");
+    } catch (error) {
+      setError("Lỗi khi đăng xuất. Vui lòng thử lại.");
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -272,7 +282,7 @@ export default function SettingsPage() {
     try {
       const wishRef = doc(db, "users", user.uid, "wishes", wishId);
       await deleteDoc(wishRef);
-      setWishes(wishes.filterremia((wish) => wish.id !== wishId));
+      setWishes(wishes.filter((wish) => wish.id !== wishId));
     } catch (err) {
       setError("Lỗi khi xóa lời chúc. Vui lòng thử lại.");
     }
@@ -296,232 +306,468 @@ export default function SettingsPage() {
 
   if (loading || !user) {
     return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" />
+      <Container
+        fluid
+        className="d-flex align-items-center justify-content-center min-vh-100"
+        style={{
+          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
+        }}
+      >
+        <Spinner animation="border" variant="danger" />
+        <span
+          className="ms-2"
+          style={{ color: "#BE123C", fontFamily: "'Great Vibes', cursive" }}
+        >
+          Loading...
+        </span>
       </Container>
     );
   }
 
   return (
-    <Container className="py-5">
-      <h2 className="mb-4">Quản trị đám cưới</h2>
-
-      {showSuccess && (
-        <Alert
-          variant="success"
-          onClose={() => setShowSuccess(false)}
-          dismissible
+    <Container
+      fluid
+      className="py-5"
+      style={{
+        background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
+        backgroundImage:
+          "url('/paper-fibers.png')",
+        minHeight: "100vh",
+      }}
+    >
+      {/* Logout Button */}
+      <div className="d-flex justify-content-end mb-4">
+        <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={handleLogout}
+          style={{
+            backgroundColor: "#BE123C",
+            borderColor: "#BE123C",
+            color: "white",
+            fontFamily: "'Playfair Display', serif",
+            borderRadius: "20px",
+            padding: "8px 20px",
+          }}
         >
-          🎉 Thông tin đã được lưu thành công!
-        </Alert>
-      )}
+          Đăng xuất
+        </Button>
+      </div>
 
-      {error && (
-        <Alert variant="danger" onClose={() => setError("")} dismissible>
-          {error}
-        </Alert>
-      )}
+      <Card
+        className="shadow-lg border-0 mx-auto"
+        style={{
+          maxWidth: "900px",
+          border: "1px solid #FECACA",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Decorative floral corners */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "60px",
+            height: "60px",
+            background: "#FECACA",
+            borderBottomRightRadius: "100%",
+            opacity: 0.3,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            width: "60px",
+            height: "60px",
+            background: "#FECACA",
+            borderTopLeftRadius: "100%",
+            opacity: 0.3,
+          }}
+        />
 
-      <Form>
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Cô dâu</Form.Label>
-              <Form.Control
-                type="text"
-                name="brideName"
-                value={form.brideName}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Chú rể</Form.Label>
-              <Form.Control
-                type="text"
-                name="groomName"
-                value={form.groomName}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+        <Card.Body className="p-4">
+          <Card.Title
+            className="mb-4 text-center"
+            style={{
+              fontFamily: "'Great Vibes', cursive",
+              color: "#BE123C",
+              fontSize: "2rem",
+            }}
+          >
+            Quản trị đám cưới
+          </Card.Title>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Slug</Form.Label>
-          <Form.Control
-            type="text"
-            name="slug"
-            value={form.slug}
-            readOnly
-            disabled
-          />
-          <Form.Text className="text-muted">
-            Tự động tạo từ tên cô dâu, chú rể và ngày cưới
-          </Form.Text>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Ngày cưới</Form.Label>
-          <Form.Control
-            type="date"
-            name="weddingDate"
-            value={form.weddingDate}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Địa điểm</Form.Label>
-          <Form.Control
-            type="text"
-            name="location"
-            value={form.location}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Chủ đề</Form.Label>
-          <FormSelect name="theme" value={form.theme} onChange={handleChange}>
-            {themes.map((theme) => (
-              <option key={theme.value} value={theme.value}>
-                {theme.label}
-              </option>
-            ))}
-          </FormSelect>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Chuyện tình yêu</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={4}
-            name="loveStory"
-            value={form.loveStory}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Thư viện ảnh</Form.Label>
-          <Form.Control
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            disabled={uploading}
-          />
-          {uploading && (
-            <Spinner animation="border" size="sm" className="mt-2" />
+          {showSuccess && (
+            <Alert
+              variant="success"
+              onClose={() => setShowSuccess(false)}
+              dismissible
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              🎉 Thông tin đã được lưu thành công!
+            </Alert>
           )}
-          {form.gallery.length > 0 && (
-            <ListGroup className="mt-3">
-              {form.gallery.map((img) => (
-                <ListGroup.Item
-                  key={img.public_id}
-                  className="d-flex align-items-center"
-                >
-                  <Image
-                    src={img.url}
-                    alt="Gallery item"
+
+          {error && (
+            <Alert
+              variant="danger"
+              onClose={() => setError("")}
+              dismissible
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              {error}
+            </Alert>
+          )}
+
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label
                     style={{
-                      width: "50px",
-                      height: "50px",
-                      objectFit: "cover",
-                      marginRight: "10px",
+                      fontFamily: "'Playfair Display', serif",
+                      color: "#9F1239",
                     }}
+                  >
+                    Cô dâu
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="brideName"
+                    value={form.brideName}
+                    onChange={handleChange}
+                    style={{ borderColor: "#FECACA" }}
                   />
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleRemoveImage(img.public_id)}
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      color: "#9F1239",
+                    }}
                   >
-                    Xóa
-                  </Button>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          )}
-        </Form.Group>
+                    Chú rể
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="groomName"
+                    value={form.groomName}
+                    onChange={handleChange}
+                    style={{ borderColor: "#FECACA" }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-        <h3 className="mt-5 mb-3">Quản lý lời chúc</h3>
-        {wishes.length > 0 ? (
-          <ListGroup className="mb-4">
-            {wishes.map((wish) => (
-              <ListGroup.Item
-                key={wish.id}
-                className="d-flex justify-content-between align-items-center"
+            <Form.Group className="mb-3">
+              <Form.Label
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: "#9F1239",
+                }}
               >
-                <div>
-                  <strong>{wish.name}</strong>: {wish.message}
-                  <br />
-                  <small>
-                    {wish.createdAt.toDate().toLocaleDateString("vi-VN")} -{" "}
-                    {wish.approved ? "Đã duyệt" : "Chưa duyệt"}
-                  </small>
-                </div>
-                <div>
-                  {!wish.approved && (
-                    <Button
-                      variant="success"
-                      size="sm"
-                      onClick={() => handleApproveWish(wish.id)}
-                      className="me-2"
-                    >
-                      Duyệt
-                    </Button>
-                  )}
-                  {wish.approved && (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleRejectWish(wish.id)}
-                      className="me-2"
-                    >
-                      Hủy duyệt
-                    </Button>
-                  )}
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => handleDeleteWish(wish.id)}
-                  >
-                    Xóa
-                  </Button>
-                </div>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        ) : (
-          <p>Chưa có lời chúc nào.</p>
-        )}
+                Slug
+              </Form.Label>
+              <Form.Control
+                type="text"
+                name="slug"
+                value={form.slug}
+                readOnly
+                disabled
+                style={{ borderColor: "#FECACA", backgroundColor: "#FFF5F5" }}
+              />
+              <Form.Text
+                className="text-muted"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                Tự động tạo từ tên cô dâu, chú rể và ngày cưới
+              </Form.Text>
+            </Form.Group>
 
-        <Button
-          variant="primary"
-          onClick={handleSave}
-          disabled={uploading}
-          className="me-2"
-        >
-          Lưu thông tin
-        </Button>
-        <Button
-          variant="info"
-          onClick={handlePreview}
-          disabled={uploading || !form.slug}
-          className="me-2"
-        >
-          Xem trước
-        </Button>
-        <Button
-          variant="success"
-          onClick={handleRedirect}
-          disabled={uploading || !form.slug}
-        >
-          Xem trang cưới
-        </Button>
-      </Form>
+            <Form.Group className="mb-3">
+              <Form.Label
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: "#9F1239",
+                }}
+              >
+                Ngày cưới
+              </Form.Label>
+              <Form.Control
+                type="date"
+                name="weddingDate"
+                value={form.weddingDate}
+                onChange={handleChange}
+                style={{ borderColor: "#FECACA" }}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: "#9F1239",
+                }}
+              >
+                Địa điểm
+              </Form.Label>
+              <Form.Control
+                type="text"
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                style={{ borderColor: "#FECACA" }}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: "#9F1239",
+                }}
+              >
+                Chủ đề
+              </Form.Label>
+              <FormSelect
+                name="theme"
+                value={form.theme}
+                onChange={handleChange}
+                style={{ borderColor: "#FECACA" }}
+              >
+                {themes.map((theme) => (
+                  <option key={theme.value} value={theme.value}>
+                    {theme.label}
+                  </option>
+                ))}
+              </FormSelect>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: "#9F1239",
+                }}
+              >
+                Chuyện tình yêu
+              </Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={4}
+                name="loveStory"
+                value={form.loveStory}
+                onChange={handleChange}
+                style={{ borderColor: "#FECACA" }}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: "#9F1239",
+                }}
+              >
+                Thư viện ảnh
+              </Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                disabled={uploading}
+                style={{ borderColor: "#FECACA" }}
+              />
+              {uploading && (
+                <Spinner
+                  animation="border"
+                  size="sm"
+                  className="mt-2"
+                  variant="danger"
+                />
+              )}
+              {form.gallery.length > 0 && (
+                <ListGroup className="mt-3">
+                  {form.gallery.map((img) => (
+                    <ListGroup.Item
+                      key={img.public_id}
+                      className="d-flex align-items-center"
+                      style={{ borderColor: "#FECACA" }}
+                    >
+                      <Image
+                        src={img.url}
+                        alt="Gallery item"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                          marginRight: "10px",
+                          border: "1px solid #FECACA",
+                        }}
+                      />
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleRemoveImage(img.public_id)}
+                        style={{
+                          backgroundColor: "#BE123C",
+                          borderColor: "#BE123C",
+                          fontFamily: "'Playfair Display', serif",
+                        }}
+                      >
+                        Xóa
+                      </Button>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </Form.Group>
+
+            <h3
+              className="mt-5 mb-3"
+              style={{ fontFamily: "'Great Vibes', cursive", color: "#BE123C" }}
+            >
+              Quản lý lời chúc
+            </h3>
+            {wishes.length > 0 ? (
+              <ListGroup className="mb-4">
+                {wishes.map((wish) => (
+                  <ListGroup.Item
+                    key={wish.id}
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ borderColor: "#FECACA" }}
+                  >
+                    <div>
+                      <strong
+                        style={{
+                          fontFamily: "'Playfair Display', serif",
+                          color: "#9F1239",
+                        }}
+                      >
+                        {wish.name}
+                      </strong>
+                      : {wish.message}
+                      <br />
+                      <small
+                        style={{
+                          fontFamily: "'Playfair Display', serif",
+                          color: "#BE123C",
+                        }}
+                      >
+                        {wish.createdAt.toDate().toLocaleDateString("vi-VN")} -{" "}
+                        {wish.approved ? "Đã duyệt" : "Chưa duyệt"}
+                      </small>
+                    </div>
+                    <div className="d-flex gap-2">
+                      {!wish.approved && (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={() => handleApproveWish(wish.id)}
+                          style={{
+                            backgroundColor: "#D97706",
+                            borderColor: "#D97706",
+                            fontFamily: "'Playfair Display', serif",
+                          }}
+                        >
+                          Duyệt
+                        </Button>
+                      )}
+                      {wish.approved && (
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleRejectWish(wish.id)}
+                          style={{
+                            backgroundColor: "#BE123C",
+                            borderColor: "#BE123C",
+                            fontFamily: "'Playfair Display', serif",
+                          }}
+                        >
+                          Hủy duyệt
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => handleDeleteWish(wish.id)}
+                        style={{
+                          borderColor: "#BE123C",
+                          color: "#BE123C",
+                          fontFamily: "'Playfair Display', serif",
+                        }}
+                      >
+                        Xóa
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            ) : (
+              <p
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: "#9F1239",
+                }}
+              >
+                Chưa có lời chúc nào.
+              </p>
+            )}
+
+            <div className="d-flex gap-2">
+              <Button
+                variant="primary"
+                onClick={handleSave}
+                disabled={uploading}
+                style={{
+                  backgroundColor: "#F43F5E",
+                  borderColor: "#F43F5E",
+                  fontFamily: "'Playfair Display', serif",
+                  borderRadius: "20px",
+                  padding: "8px 20px",
+                }}
+              >
+                Lưu thông tin
+              </Button>
+              <Button
+                variant="info"
+                onClick={handlePreview}
+                disabled={uploading || !form.slug}
+                style={{
+                  backgroundColor: "#D97706",
+                  borderColor: "#D97706",
+                  fontFamily: "'Playfair Display', serif",
+                  borderRadius: "20px",
+                  padding: "8px 20px",
+                }}
+              >
+                Xem trước
+              </Button>
+              <Button
+                variant="success"
+                onClick={handleRedirect}
+                disabled={uploading || !form.slug}
+                style={{
+                  backgroundColor: "#BE123C",
+                  borderColor: "#BE123C",
+                  fontFamily: "'Playfair Display', serif",
+                  borderRadius: "20px",
+                  padding: "8px 20px",
+                }}
+              >
+                Xem trang cưới
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
     </Container>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Container, Spinner, Alert } from "react-bootstrap";
+import { Container, Spinner, Alert, Card } from "react-bootstrap";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import WeddingHeader from "@/components/WeddingHeader";
@@ -80,30 +80,133 @@ export default function WeddingPage({ params }) {
 
   if (loading) {
     return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" />
+      <Container
+        fluid
+        className="d-flex align-items-center justify-content-center min-vh-100"
+        style={{
+          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
+        }}
+      >
+        <Spinner animation="border" variant="danger" />
+        <span
+          className="ms-2"
+          style={{ color: "#BE123C", fontFamily: "'Great Vibes', cursive" }}
+        >
+          Loading...
+        </span>
       </Container>
     );
   }
 
   if (error || !weddingData) {
     return (
-      <Container className="py-5">
-        <Alert variant="danger">
-          {error || "Không có dữ liệu để hiển thị."}
-        </Alert>
+      <Container
+        fluid
+        className="py-5"
+        style={{
+          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
+          backgroundImage: "url('/paper-fibers.png')",
+          minHeight: "100vh",
+        }}
+      >
+        <Card
+          className="shadow-lg border-0 mx-auto"
+          style={{
+            maxWidth: "900px",
+            border: "1px solid #FECACA",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "60px",
+              height: "60px",
+              background: "#FECACA",
+              borderBottomRightRadius: "100%",
+              opacity: 0.3,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              width: "60px",
+              height: "60px",
+              background: "#FECACA",
+              borderTopLeftRadius: "100%",
+              opacity: 0.3,
+            }}
+          />
+          <Card.Body className="p-4">
+            <Alert
+              variant="danger"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              {error || "Không có dữ liệu để hiển thị."}
+            </Alert>
+          </Card.Body>
+        </Card>
       </Container>
     );
   }
 
   return (
-    <Container className={`py-5 theme-${weddingData.theme}`}>
-      <WeddingHeader data={weddingData} />
-      <Countdown weddingDate={weddingData.weddingDate} />
-      <Gallery images={weddingData.gallery} />
-      <LoveStory text={weddingData.loveStory} />
-      <WishForm onSubmit={addWish} />
-      <WishList wishes={wishes} />
+    <Container
+      fluid
+      className="py-5"
+      style={{
+        background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
+        backgroundImage: "url('/paper-fibers.png')",
+        minHeight: "100vh",
+      }}
+    >
+      <Card
+        className="shadow-lg border-0 mx-auto"
+        style={{
+          maxWidth: "900px",
+          border: "1px solid #FECACA",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "60px",
+            height: "60px",
+            background: "#FECACA",
+            borderBottomRightRadius: "100%",
+            opacity: 0.3,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            width: "60px",
+            height: "60px",
+            background: "#FECACA",
+            borderTopLeftRadius: "100%",
+            opacity: 0.3,
+          }}
+        />
+        <Card.Body className="p-4">
+          <WeddingHeader data={weddingData} />
+          <Countdown weddingDate={weddingData.weddingDate} />
+          <Gallery images={weddingData.gallery} />
+          <LoveStory text={weddingData.loveStory} />
+          <WishForm onSubmit={addWish} />
+          <WishList wishes={wishes} />
+        </Card.Body>
+      </Card>
     </Container>
   );
 }
