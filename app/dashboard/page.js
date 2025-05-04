@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { slugify } from "@/utils/slug";
 import { uploadToCloudinary } from "@/utils/cloudinary";
+import WeddingPreviewCard from "@/components/WeddingPreviewCard";
 
 export const dynamic = "force-dynamic";
 
@@ -303,7 +304,7 @@ export default function DashboardPage() {
       setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
     }
   };
-
+  const approvedWishes = wishes.filter((wish) => wish.approved);
   if (loading || !user) {
     return (
       <Container
@@ -736,20 +737,6 @@ export default function DashboardPage() {
                 Lưu thông tin
               </Button>
               <Button
-                variant="info"
-                onClick={handlePreview}
-                disabled={uploading || !form.slug}
-                style={{
-                  backgroundColor: "#D97706",
-                  borderColor: "#D97706",
-                  fontFamily: "'Playfair Display', serif",
-                  borderRadius: "20px",
-                  padding: "8px 20px",
-                }}
-              >
-                Xem trước
-              </Button>
-              <Button
                 variant="success"
                 onClick={handleRedirect}
                 disabled={uploading || !form.slug}
@@ -767,6 +754,7 @@ export default function DashboardPage() {
           </Form>
         </Card.Body>
       </Card>
+      <WeddingPreviewCard form={form} wishes={approvedWishes} />
     </Container>
   );
 }
