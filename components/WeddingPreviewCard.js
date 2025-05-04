@@ -6,31 +6,96 @@ import LoveStory from "./LoveStory";
 import WishList from "./WishList";
 import QRCode from "./QRCode";
 import { Card, Container } from "react-bootstrap";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-const WeddingPreviewCard = ({ form, wishes }) => (
-  <Container fluid className="py-5" data-theme={form.theme}>
-    <Card className="shadow-lg border-0 mx-auto">
-      <Card.Title className="text-center mt-4">
-        Xem trước giao diện đám cưới
-      </Card.Title>
-      <Card.Body>
-        <WeddingHeader data={form} />
-        {form.showCountdown && form.weddingDate && (
-          <Countdown weddingDate={form.weddingDate} />
-        )}
-        {form.showGallery && form.gallery?.length > 0 && (
-          <Gallery images={form.gallery} />
-        )}
-        {form.showLoveStory && form.loveStory && (
-          <LoveStory text={form.loveStory} />
-        )}
-        {form.showQRCode && <QRCode bankInfo={form.bankInfo} />}
-        {form.showWishList && wishes?.length > 0 && (
-          <WishList wishes={wishes} />
-        )}
-      </Card.Body>
-    </Card>
-  </Container>
-);
+const SortableComponent = ({ id, children, disabled }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id, disabled });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    cursor: disabled ? "default" : "grab",
+    padding: "10px 0",
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  );
+};
+
+const WeddingPreviewCard = ({ form, wishes }) => {
+  const componentOrder = form.componentOrder || [
+    "WeddingHeader",
+    "Countdown",
+    "Gallery",
+    "LoveStory",
+    "QRCode",
+    "WishList",
+  ];
+
+  const renderComponent = (componentId) => {
+    switch (componentId) {
+      case "WeddingHeader":
+        return <WeddingHeader data={form} />;
+      case "Countdown":
+        return (
+          form.showCountdown &&
+          form.weddingDate && <Countdown weddingDate={form.weddingDate} />
+        );
+      case "Gallery":
+        return (
+          form.showGallery &&
+          form.gallery?.length > 0 && <Gallery images={form.gallery} />
+        );
+      case "LoveStory":
+        return (
+          form.showLoveStory &&
+          form.loveStory && <LoveStory text={form.loveStory} />
+        );
+      case "QRCode":
+        return form.showQRCode && <QRCode bankInfo={form.bankInfo} />;
+      case "WishList":
+        return (
+          form.showWishList &&
+          wishes?.length > 0 && <WishList wishes={wishes} />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Container fluid className="py-5" data-theme={form.theme}>
+      <Card className="shadow-lg border-0 mx-auto">
+        <Card.Title className="text-center mt-4">
+          Xem trước giao diện đám cưới
+        </Card.Title>
+        <Card.Body>
+          <DndContext collisionDetection={closestCenter}>
+            <SortableContext
+              items={componentOrder}
+              strategy={verticalListSortingStrategy}
+            >
+              {componentOrder.map((id) => (
+                <SortableComponent key={id} id={id} disabled>
+                  {renderComponent(id)}
+                </SortableComponent>
+              ))}
+            </SortableContext>
+          </DndContext>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
+};
 
 export default WeddingPreviewCard;

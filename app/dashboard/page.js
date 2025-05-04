@@ -28,8 +28,46 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { slugify } from "@/utils/slug";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import WeddingPreviewCard from "@/components/WeddingPreviewCard";
+import {
+  DndContext,
+  closestCenter,
+  useSensor,
+  useSensors,
+  PointerSensor,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export const dynamic = "force-dynamic";
+
+const SortableItem = ({ id, label }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    cursor: "grab",
+    padding: "10px",
+    border: "1px solid #FECACA",
+    borderRadius: "8px",
+    marginBottom: "8px",
+    backgroundColor: "#FFF5F5",
+    fontFamily: "'Playfair Display', serif",
+    color: "#9F1239",
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {label}
+    </div>
+  );
+};
 
 function useAuth() {
   const [user, setUser] = useState(null);
@@ -85,6 +123,15 @@ export default function DashboardPage() {
       amount: "",
       description: "",
     },
+    componentOrder: [
+      "WeddingHeader",
+      "Countdown",
+      "Gallery",
+      "LoveStory",
+      "QRCode",
+      "WishForm",
+      "WishList",
+    ],
   });
   const [wishes, setWishes] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -101,6 +148,36 @@ export default function DashboardPage() {
     { value: "classic", label: "Classic" },
     { value: "floral", label: "Floral" },
   ];
+
+  const componentLabels = {
+    WeddingHeader: "Tiêu đề đám cưới",
+    Countdown: "Đếm ngược",
+    Gallery: "Thư viện ảnh",
+    LoveStory: "Chuyện tình yêu",
+    QRCode: "Mã QR chuyển khoản",
+    WishForm: "Form lời chúc",
+    WishList: "Danh sách lời chúc",
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setForm((prev) => {
+        const oldIndex = prev.componentOrder.indexOf(active.id);
+        const newIndex = prev.componentOrder.indexOf(over.id);
+        const newOrder = arrayMove(prev.componentOrder, oldIndex, newIndex);
+        return { ...prev, componentOrder: newOrder };
+      });
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -142,6 +219,15 @@ export default function DashboardPage() {
                 amount: data.bankInfo?.amount || "",
                 description: data.bankInfo?.description || "",
               },
+              componentOrder: data.componentOrder || [
+                "WeddingHeader",
+                "Countdown",
+                "Gallery",
+                "LoveStory",
+                "QRCode",
+                "WishForm",
+                "WishList",
+              ],
             });
           }
 
@@ -883,6 +969,34 @@ export default function DashboardPage() {
                   </Form.Group>
                 </Col>
               </Row>
+
+              <h3
+                className="mt-5 mb-3"
+                style={{
+                  fontFamily: "'Great Vibes', cursive",
+                  color: "#BE123C",
+                }}
+              >
+                Sắp xếp thành phần
+              </h3>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={form.componentOrder}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {form.componentOrder.map((id) => (
+                    <SortableItem
+                      key={id}
+                      id={id}
+                      label={componentLabels[id]}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
 
               <h3
                 className="mt-5 mb-3"

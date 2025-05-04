@@ -10,10 +10,34 @@ import WishForm from "@/components/WishForm";
 import WishList from "@/components/WishList";
 import Countdown from "@/components/Countdown";
 import QRCode from "@/components/QRCode";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+const SortableComponent = ({ id, children, disabled }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id, disabled });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    cursor: disabled ? "default" : "grab",
+    padding: "10px 0",
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  );
+};
 
 export default function WeddingPage({ params }) {
   const { slug } = params;
-
   const [weddingData, setWeddingData] = useState(null);
   const [wishes, setWishes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,6 +77,15 @@ export default function WeddingPage({ params }) {
           showWishList: data.showWishList !== false,
           showQRCode: data.showQRCode || false,
           bankInfo: data.bankInfo || {},
+          componentOrder: data.componentOrder || [
+            "WeddingHeader",
+            "Countdown",
+            "Gallery",
+            "LoveStory",
+            "QRCode",
+            "WishForm",
+            "WishList",
+          ],
         };
 
         const wishesRef = collection(db, "users", userId, "wishes");
@@ -84,6 +117,39 @@ export default function WeddingPage({ params }) {
       createdAt: new Date(),
       approved: false,
     });
+  };
+
+  const renderComponent = (componentId) => {
+    switch (componentId) {
+      case "WeddingHeader":
+        return <WeddingHeader data={weddingData} />;
+      case "Countdown":
+        return (
+          weddingData.showCountdown && (
+            <Countdown weddingDate={weddingData.weddingDate} />
+          )
+        );
+      case "Gallery":
+        return (
+          weddingData.showGallery && <Gallery images={weddingData.gallery} />
+        );
+      case "LoveStory":
+        return (
+          weddingData.showLoveStory && (
+            <LoveStory text={weddingData.loveStory} />
+          )
+        );
+      case "QRCode":
+        return (
+          weddingData.showQRCode && <QRCode bankInfo={weddingData.bankInfo} />
+        );
+      case "WishForm":
+        return weddingData.showWishForm && <WishForm onSubmit={addWish} />;
+      case "WishList":
+        return weddingData.showWishList && <WishList wishes={wishes} />;
+      default:
+        return null;
+    }
   };
 
   if (loading) {
@@ -120,17 +186,18 @@ export default function WeddingPage({ params }) {
     <Container fluid className="py-5" data-theme={weddingData.theme}>
       <Card className="shadow-lg border-0 mx-auto">
         <Card.Body>
-          <WeddingHeader data={weddingData} />
-          {weddingData.showCountdown && (
-            <Countdown weddingDate={weddingData.weddingDate} />
-          )}
-          {weddingData.showGallery && <Gallery images={weddingData.gallery} />}
-          {weddingData.showLoveStory && (
-            <LoveStory text={weddingData.loveStory} />
-          )}
-          {weddingData.showQRCode && <QRCode bankInfo={weddingData.bankInfo} />}
-          {weddingData.showWishForm && <WishForm onSubmit={addWish} />}
-          {weddingData.showWishList && <WishList wishes={wishes} />}
+          <DndContext collisionDetection={closestCenter}>
+            <SortableContext
+              items={weddingData.componentOrder}
+              strategy={verticalListSortingStrategy}
+            >
+              {weddingData.componentOrder.map((id) => (
+                <SortableComponent key={id} id={id} disabled>
+                  {renderComponent(id)}
+                </SortableComponent>
+              ))}
+            </SortableContext>
+          </DndContext>
         </Card.Body>
       </Card>
     </Container>
