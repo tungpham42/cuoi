@@ -295,7 +295,7 @@ export default function DashboardPage() {
 
   const handleRedirect = () => {
     if (form.slug) {
-      router.push(`/wedding/${form.slug}`);
+      router.push(`/dam-cuoi/${form.slug}`);
     } else {
       setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
     }
@@ -303,7 +303,7 @@ export default function DashboardPage() {
 
   const handlePreview = () => {
     if (form.slug) {
-      router.push(`/wedding/preview/${form.slug}`);
+      router.push(`/dam-cuoi/preview/${form.slug}`);
     } else {
       setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
     }

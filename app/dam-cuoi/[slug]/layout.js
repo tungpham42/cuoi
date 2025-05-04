@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
           description:
             "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
           type: "website",
-          url: `https://cuoi.soft.io.vn/wedding/${slug}`,
+          url: `https://cuoi.soft.io.vn/dam-cuoi/${slug}`,
           images: [
             {
               url: "https://cuoi.soft.io.vn/1200x630.jpg",
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }) {
           description:
             "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
           type: "website",
-          url: `https://cuoi.soft.io.vn/wedding/${slug}`,
+          url: `https://cuoi.soft.io.vn/dam-cuoi/${slug}`,
           images: [
             {
               url: "https://cuoi.soft.io.vn/1200x630.jpg",
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }) {
         description:
           "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
         type: "website",
-        url: `https://cuoi.soft.io.vn/wedding/${slug}`,
+        url: `https://cuoi.soft.io.vn/dam-cuoi/${slug}`,
         images: [
           {
             url: "https://cuoi.soft.io.vn/1200x630.jpg",
