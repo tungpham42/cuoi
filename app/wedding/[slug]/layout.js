@@ -19,6 +19,20 @@ export async function generateMetadata({ params }) {
       return {
         title: `Tình Yêu Vĩnh Cửu - ${brideName} & ${groomName}`,
         description: `Chào mừng bạn đến với trang web hôn lễ của ${brideName} và ${groomName}, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.`,
+        openGraph: {
+          title: `Tình Yêu Vĩnh Cửu - ${brideName} & ${groomName}`,
+          description:
+            "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
+          type: "website",
+          url: `https://cuoi.soft.io.vn/wedding/${slug}`,
+          images: [
+            {
+              url: "https://cuoi.soft.io.vn/1200x630.jpg",
+              width: 1200,
+              height: 630,
+            },
+          ],
+        },
       };
     } else {
       // Fallback metadata if no matching document is found
@@ -26,6 +40,20 @@ export async function generateMetadata({ params }) {
         title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
         description:
           "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
+        openGraph: {
+          title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
+          description:
+            "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
+          type: "website",
+          url: `https://cuoi.soft.io.vn/wedding/${slug}`,
+          images: [
+            {
+              url: "https://cuoi.soft.io.vn/1200x630.jpg",
+              width: 1200,
+              height: 630,
+            },
+          ],
+        },
       };
     }
   } catch (error) {
@@ -35,6 +63,20 @@ export async function generateMetadata({ params }) {
       title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
       description:
         "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
+      openGraph: {
+        title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
+        description:
+          "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
+        type: "website",
+        url: `https://cuoi.soft.io.vn/wedding/${slug}`,
+        images: [
+          {
+            url: "https://cuoi.soft.io.vn/1200x630.jpg",
+            width: 1200,
+            height: 630,
+          },
+        ],
+      },
     };
   }
 }
