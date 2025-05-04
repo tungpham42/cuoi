@@ -599,39 +599,48 @@ export default function DashboardPage() {
                   />
                 )}
                 {form.gallery.length > 0 && (
-                  <ListGroup className="mt-3">
+                  <Row className="mt-3 g-2">
                     {form.gallery.map((img) => (
-                      <ListGroup.Item
+                      <Col
+                        xs={6}
+                        sm={4}
+                        md={3}
+                        lg={2}
+                        xl={2}
                         key={img.public_id}
-                        className="d-flex align-items-center"
-                        style={{ borderColor: "#FECACA" }}
                       >
-                        <Image
-                          src={img.url}
-                          alt="Gallery item"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                            marginRight: "10px",
-                            border: "1px solid #FECACA",
-                          }}
-                        />
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleRemoveImage(img.public_id)}
-                          style={{
-                            backgroundColor: "#BE123C",
-                            borderColor: "#BE123C",
-                            fontFamily: "'Playfair Display', serif",
-                          }}
-                        >
-                          Xóa
-                        </Button>
-                      </ListGroup.Item>
+                        <div className="position-relative">
+                          <Image
+                            src={img.url}
+                            alt="Gallery item"
+                            style={{
+                              width: "100%",
+                              height: "150px",
+                              objectFit: "cover",
+                              border: "1px solid #FECACA",
+                              borderRadius: "8px",
+                            }}
+                          />
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleRemoveImage(img.public_id)}
+                            style={{
+                              position: "absolute",
+                              top: "8px",
+                              right: "8px",
+                              backgroundColor: "#BE123C",
+                              borderColor: "#BE123C",
+                              fontFamily: "'Playfair Display', serif",
+                              opacity: 0.9,
+                            }}
+                          >
+                            Xóa
+                          </Button>
+                        </div>
+                      </Col>
                     ))}
-                  </ListGroup>
+                  </Row>
                 )}
               </Form.Group>
 
