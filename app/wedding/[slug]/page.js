@@ -83,17 +83,9 @@ export default function WeddingPage({ params }) {
       <Container
         fluid
         className="d-flex align-items-center justify-content-center min-vh-100"
-        style={{
-          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-        }}
       >
         <Spinner animation="border" variant="danger" />
-        <span
-          className="ms-2"
-          style={{ color: "#BE123C", fontFamily: "'Great Vibes', cursive" }}
-        >
-          Loading...
-        </span>
+        <span className="ms-2 h3">Loading...</span>
       </Container>
     );
   }
@@ -102,50 +94,12 @@ export default function WeddingPage({ params }) {
     return (
       <Container
         fluid
-        className={`py-5 theme-${weddingData.theme}`}
-        style={{
-          backgroundImage: "url('/paper-fibers.png')",
-          minHeight: "100vh",
-        }}
+        className="py-5"
+        data-theme={weddingData?.theme || "romantic"}
       >
-        <Card
-          className="shadow-lg border-0 mx-auto"
-          style={{
-            maxWidth: "900px",
-            border: "1px solid #FECACA",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "60px",
-              height: "60px",
-              background: "#FECACA",
-              borderBottomRightRadius: "100%",
-              opacity: 0.3,
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              width: "60px",
-              height: "60px",
-              background: "#FECACA",
-              borderTopLeftRadius: "100%",
-              opacity: 0.3,
-            }}
-          />
+        <Card className="shadow-lg border-0 mx-auto">
           <Card.Body className="p-4">
-            <Alert
-              variant="danger"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
+            <Alert variant="danger">
               {error || "Không có dữ liệu để hiển thị."}
             </Alert>
           </Card.Body>
@@ -155,48 +109,9 @@ export default function WeddingPage({ params }) {
   }
 
   return (
-    <Container
-      fluid
-      className={`py-5 theme-${weddingData.theme}`}
-      style={{
-        backgroundImage: "url('/paper-fibers.png')",
-        minHeight: "100vh",
-      }}
-    >
-      <Card
-        className="shadow-lg border-0 mx-auto"
-        style={{
-          maxWidth: "900px",
-          border: "1px solid #FECACA",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "60px",
-            height: "60px",
-            background: "#FECACA",
-            borderBottomRightRadius: "100%",
-            opacity: 0.3,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            width: "60px",
-            height: "60px",
-            background: "#FECACA",
-            borderTopLeftRadius: "100%",
-            opacity: 0.3,
-          }}
-        />
-        <Card.Body className="p-4">
+    <Container fluid className="py-5" data-theme={weddingData.theme}>
+      <Card className="shadow-lg border-0 mx-auto">
+        <Card.Body>
           <WeddingHeader data={weddingData} />
           <Countdown weddingDate={weddingData.weddingDate} />
           <Gallery images={weddingData.gallery} />

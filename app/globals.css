@@ -1,62 +1,128 @@
 @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
-/* globals.css */
+
+/* Base variables for default theme */
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --accent: #e91e63;
+  --border-color: #fecaca;
+  --gradient-start: #fff1f2;
+  --gradient-end: #ffe4e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --card-border: 1px solid var(--border-color);
 }
 
-/* Romantic Theme */
-.theme-romantic {
+/* Theme definitions */
+[data-theme="romantic"] {
   --background: #fff0f5;
   --foreground: #880e4f;
   --accent: #f48fb1;
+  --border-color: #fecaca;
+  --gradient-start: #fff1f2;
+  --gradient-end: #ffe4e6;
 }
 
-/* Rustic Theme */
-.theme-rustic {
+[data-theme="rustic"] {
   --background: #f5f5dc;
   --foreground: #4e342e;
   --accent: #8d6e63;
+  --border-color: #d7ccc8;
+  --gradient-start: #efebe9;
+  --gradient-end: #d7ccc8;
 }
 
-/* Modern Theme */
-.theme-modern {
+[data-theme="modern"] {
   --background: #f0f0f0;
   --foreground: #212121;
   --accent: #00bcd4;
+  --border-color: #b0bec5;
+  --gradient-start: #eceff1;
+  --gradient-end: #cfd8dc;
 }
 
-/* Elegant Theme */
-.theme-elegant {
+[data-theme="elegant"] {
   --background: #fefefe;
   --foreground: #333333;
   --accent: #9c27b0;
+  --border-color: #e1bee7;
+  --gradient-start: #f3e5f5;
+  --gradient-end: #e1bee7;
 }
 
+[data-theme="vintage"] {
+  --background: #fdf6e3;
+  --foreground: #5c4033;
+  --accent: #d4a373;
+  --border-color: #e6ccb2;
+  --gradient-start: #f4e4bc;
+  --gradient-end: #ede4cd;
+}
+
+[data-theme="bohemian"] {
+  --background: #f9ecec;
+  --foreground: #4a3728;
+  --accent: #e2725b;
+  --border-color: #f4c2c2;
+  --gradient-start: #f7d9c4;
+  --gradient-end: #f4c2c2;
+}
+
+[data-theme="classic"] {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --accent: #b8860b;
+  --border-color: #d9d9d9;
+  --gradient-start: #f5f5f5;
+  --gradient-end: #e6e6e6;
+}
+
+[data-theme="floral"] {
+  --background: #f0fff0;
+  --foreground: #2e4a2e;
+  --accent: #ff69b4;
+  --border-color: #98fb98;
+  --gradient-start: #e0ffee;
+  --gradient-end: #c1ffc1;
+}
+
+/* Base styles applied to all themes */
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: "Playfair Display", serif;
 }
 
 a,
 button {
   color: var(--accent);
+  transition: color 0.3s ease;
 }
 
-/* Ensure container respects theme */
-.container.theme-romantic,
-.container.theme-rustic,
-.container.theme-modern,
-.container.theme-elegant {
+a:hover,
+button:hover {
+  color: darken(var(--accent), 10%);
+}
+
+/* Container styling */
+.container {
   background-color: var(--background);
   color: var(--foreground);
 }
+
+/* Form elements */
+.form-control,
+.form-select {
+  border-color: var(--border-color) !important;
+  font-family: "Playfair Display", serif !important;
+}
+
 .form-control:focus,
 .form-select:focus {
   border-color: var(--accent) !important;
-  box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25) !important;
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--accent) 25%, transparent) !important;
 }
+
+/* Headings */
 h1,
 h2,
 h3,
@@ -68,6 +134,81 @@ h6,
 .h3,
 .h4,
 .h5,
-.h6 {
+.h6,
+.lead {
   font-family: "Great Vibes", cursive !important;
+  color: var(--foreground) !important;
+}
+
+p {
+  font-family: "Playfair Display", serif !important;
+  color: var(--foreground) !important;
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+}
+
+/* Card styling */
+.card {
+  border: var(--card-border) !important;
+  box-shadow: 0 4px 15px var(--shadow-color) !important;
+  background-color: var(--background) !important;
+}
+
+/* Component-specific styling */
+.wedding-section {
+  background: linear-gradient(
+    to bottom right,
+    var(--gradient-start),
+    var(--gradient-end)
+  ) !important;
+  background-image: url("/paper-fibers.png") !important;
+  border: var(--card-border) !important;
+  border-radius: 15px !important;
+  box-shadow: 0 4px 15px var(--shadow-color) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Decorative floral corners */
+.wedding-section::before,
+.wedding-section::after {
+  content: "" !important;
+  position: absolute !important;
+  width: 60px !important;
+  height: 60px !important;
+  background: var(--border-color) !important;
+  opacity: 0.3 !important;
+}
+
+.wedding-section::before {
+  top: 0 !important;
+  left: 0 !important;
+  border-bottom-right-radius: 100% !important;
+}
+
+.wedding-section::after {
+  bottom: 0 !important;
+  right: 0 !important;
+  border-top-left-radius: 100% !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  border-radius: 20px !important;
+  padding: 8px 20px !important;
+  font-family: "Playfair Display", serif !important;
+}
+
+.btn-primary:hover {
+  background-color: darken(var(--accent), 10%) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+/* Alerts */
+.alert {
+  border-color: var(--border-color) !important;
+  font-family: "Playfair Display", serif !important;
 }
