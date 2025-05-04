@@ -9,6 +9,7 @@ import LoveStory from "@/components/LoveStory";
 import WishForm from "@/components/WishForm";
 import WishList from "@/components/WishList";
 import Countdown from "@/components/Countdown";
+import QRCode from "@/components/QRCode";
 
 export default function WeddingPage({ params }) {
   const { slug } = params;
@@ -45,6 +46,13 @@ export default function WeddingPage({ params }) {
           loveStory: data.loveStory || "",
           theme: data.theme || "romantic",
           gallery: data.gallery || [],
+          showCountdown: data.showCountdown !== false,
+          showGallery: data.showGallery !== false,
+          showLoveStory: data.showLoveStory !== false,
+          showWishForm: data.showWishForm !== false,
+          showWishList: data.showWishList !== false,
+          showQRCode: data.showQRCode || false,
+          bankInfo: data.bankInfo || {},
         };
 
         const wishesRef = collection(db, "users", userId, "wishes");
@@ -113,11 +121,16 @@ export default function WeddingPage({ params }) {
       <Card className="shadow-lg border-0 mx-auto">
         <Card.Body>
           <WeddingHeader data={weddingData} />
-          <Countdown weddingDate={weddingData.weddingDate} />
-          <Gallery images={weddingData.gallery} />
-          <LoveStory text={weddingData.loveStory} />
-          <WishForm onSubmit={addWish} />
-          <WishList wishes={wishes} />
+          {weddingData.showCountdown && (
+            <Countdown weddingDate={weddingData.weddingDate} />
+          )}
+          {weddingData.showGallery && <Gallery images={weddingData.gallery} />}
+          {weddingData.showLoveStory && (
+            <LoveStory text={weddingData.loveStory} />
+          )}
+          {weddingData.showQRCode && <QRCode bankInfo={weddingData.bankInfo} />}
+          {weddingData.showWishForm && <WishForm onSubmit={addWish} />}
+          {weddingData.showWishList && <WishList wishes={wishes} />}
         </Card.Body>
       </Card>
     </Container>

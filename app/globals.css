@@ -220,3 +220,52 @@ p {
   border-color: var(--border-color) !important;
   font-family: "Playfair Display", serif !important;
 }
+/* Custom styling for checkbox toggle (switch) */
+.form-check-input[type="checkbox"] {
+  --bs-form-switch-bg: var(--border-color) !important;
+  --bs-form-switch-width: 2.5rem !important;
+  --bs-form-switch-height: 1.25rem !important;
+  --bs-form-switch-border-radius: 0.625rem !important;
+  border: none !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+  box-shadow: 0 2px 4px var(--shadow-color) !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.form-check-input[type="checkbox"]:checked {
+  background-color: var(--accent) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-input[type="checkbox"]:focus {
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--accent) 25%, transparent) !important;
+  outline: none !important;
+}
+
+.form-check-input[type="checkbox"]:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* Label styling for consistency */
+.form-check-label {
+  font-family: "Playfair Display", serif !important;
+  color: var(--foreground) !important;
+  font-size: 16px !important;
+  margin-left: 0.5rem !important;
+}
+
+/* Hover effect for non-disabled switches */
+.form-check-input[type="checkbox"]:not(:disabled):hover {
+  background-color: color-mix(
+    in srgb,
+    var(--accent) 10%,
+    var(--border-color)
+  ) !important;
+}
+
+/* Smooth transition for the switch toggle */
+.form-check-input[type="checkbox"]::before {
+  transition: transform 0.3s ease !important;
+}

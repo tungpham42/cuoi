@@ -72,6 +72,19 @@ export default function DashboardPage() {
     theme: "romantic",
     slug: "",
     gallery: [],
+    showCountdown: true,
+    showGallery: true,
+    showLoveStory: true,
+    showWishForm: true,
+    showWishList: true,
+    showQRCode: false,
+    bankInfo: {
+      bankName: "",
+      accountNumber: "",
+      accountHolder: "",
+      amount: "",
+      description: "",
+    },
   });
   const [wishes, setWishes] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -116,10 +129,22 @@ export default function DashboardPage() {
               theme: data.theme || "romantic",
               slug: data.slug || "",
               gallery: data.gallery || [],
+              showCountdown: data.showCountdown !== false,
+              showGallery: data.showGallery !== false,
+              showLoveStory: data.showLoveStory !== false,
+              showWishForm: data.showWishForm !== false,
+              showWishList: data.showWishList !== false,
+              showQRCode: data.showQRCode || false,
+              bankInfo: {
+                bankName: data.bankInfo?.bankName || "",
+                accountNumber: data.bankInfo?.accountNumber || "",
+                accountHolder: data.bankInfo?.accountHolder || "",
+                amount: data.bankInfo?.amount || "",
+                description: data.bankInfo?.description || "",
+              },
             });
           }
 
-          // Load wishes
           const wishesRef = collection(db, "users", user.uid, "wishes");
           const wishesSnap = await getDocs(wishesRef);
           const wishesList = wishesSnap.docs.map((doc) => ({
@@ -148,15 +173,26 @@ export default function DashboardPage() {
   }, [form.brideName, form.groomName, form.weddingDate]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    if (name.startsWith("bankInfo.")) {
+      const field = name.split(".")[1];
+      setForm((prev) => ({
+        ...prev,
+        bankInfo: { ...prev.bankInfo, [field]: value },
+      }));
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
-    const maxSize = 25 * 1024 * 1024; // 25MB
+    const maxSize = 25 * 1024 * 1024;
     const invalidFiles = files.filter((file) => file.size > maxSize);
     if (invalidFiles.length > 0) {
       setError("Một số tệp vượt quá giới hạn kích thước 25MB.");
@@ -185,10 +221,8 @@ export default function DashboardPage() {
         throw new Error("Không có hình ảnh nào được tải lên thành công.");
       }
 
-      // Update state with new images
       setForm((prev) => {
         const updatedGallery = [...prev.gallery, ...uploadedImages];
-        // Save to Firestore
         if (user) {
           const userRef = doc(db, "users", user.uid);
           updateDoc(userRef, { gallery: updatedGallery }).catch((err) => {
@@ -221,7 +255,6 @@ export default function DashboardPage() {
       const updatedGallery = prev.gallery.filter(
         (img) => img.public_id !== public_id
       );
-      // Save updated gallery to Firestore
       if (user) {
         const userRef = doc(db, "users", user.uid);
         updateDoc(userRef, { gallery: updatedGallery }).catch((err) => {
@@ -308,7 +341,9 @@ export default function DashboardPage() {
       setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
     }
   };
+
   const approvedWishes = wishes.filter((wish) => wish.approved);
+
   if (loading || !user) {
     return (
       <Container
@@ -340,7 +375,6 @@ export default function DashboardPage() {
           minHeight: "100vh",
         }}
       >
-        {/* Logout Button */}
         <div className="d-flex justify-content-end mb-4">
           <Button
             variant="outline-danger"
@@ -368,7 +402,6 @@ export default function DashboardPage() {
             overflow: "hidden",
           }}
         >
-          {/* Decorative floral corners */}
           <div
             style={{
               position: "absolute",
@@ -643,6 +676,213 @@ export default function DashboardPage() {
                   </Row>
                 )}
               </Form.Group>
+
+              <h3
+                className="mt-5 mb-3"
+                style={{
+                  fontFamily: "'Great Vibes', cursive",
+                  color: "#BE123C",
+                }}
+              >
+                Thông tin chuyển khoản
+              </h3>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    >
+                      Tên ngân hàng
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="bankInfo.bankName"
+                      value={form.bankInfo.bankName}
+                      onChange={handleChange}
+                      style={{ borderColor: "#FECACA" }}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    >
+                      Số tài khoản
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="bankInfo.accountNumber"
+                      value={form.bankInfo.accountNumber}
+                      onChange={handleChange}
+                      style={{ borderColor: "#FECACA" }}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    >
+                      Chủ tài khoản
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="bankInfo.accountHolder"
+                      value={form.bankInfo.accountHolder}
+                      onChange={handleChange}
+                      style={{ borderColor: "#FECACA" }}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    >
+                      Số tiền đề xuất (VNĐ)
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="bankInfo.amount"
+                      value={form.bankInfo.amount}
+                      onChange={handleChange}
+                      style={{ borderColor: "#FECACA" }}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Form.Group className="mb-3">
+                <Form.Label
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    color: "#9F1239",
+                  }}
+                >
+                  Nội dung chuyển khoản
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="bankInfo.description"
+                  value={form.bankInfo.description}
+                  onChange={handleChange}
+                  style={{ borderColor: "#FECACA" }}
+                />
+              </Form.Group>
+
+              <h3
+                className="mt-5 mb-3"
+                style={{
+                  fontFamily: "'Great Vibes', cursive",
+                  color: "#BE123C",
+                }}
+              >
+                Hiển thị thành phần
+              </h3>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      id="showCountdown"
+                      name="showCountdown"
+                      label="Đếm ngược"
+                      checked={form.showCountdown}
+                      onChange={handleChange}
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      id="showGallery"
+                      name="showGallery"
+                      label="Thư viện ảnh"
+                      checked={form.showGallery}
+                      onChange={handleChange}
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      id="showLoveStory"
+                      name="showLoveStory"
+                      label="Chuyện tình yêu"
+                      checked={form.showLoveStory}
+                      onChange={handleChange}
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      id="showWishForm"
+                      name="showWishForm"
+                      label="Form lời chúc"
+                      checked={form.showWishForm}
+                      onChange={handleChange}
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      id="showWishList"
+                      name="showWishList"
+                      label="Danh sách lời chúc"
+                      checked={form.showWishList}
+                      onChange={handleChange}
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      id="showQRCode"
+                      name="showQRCode"
+                      label="Mã QR chuyển khoản"
+                      checked={form.showQRCode}
+                      onChange={handleChange}
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#9F1239",
+                      }}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
               <h3
                 className="mt-5 mb-3"

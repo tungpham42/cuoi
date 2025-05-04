@@ -1,8 +1,10 @@
+"use client";
 import WeddingHeader from "./WeddingHeader";
 import Countdown from "./Countdown";
 import Gallery from "./Gallery";
 import LoveStory from "./LoveStory";
 import WishList from "./WishList";
+import QRCode from "./QRCode";
 import { Card, Container } from "react-bootstrap";
 
 const WeddingPreviewCard = ({ form, wishes }) => (
@@ -13,12 +15,22 @@ const WeddingPreviewCard = ({ form, wishes }) => (
       </Card.Header>
       <Card.Body>
         <WeddingHeader data={form} />
-        <Countdown weddingDate={form.weddingDate} />
-        <Gallery images={form.gallery} />
-        <LoveStory text={form.loveStory} />
-        <WishList wishes={wishes} />
+        {form.showCountdown && form.weddingDate && (
+          <Countdown weddingDate={form.weddingDate} />
+        )}
+        {form.showGallery && form.gallery?.length > 0 && (
+          <Gallery images={form.gallery} />
+        )}
+        {form.showLoveStory && form.loveStory && (
+          <LoveStory text={form.loveStory} />
+        )}
+        {form.showQRCode && <QRCode bankInfo={form.bankInfo} />}
+        {form.showWishList && wishes?.length > 0 && (
+          <WishList wishes={wishes} />
+        )}
       </Card.Body>
     </Card>
   </Container>
 );
+
 export default WeddingPreviewCard;
