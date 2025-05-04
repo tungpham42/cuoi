@@ -76,7 +76,7 @@ const WeddingPreviewCard = ({ form, wishes }) => {
   return (
     <Container fluid className="py-5" data-theme={form.theme}>
       <Card className="shadow-lg border-0 mx-auto">
-        <Card.Title className="text-center mt-4">
+        <Card.Title className="text-center mt-4 h2">
           Xem trước giao diện đám cưới
         </Card.Title>
         <Card.Body>

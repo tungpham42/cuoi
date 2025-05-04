@@ -52,18 +52,16 @@ const SortableItem = ({ id, label }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    cursor: "grab",
-    padding: "10px",
-    border: "1px solid #FECACA",
-    borderRadius: "8px",
-    marginBottom: "8px",
-    backgroundColor: "#FFF5F5",
-    fontFamily: "'Playfair Display', serif",
-    color: "#9F1239",
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      className="sortable-item"
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       {label}
     </div>
   );
@@ -432,96 +430,32 @@ export default function DashboardPage() {
 
   if (loading || !user) {
     return (
-      <Container
-        fluid
-        className="d-flex align-items-center justify-content-center min-vh-100"
-        style={{
-          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-        }}
-      >
+      <Container fluid className="loading-container">
         <Spinner animation="border" variant="danger" />
-        <span
-          className="ms-2"
-          style={{ color: "#BE123C", fontFamily: "'Great Vibes', cursive" }}
-        >
-          Loading...
-        </span>
+        <span className="loading-text">Loading...</span>
       </Container>
     );
   }
 
   return (
     <>
-      <Container
-        fluid
-        className="py-5"
-        style={{
-          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-          backgroundImage: "url('/paper-fibers.png')",
-          minHeight: "100vh",
-        }}
-      >
+      <Container fluid className="dashboard-container wedding-section">
         <div className="d-flex justify-content-end mb-4">
           <Button
             variant="outline-danger"
             size="sm"
             onClick={handleLogout}
-            style={{
-              backgroundColor: "#BE123C",
-              borderColor: "#BE123C",
-              color: "white",
-              fontFamily: "'Playfair Display', serif",
-              borderRadius: "20px",
-              padding: "8px 20px",
-            }}
+            className="btn-logout"
           >
             Đăng xuất
           </Button>
         </div>
 
-        <Card
-          className="shadow-lg border-0 mx-auto"
-          style={{
-            maxWidth: "900px",
-            border: "1px solid #FECACA",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "60px",
-              height: "60px",
-              background: "#FECACA",
-              borderBottomRightRadius: "100%",
-              opacity: 0.3,
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              width: "60px",
-              height: "60px",
-              background: "#FECACA",
-              borderTopLeftRadius: "100%",
-              opacity: 0.3,
-            }}
-          />
-
-          <Card.Body className="p-4">
-            <Card.Title
-              className="mb-4 text-center"
-              style={{
-                fontFamily: "'Great Vibes', cursive",
-                color: "#BE123C",
-                fontSize: "2rem",
-              }}
-            >
+        <Card className="dashboard-card">
+          <div className="decorative-corner-top" />
+          <div className="decorative-corner-bottom" />
+          <Card.Body className="dashboard-card-body">
+            <Card.Title className="dashboard-card-title h2">
               Quản trị đám cưới
             </Card.Title>
 
@@ -530,19 +464,13 @@ export default function DashboardPage() {
                 variant="success"
                 onClose={() => setShowSuccess(false)}
                 dismissible
-                style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 🎉 Thông tin đã được lưu thành công!
               </Alert>
             )}
 
             {error && (
-              <Alert
-                variant="danger"
-                onClose={() => setError("")}
-                dismissible
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
+              <Alert variant="danger" onClose={() => setError("")} dismissible>
                 {error}
               </Alert>
             )}
@@ -551,119 +479,69 @@ export default function DashboardPage() {
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
-                    >
-                      Cô dâu
-                    </Form.Label>
+                    <Form.Label className="form-label">Cô dâu</Form.Label>
                     <Form.Control
                       type="text"
                       name="brideName"
                       value={form.brideName}
                       onChange={handleChange}
-                      style={{ borderColor: "#FECACA" }}
                     />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
-                    >
-                      Chú rể
-                    </Form.Label>
+                    <Form.Label className="form-label">Chú rể</Form.Label>
                     <Form.Control
                       type="text"
                       name="groomName"
                       value={form.groomName}
                       onChange={handleChange}
-                      style={{ borderColor: "#FECACA" }}
                     />
                   </Form.Group>
                 </Col>
               </Row>
 
               <Form.Group className="mb-3">
-                <Form.Label
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
-                  Slug
-                </Form.Label>
+                <Form.Label className="form-label">Slug</Form.Label>
                 <Form.Control
                   type="text"
                   name="slug"
                   value={form.slug}
                   readOnly
                   disabled
-                  style={{ borderColor: "#FECACA", backgroundColor: "#FFF5F5" }}
+                  className="form-control-disabled"
                 />
-                <Form.Text
-                  className="text-muted"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
+                <Form.Text className="form-text">
                   Tự động tạo từ tên cô dâu, chú rể và ngày cưới
                 </Form.Text>
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
-                  Ngày cưới
-                </Form.Label>
+                <Form.Label className="form-label">Ngày cưới</Form.Label>
                 <Form.Control
                   type="date"
                   name="weddingDate"
                   value={form.weddingDate}
                   onChange={handleChange}
-                  style={{ borderColor: "#FECACA" }}
                 />
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
-                  Địa điểm
-                </Form.Label>
+                <Form.Label className="form-label">Địa điểm</Form.Label>
                 <Form.Control
                   type="text"
                   name="location"
                   value={form.location}
                   onChange={handleChange}
-                  style={{ borderColor: "#FECACA" }}
                 />
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
-                  Chủ đề
-                </Form.Label>
+                <Form.Label className="form-label">Chủ đề</Form.Label>
                 <FormSelect
                   name="theme"
                   value={form.theme}
                   onChange={handleChange}
-                  style={{ borderColor: "#FECACA" }}
                 >
                   {themes.map((theme) => (
                     <option key={theme.value} value={theme.value}>
@@ -674,40 +552,24 @@ export default function DashboardPage() {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
-                  Chuyện tình yêu
-                </Form.Label>
+                <Form.Label className="form-label">Chuyện tình yêu</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={4}
                   name="loveStory"
                   value={form.loveStory}
                   onChange={handleChange}
-                  style={{ borderColor: "#FECACA" }}
                 />
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
-                  Thư viện ảnh
-                </Form.Label>
+                <Form.Label className="form-label">Thư viện ảnh</Form.Label>
                 <Form.Control
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={handleImageUpload}
                   disabled={uploading}
-                  style={{ borderColor: "#FECACA" }}
                 />
                 {uploading && (
                   <Spinner
@@ -728,31 +590,17 @@ export default function DashboardPage() {
                         xl={2}
                         key={img.public_id}
                       >
-                        <div className="position-relative">
+                        <div className="gallery-image-wrapper">
                           <Image
                             src={img.url}
                             alt="Gallery item"
-                            style={{
-                              width: "100%",
-                              height: "150px",
-                              objectFit: "cover",
-                              border: "1px solid #FECACA",
-                              borderRadius: "8px",
-                            }}
+                            className="gallery-image"
                           />
                           <Button
                             variant="danger"
                             size="sm"
                             onClick={() => handleRemoveImage(img.public_id)}
-                            style={{
-                              position: "absolute",
-                              top: "8px",
-                              right: "8px",
-                              backgroundColor: "#BE123C",
-                              borderColor: "#BE123C",
-                              fontFamily: "'Playfair Display', serif",
-                              opacity: 0.9,
-                            }}
+                            className="gallery-delete-button"
                           >
                             Xóa
                           </Button>
@@ -763,24 +611,11 @@ export default function DashboardPage() {
                 )}
               </Form.Group>
 
-              <h3
-                className="mt-5 mb-3"
-                style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  color: "#BE123C",
-                }}
-              >
-                Thông tin chuyển khoản
-              </h3>
+              <h3 className="section-heading">Thông tin chuyển khoản</h3>
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
-                    >
+                    <Form.Label className="form-label">
                       Tên ngân hàng
                     </Form.Label>
                     <Form.Control
@@ -788,26 +623,17 @@ export default function DashboardPage() {
                       name="bankInfo.bankName"
                       value={form.bankInfo.bankName}
                       onChange={handleChange}
-                      style={{ borderColor: "#FECACA" }}
                     />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
-                    >
-                      Số tài khoản
-                    </Form.Label>
+                    <Form.Label className="form-label">Số tài khoản</Form.Label>
                     <Form.Control
                       type="text"
                       name="bankInfo.accountNumber"
                       value={form.bankInfo.accountNumber}
                       onChange={handleChange}
-                      style={{ borderColor: "#FECACA" }}
                     />
                   </Form.Group>
                 </Col>
@@ -815,12 +641,7 @@ export default function DashboardPage() {
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
-                    >
+                    <Form.Label className="form-label">
                       Chủ tài khoản
                     </Form.Label>
                     <Form.Control
@@ -828,18 +649,12 @@ export default function DashboardPage() {
                       name="bankInfo.accountHolder"
                       value={form.bankInfo.accountHolder}
                       onChange={handleChange}
-                      style={{ borderColor: "#FECACA" }}
                     />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
-                    >
+                    <Form.Label className="form-label">
                       Số tiền đề xuất (VNĐ)
                     </Form.Label>
                     <Form.Control
@@ -847,18 +662,12 @@ export default function DashboardPage() {
                       name="bankInfo.amount"
                       value={form.bankInfo.amount}
                       onChange={handleChange}
-                      style={{ borderColor: "#FECACA" }}
                     />
                   </Form.Group>
                 </Col>
               </Row>
               <Form.Group className="mb-3">
-                <Form.Label
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
+                <Form.Label className="form-label">
                   Nội dung chuyển khoản
                 </Form.Label>
                 <Form.Control
@@ -866,19 +675,10 @@ export default function DashboardPage() {
                   name="bankInfo.description"
                   value={form.bankInfo.description}
                   onChange={handleChange}
-                  style={{ borderColor: "#FECACA" }}
                 />
               </Form.Group>
 
-              <h3
-                className="mt-5 mb-3"
-                style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  color: "#BE123C",
-                }}
-              >
-                Hiển thị thành phần
-              </h3>
+              <h3 className="section-heading">Hiển thị thành phần</h3>
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
@@ -889,10 +689,6 @@ export default function DashboardPage() {
                       label="Đếm ngược"
                       checked={form.showCountdown}
                       onChange={handleChange}
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -903,10 +699,6 @@ export default function DashboardPage() {
                       label="Thư viện ảnh"
                       checked={form.showGallery}
                       onChange={handleChange}
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -917,10 +709,6 @@ export default function DashboardPage() {
                       label="Chuyện tình yêu"
                       checked={form.showLoveStory}
                       onChange={handleChange}
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
                     />
                   </Form.Group>
                 </Col>
@@ -933,10 +721,6 @@ export default function DashboardPage() {
                       label="Form lời chúc"
                       checked={form.showWishForm}
                       onChange={handleChange}
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -947,10 +731,6 @@ export default function DashboardPage() {
                       label="Danh sách lời chúc"
                       checked={form.showWishList}
                       onChange={handleChange}
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -961,24 +741,12 @@ export default function DashboardPage() {
                       label="Mã QR chuyển khoản"
                       checked={form.showQRCode}
                       onChange={handleChange}
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        color: "#9F1239",
-                      }}
                     />
                   </Form.Group>
                 </Col>
               </Row>
 
-              <h3
-                className="mt-5 mb-3"
-                style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  color: "#BE123C",
-                }}
-              >
-                Sắp xếp thành phần
-              </h3>
+              <h3 className="section-heading">Sắp xếp thành phần</h3>
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -998,40 +766,16 @@ export default function DashboardPage() {
                 </SortableContext>
               </DndContext>
 
-              <h3
-                className="mt-5 mb-3"
-                style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  color: "#BE123C",
-                }}
-              >
-                Quản lý lời chúc
-              </h3>
+              <h3 className="section-heading">Quản lý lời chúc</h3>
               {wishes.length > 0 ? (
                 <ListGroup className="mb-4">
                   {wishes.map((wish) => (
-                    <ListGroup.Item
-                      key={wish.id}
-                      className="d-flex justify-content-between align-items-center"
-                      style={{ borderColor: "#FECACA" }}
-                    >
+                    <ListGroup.Item key={wish.id} className="wish-list-item">
                       <div>
-                        <strong
-                          style={{
-                            fontFamily: "'Playfair Display', serif",
-                            color: "#9F1239",
-                          }}
-                        >
-                          {wish.name}
-                        </strong>
-                        : {wish.message}
+                        <strong className="wish-name">{wish.name}</strong>:{" "}
+                        {wish.message}
                         <br />
-                        <small
-                          style={{
-                            fontFamily: "'Playfair Display', serif",
-                            color: "#BE123C",
-                          }}
-                        >
+                        <small className="wish-meta">
                           {wish.createdAt.toDate().toLocaleDateString("vi-VN")}{" "}
                           - {wish.approved ? "Đã duyệt" : "Chưa duyệt"}
                         </small>
@@ -1042,11 +786,7 @@ export default function DashboardPage() {
                             variant="success"
                             size="sm"
                             onClick={() => handleApproveWish(wish.id)}
-                            style={{
-                              backgroundColor: "#D97706",
-                              borderColor: "#D97706",
-                              fontFamily: "'Playfair Display', serif",
-                            }}
+                            className="btn-approve"
                           >
                             Duyệt
                           </Button>
@@ -1056,11 +796,7 @@ export default function DashboardPage() {
                             variant="danger"
                             size="sm"
                             onClick={() => handleRejectWish(wish.id)}
-                            style={{
-                              backgroundColor: "#BE123C",
-                              borderColor: "#BE123C",
-                              fontFamily: "'Playfair Display', serif",
-                            }}
+                            className="btn-reject"
                           >
                             Hủy duyệt
                           </Button>
@@ -1069,11 +805,7 @@ export default function DashboardPage() {
                           variant="outline-danger"
                           size="sm"
                           onClick={() => handleDeleteWish(wish.id)}
-                          style={{
-                            borderColor: "#BE123C",
-                            color: "#BE123C",
-                            fontFamily: "'Playfair Display', serif",
-                          }}
+                          className="btn-delete"
                         >
                           Xóa
                         </Button>
@@ -1082,14 +814,7 @@ export default function DashboardPage() {
                   ))}
                 </ListGroup>
               ) : (
-                <p
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                  }}
-                >
-                  Chưa có lời chúc nào.
-                </p>
+                <p className="no-wishes">Chưa có lời chúc nào.</p>
               )}
 
               <div className="d-flex gap-2">
@@ -1097,13 +822,7 @@ export default function DashboardPage() {
                   variant="primary"
                   onClick={handleSave}
                   disabled={uploading}
-                  style={{
-                    backgroundColor: "#F43F5E",
-                    borderColor: "#F43F5E",
-                    fontFamily: "'Playfair Display', serif",
-                    borderRadius: "20px",
-                    padding: "8px 20px",
-                  }}
+                  className="btn-save"
                 >
                   Lưu thông tin
                 </Button>
@@ -1111,13 +830,7 @@ export default function DashboardPage() {
                   variant="success"
                   onClick={handleRedirect}
                   disabled={uploading || !form.slug}
-                  style={{
-                    backgroundColor: "#BE123C",
-                    borderColor: "#BE123C",
-                    fontFamily: "'Playfair Display', serif",
-                    borderRadius: "20px",
-                    padding: "8px 20px",
-                  }}
+                  className="btn-redirect"
                 >
                   Xem trang cưới
                 </Button>
