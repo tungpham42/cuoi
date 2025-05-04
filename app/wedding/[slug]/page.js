@@ -102,9 +102,8 @@ export default function WeddingPage({ params }) {
     return (
       <Container
         fluid
-        className="py-5"
+        className={`py-5 theme-${weddingData.theme}`}
         style={{
-          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
           backgroundImage: "url('/paper-fibers.png')",
           minHeight: "100vh",
         }}
@@ -158,9 +157,8 @@ export default function WeddingPage({ params }) {
   return (
     <Container
       fluid
-      className="py-5"
+      className={`py-5 theme-${weddingData.theme}`}
       style={{
-        background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
         backgroundImage: "url('/paper-fibers.png')",
         minHeight: "100vh",
       }}
