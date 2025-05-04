@@ -10,9 +10,9 @@ import { Card, Container } from "react-bootstrap";
 const WeddingPreviewCard = ({ form, wishes }) => (
   <Container fluid className="py-5" data-theme={form.theme}>
     <Card className="shadow-lg border-0 mx-auto">
-      <Card.Header className="text-center">
+      <Card.Title className="text-center mt-4">
         Xem trước giao diện đám cưới
-      </Card.Header>
+      </Card.Title>
       <Card.Body>
         <WeddingHeader data={form} />
         {form.showCountdown && form.weddingDate && (
