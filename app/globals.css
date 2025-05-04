@@ -20,6 +20,7 @@
   --border-color: #fecaca;
   --gradient-start: #fff1f2;
   --gradient-end: #ffe4e6;
+  --card-border: 1px solid var(--border-color);
 }
 
 [data-theme="rustic"] {
@@ -29,6 +30,7 @@
   --border-color: #d7ccc8;
   --gradient-start: #efebe9;
   --gradient-end: #d7ccc8;
+  --card-border: 1px solid var(--border-color);
 }
 
 [data-theme="modern"] {
@@ -38,6 +40,7 @@
   --border-color: #b0bec5;
   --gradient-start: #eceff1;
   --gradient-end: #cfd8dc;
+  --card-border: 1px solid var(--border-color);
 }
 
 [data-theme="elegant"] {
@@ -47,6 +50,7 @@
   --border-color: #e1bee7;
   --gradient-start: #f3e5f5;
   --gradient-end: #e1bee7;
+  --card-border: 1px solid var(--border-color);
 }
 
 [data-theme="vintage"] {
@@ -56,6 +60,7 @@
   --border-color: #e6ccb2;
   --gradient-start: #f4e4bc;
   --gradient-end: #ede4cd;
+  --card-border: 1px solid var(--border-color);
 }
 
 [data-theme="bohemian"] {
@@ -65,6 +70,7 @@
   --border-color: #f4c2c2;
   --gradient-start: #f7d9c4;
   --gradient-end: #f4c2c2;
+  --card-border: 1px solid var(--border-color);
 }
 
 [data-theme="classic"] {
@@ -74,6 +80,7 @@
   --border-color: #d9d9d9;
   --gradient-start: #f5f5f5;
   --gradient-end: #e6e6e6;
+  --card-border: 1px solid var(--border-color);
 }
 
 [data-theme="floral"] {
@@ -83,6 +90,7 @@
   --border-color: #98fb98;
   --gradient-start: #e0ffee;
   --gradient-end: #c1ffc1;
+  --card-border: 1px solid var(--border-color);
 }
 
 /* Base styles applied to all themes */
