@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 export default function Countdown({ weddingDate }) {
   const [timeLeft, setTimeLeft] = useState({});
+  const [isTimeUp, setIsTimeUp] = useState(false);
 
   useEffect(() => {
     const parseVietnameseDate = (dateStr) => {
@@ -19,6 +20,7 @@ export default function Countdown({ weddingDate }) {
 
       if (isNaN(difference)) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        setIsTimeUp(true);
         clearInterval(countdown);
         return;
       }
@@ -30,7 +32,10 @@ export default function Countdown({ weddingDate }) {
 
       setTimeLeft({ days, hours, minutes, seconds });
 
-      if (difference <= 0) clearInterval(countdown);
+      if (difference <= 0) {
+        setIsTimeUp(true);
+        clearInterval(countdown);
+      }
     }, 1000);
 
     return () => clearInterval(countdown);
@@ -39,10 +44,14 @@ export default function Countdown({ weddingDate }) {
   return (
     <div className="wedding-section text-center py-4 mx-auto">
       <h3 className="h3 mb-3">Đếm ngược tới ngày cưới</h3>
-      <p>
-        {timeLeft.days || 0} ngày {timeLeft.hours || 0} giờ{" "}
-        {timeLeft.minutes || 0} phút {timeLeft.seconds || 0} giây
-      </p>
+      {isTimeUp ? (
+        <p>Chúc mừng! Ngày cưới đã đến!</p>
+      ) : (
+        <p>
+          {timeLeft.days || 0} ngày {timeLeft.hours || 0} giờ{" "}
+          {timeLeft.minutes || 0} phút {timeLeft.seconds || 0} giây
+        </p>
+      )}
     </div>
   );
 }
