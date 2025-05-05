@@ -5,7 +5,7 @@ const WeddingHeader = ({ data }) => {
   const { brideName, groomName, weddingDate, location } = data;
 
   return (
-    <header className="wedding-section text-center py-5 mx-auto mb-4">
+    <header className="wedding-section text-center py-5 mx-auto my-5">
       <h1 className="h1 mb-3">
         {brideName} 💖 {groomName}
       </h1>

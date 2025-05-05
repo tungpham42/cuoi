@@ -42,7 +42,7 @@ export default function Countdown({ weddingDate }) {
   }, [weddingDate]);
 
   return (
-    <div className="wedding-section text-center py-4 mx-auto">
+    <div className="wedding-section text-center py-4 my-5 mx-auto">
       <h3 className="h3 mb-3">Đếm ngược tới ngày cưới</h3>
       {isTimeUp ? (
         <p>Chúc mừng! Ngày cưới đã đến!</p>

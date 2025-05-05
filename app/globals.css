@@ -547,3 +547,6 @@ p {
   font-family: "Playfair Display", serif;
   color: var(--foreground);
 }
+[role="button"][aria-roledescription="sortable"]:not(.sortable-item) {
+  padding: 0 !important;
+}
