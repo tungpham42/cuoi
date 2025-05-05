@@ -17,7 +17,7 @@ const Gallery = ({ images }) => {
               alt={`Ảnh cưới ${index + 1}`}
               style={{
                 maxHeight: "600px",
-                objectFit: "cover",
+                objectFit: "contain", // Changed from "cover" to "contain"
                 borderRadius: "10px",
               }}
             />
