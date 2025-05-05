@@ -21,6 +21,8 @@ import {
   getDocs,
   setDoc,
   deleteDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { db, auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
@@ -135,6 +137,7 @@ export default function DashboardPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [slugError, setSlugError] = useState("");
 
   const themes = [
     { value: "romantic", label: "Romantic" },
@@ -183,6 +186,28 @@ export default function DashboardPage() {
       router.push("/");
     } catch (error) {
       setError("Lỗi khi đăng xuất. Vui lòng thử lại.");
+    }
+  };
+
+  const validateSlug = async (slug, currentUserId) => {
+    if (!slug) return false;
+    try {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("slug", "==", slug));
+      const querySnapshot = await getDocs(q);
+
+      let isTaken = false;
+      querySnapshot.forEach((doc) => {
+        if (doc.id !== currentUserId) {
+          isTaken = true;
+        }
+      });
+
+      return !isTaken;
+    } catch (err) {
+      console.error("Error validating slug:", err);
+      setError("Lỗi khi kiểm tra slug. Vui lòng thử lại.");
+      return false;
     }
   };
 
@@ -250,11 +275,25 @@ export default function DashboardPage() {
       if (form.weddingDate) {
         combinedName += ` ${form.weddingDate}`;
       }
-      setForm((prev) => ({ ...prev, slug: slugify(combinedName) }));
+      const newSlug = slugify(combinedName);
+      setForm((prev) => ({ ...prev, slug: newSlug }));
+
+      const checkSlug = async () => {
+        const isAvailable = await validateSlug(newSlug, user?.uid || "");
+        setSlugError(
+          isAvailable
+            ? ""
+            : "Slug này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
+        );
+      };
+      if (user) {
+        checkSlug();
+      }
     } else {
       setForm((prev) => ({ ...prev, slug: "" }));
+      setSlugError("");
     }
-  }, [form.brideName, form.groomName, form.weddingDate]);
+  }, [form.brideName, form.groomName, form.weddingDate, user]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -358,6 +397,19 @@ export default function DashboardPage() {
       return;
     }
 
+    if (!form.slug) {
+      setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
+      return;
+    }
+
+    const isSlugAvailable = await validateSlug(form.slug, user.uid);
+    if (!isSlugAvailable) {
+      setSlugError(
+        "Slug này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
+      );
+      return;
+    }
+
     try {
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, {
@@ -366,6 +418,7 @@ export default function DashboardPage() {
       });
 
       setShowSuccess(true);
+      setSlugError("");
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
       setError("Lỗi khi lưu thông tin. Vui lòng thử lại.");
@@ -411,18 +464,22 @@ export default function DashboardPage() {
   };
 
   const handleRedirect = () => {
-    if (form.slug) {
+    if (form.slug && !slugError) {
       router.push(`/dam-cuoi/${form.slug}`);
     } else {
-      setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
+      setError(
+        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug hợp lệ."
+      );
     }
   };
 
   const handlePreview = () => {
-    if (form.slug) {
+    if (form.slug && !slugError) {
       router.push(`/dam-cuoi/preview/${form.slug}`);
     } else {
-      setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
+      setError(
+        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug hợp lệ."
+      );
     }
   };
 
@@ -472,6 +529,16 @@ export default function DashboardPage() {
             {error && (
               <Alert variant="danger" onClose={() => setError("")} dismissible>
                 {error}
+              </Alert>
+            )}
+
+            {slugError && (
+              <Alert
+                variant="danger"
+                onClose={() => setSlugError("")}
+                dismissible
+              >
+                {slugError}
               </Alert>
             )}
 
@@ -821,7 +888,7 @@ export default function DashboardPage() {
                 <Button
                   variant="primary"
                   onClick={handleSave}
-                  disabled={uploading}
+                  disabled={uploading || !!slugError}
                   className="btn-save"
                 >
                   Lưu thông tin
@@ -829,7 +896,7 @@ export default function DashboardPage() {
                 <Button
                   variant="success"
                   onClick={handleRedirect}
-                  disabled={uploading || !form.slug}
+                  disabled={uploading || !form.slug || !!slugError}
                   className="btn-redirect"
                 >
                   Xem trang cưới
