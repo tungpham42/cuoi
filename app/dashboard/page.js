@@ -115,7 +115,7 @@ export default function DashboardPage() {
     showLoveStory: true,
     showWishForm: true,
     showWishList: true,
-    showQRCode: false,
+    showQRCode: true,
     bankInfo: {
       bankName: "",
       accountNumber: "",
