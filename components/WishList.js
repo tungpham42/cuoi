@@ -7,6 +7,8 @@ const WishList = ({ wishes }) => {
 
   return (
     <section className="wedding-section my-5 py-5 mx-auto">
+      <div className="decorative-corner-top"></div>
+      <div className="decorative-corner-bottom"></div>
       <h2 className="h2 text-center mb-4">Lời chúc đã gửi</h2>
       <div className="d-flex flex-column align-items-center gap-3 px-3">
         {wishes.map((wish, index) => (

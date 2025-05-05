@@ -7,6 +7,8 @@ const Gallery = ({ images }) => {
 
   return (
     <section className="wedding-section my-5 py-5 mx-auto">
+      <div className="decorative-corner-top"></div>
+      <div className="decorative-corner-bottom"></div>
       <h2 className="h2 text-center mb-4">Bộ ảnh cưới</h2>
       <Carousel>
         {images.map((img, index) => (

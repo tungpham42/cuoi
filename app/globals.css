@@ -419,25 +419,25 @@ p {
 
 /* Existing DashboardPage classes */
 .decorative-corner-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 60px;
-  height: 60px;
-  background: var(--border-color);
-  border-bottom-right-radius: 100%;
-  opacity: 0.3;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 60px !important;
+  height: 60px !important;
+  background: var(--border-color) !important;
+  border-bottom-right-radius: 100% !important;
+  opacity: 0.6 !important;
 }
 
 .decorative-corner-bottom {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 60px;
-  height: 60px;
-  background: var(--border-color);
-  border-top-left-radius: 100%;
-  opacity: 0.3;
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 60px !important;
+  height: 60px !important;
+  background: var(--border-color) !important;
+  border-top-left-radius: 100% !important;
+  opacity: 0.6 !important;
 }
 
 .dashboard-card-body {
