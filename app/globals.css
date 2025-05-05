@@ -12,7 +12,19 @@
   --card-border: 1px solid var(--border-color);
 }
 
-/* Theme definitions */
+/* Modern theme for wedding */
+[data-theme="modern"] {
+  --background: #f5f7fa;
+  --foreground: #263238;
+  --accent: #4dd0e1; /* Softer teal for wedding vibe */
+  --border-color: #b0bec5;
+  --gradient-start: #eceff1;
+  --gradient-end: #b0bec5; /* Warmer gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Other themes remain unchanged */
 [data-theme="romantic"] {
   --background: #fff0f5;
   --foreground: #880e4f;
@@ -30,16 +42,6 @@
   --border-color: #d7ccc8;
   --gradient-start: #efebe9;
   --gradient-end: #d7ccc8;
-  --card-border: 1px solid var(--border-color);
-}
-
-[data-theme="modern"] {
-  --background: #f0f0f0;
-  --foreground: #212121;
-  --accent: #00bcd4;
-  --border-color: #b0bec5;
-  --gradient-start: #eceff1;
-  --gradient-end: #cfd8dc;
   --card-border: 1px solid var(--border-color);
 }
 
@@ -103,7 +105,7 @@ body {
 a,
 button {
   color: var(--accent);
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 a:hover,
@@ -158,8 +160,9 @@ p {
 /* Card styling */
 .card {
   border: var(--card-border) !important;
-  box-shadow: 0 4px 15px var(--shadow-color) !important;
+  box-shadow: 0 2px 10px var(--shadow-color) !important;
   background-color: var(--background) !important;
+  border-radius: 12px !important;
 }
 
 /* Component-specific styling */
@@ -169,35 +172,11 @@ p {
     var(--gradient-start),
     var(--gradient-end)
   ) !important;
-  background-image: url("/paper-fibers.png") !important;
   border: var(--card-border) !important;
   border-radius: 15px !important;
   box-shadow: 0 4px 15px var(--shadow-color) !important;
   position: relative !important;
   overflow: hidden !important;
-}
-
-/* Decorative floral corners */
-.wedding-section::before,
-.wedding-section::after {
-  content: "" !important;
-  position: absolute !important;
-  width: 60px !important;
-  height: 60px !important;
-  background: var(--border-color) !important;
-  opacity: 0.3 !important;
-}
-
-.wedding-section::before {
-  top: 0 !important;
-  left: 0 !important;
-  border-bottom-right-radius: 100% !important;
-}
-
-.wedding-section::after {
-  bottom: 0 !important;
-  right: 0 !important;
-  border-top-left-radius: 100% !important;
 }
 
 /* Buttons */
@@ -207,12 +186,16 @@ p {
   border-radius: 20px !important;
   padding: 8px 20px !important;
   font-family: "Playfair Display", serif !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
 }
 
 .btn-primary:hover {
   background-color: darken(var(--accent), 10%) !important;
   border-color: var(--accent) !important;
+  transform: scale(1.05) !important;
   color: var(--accent) !important;
+  box-shadow: 0 4px 15px var(--shadow-color) !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
 }
 
 /* Alerts */
@@ -249,14 +232,6 @@ p {
   cursor: not-allowed !important;
 }
 
-/* Label styling for consistency */
-.form-check-label {
-  font-family: "Playfair Display", serif !important;
-  color: var(--foreground) !important;
-  font-size: 16px !important;
-  margin-left: 0.5rem !important;
-}
-
 /* Hover effect for non-disabled switches */
 .form-check-input[type="checkbox"]:not(:disabled):hover {
   background-color: color-mix(
@@ -285,6 +260,7 @@ p {
   text-align: center !important;
   margin-bottom: 1.5rem !important;
 }
+
 /* Dashboard container */
 .dashboard-container {
   background: linear-gradient(
@@ -316,20 +292,55 @@ p {
   color: var(--foreground);
   font-family: "Great Vibes", cursive;
   margin-left: 0.5rem;
+  font-size: 1.5rem;
 }
 
 /* Dashboard card */
 .dashboard-card {
-  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   border: var(--card-border);
   box-shadow: 0 4px 15px var(--shadow-color);
   position: relative;
   overflow: hidden;
+  border-radius: 12px;
 }
 
-/* Decorative corners */
+/* New classes for LoginPage */
+.login-card-title {
+  font-family: "Great Vibes", cursive !important;
+  color: var(--foreground) !important;
+  font-size: 2.2rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.login-card-text {
+  font-family: "Playfair Display", serif !important;
+  color: var(--foreground) !important;
+  font-style: italic !important;
+  font-size: 1.1rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.login-user-greeting {
+  font-family: "Playfair Display", serif !important;
+  color: var(--foreground) !important;
+  font-size: 1.2rem !important;
+}
+
+.login-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: transform 0.2s ease !important;
+}
+
+.login-button:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Existing DashboardPage classes */
 .decorative-corner-top {
   position: absolute;
   top: 0;
@@ -352,12 +363,10 @@ p {
   opacity: 0.3;
 }
 
-/* Card body */
 .dashboard-card-body {
   padding: 1.5rem;
 }
 
-/* Card title */
 .dashboard-card-title {
   font-family: "Great Vibes", cursive;
   color: var(--foreground);
@@ -366,7 +375,6 @@ p {
   margin-bottom: 1.5rem;
 }
 
-/* Section heading */
 .section-heading {
   font-family: "Great Vibes", cursive;
   color: var(--foreground);
@@ -374,13 +382,11 @@ p {
   margin-bottom: 1rem;
 }
 
-/* Form label */
 .form-label {
   font-family: "Playfair Display", serif;
   color: var(--foreground);
 }
 
-/* Disabled form control */
 .form-control-disabled {
   border-color: var(--border-color);
   background-color: color-mix(
@@ -390,14 +396,12 @@ p {
   );
 }
 
-/* Form text */
 .form-text {
   font-family: "Playfair Display", serif;
   color: var(--foreground);
   opacity: 0.7;
 }
 
-/* Logout button */
 .btn-logout {
   background-color: var(--accent);
   border-color: var(--accent);
@@ -409,11 +413,10 @@ p {
 
 .btn-logout:hover {
   background-color: darken(var(--accent), 10%);
-  border-color: var(--accent);
+  border-color: darken(var(--accent), 10%);
   color: white;
 }
 
-/* Save button */
 .btn-save {
   background-color: #f43f5e;
   border-color: #f43f5e;
@@ -427,21 +430,24 @@ p {
   border-color: #f43f5e;
 }
 
-/* Redirect button */
 .btn-redirect {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  font-family: "Playfair Display", serif;
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
   border-radius: 20px !important;
-  padding: 8px 20px;
+  padding: 8px 20px !important;
+  font-family: "Playfair Display", serif !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
 }
 
 .btn-redirect:hover {
-  background-color: darken(var(--accent), 10%);
-  border-color: var(--accent);
+  background-color: darken(var(--accent), 10%) !important;
+  border-color: var(--accent) !important;
+  transform: scale(1.05) !important;
+  color: var(--accent) !important;
+  box-shadow: 0 4px 15px var(--shadow-color) !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
 }
 
-/* Gallery image wrapper */
 .gallery-image-wrapper {
   position: relative;
 }
@@ -469,7 +475,6 @@ p {
   border-color: var(--accent);
 }
 
-/* Sortable item */
 .sortable-item {
   padding: 10px;
   border: var(--card-border);
@@ -485,7 +490,6 @@ p {
   cursor: grab;
 }
 
-/* Wish list item */
 .wish-list-item {
   display: flex;
   justify-content: space-between;

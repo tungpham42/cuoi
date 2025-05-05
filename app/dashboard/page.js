@@ -180,7 +180,7 @@ export default function DashboardPage() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       setError("Lỗi khi đăng xuất. Vui lòng thử lại.");
     }

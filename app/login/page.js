@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { auth, provider, db } from "@/firebase/config";
 import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
-import { Button, Container, Card, Image, Spinner } from "react-bootstrap";
+import { Button, Container, Card, Spinner } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [user, setUser] = useState(null); // State to track user
-  const [loading, setLoading] = useState(true); // State to handle loading
+  const [user, setUser] = useState(null); // Trạng thái theo dõi người dùng
+  const [loading, setLoading] = useState(true); // Trạng thái xử lý tải
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -31,17 +31,17 @@ export default function LoginPage() {
 
       router.push("/dashboard");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Đăng nhập thất bại:", error);
     }
   };
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setUser(null); // Clear user state on logout
-      router.push("/login");
+      setUser(null); // Xóa trạng thái người dùng khi đăng xuất
+      router.push("/");
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("Đăng xuất thất bại:", error);
     }
   };
 
@@ -59,33 +59,26 @@ export default function LoginPage() {
             createdAt: serverTimestamp(),
           });
         }
-        setUser(user); // Set user in state
+        setUser(user); // Cập nhật trạng thái người dùng
       } else {
-        setUser(null); // Clear user state if not authenticated
+        setUser(null); // Xóa trạng thái nếu không xác thực
       }
-      setLoading(false); // Mark loading as complete
+      setLoading(false); // Hoàn tất tải
     });
 
-    return () => unsubscribe(); // Cleanup subscription
+    return () => unsubscribe(); // Dọn dẹp subscription
   }, []);
 
-  // Handle prerendering or initial load
+  // Xử lý tải ban đầu
   if (loading) {
     return (
       <Container
         fluid
-        className="d-flex align-items-center justify-content-center min-vh-100"
-        style={{
-          background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-        }}
+        className="loading-container d-flex align-items-center justify-content-center min-vh-100"
+        data-theme="modern"
       >
-        <Spinner animation="border" variant="danger" />
-        <span
-          className="ms-2"
-          style={{ color: "#BE123C", fontFamily: "'Great Vibes', cursive" }}
-        >
-          Loading...
-        </span>
+        <Spinner animation="border" style={{ color: "var(--accent)" }} />
+        <span className="loading-text ms-2">Đang tải...</span>
       </Container>
     );
   }
@@ -93,69 +86,19 @@ export default function LoginPage() {
   return (
     <Container
       fluid
-      className="d-flex align-items-center justify-content-center min-vh-100"
-      style={{
-        background: "linear-gradient(to bottom right, #FFF1F2, #FFE4E6)",
-      }}
+      className="wedding-section d-flex align-items-center justify-content-center min-vh-100"
+      data-theme="romantic"
     >
-      <Card
-        className="shadow-lg border-0"
-        style={{
-          maxWidth: "400px",
-          width: "100%",
-          border: "1px solid #FECACA",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Decorative floral corners */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "60px",
-            height: "60px",
-            background: "#FECACA",
-            borderBottomRightRadius: "100%",
-            opacity: 0.3,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            width: "60px",
-            height: "60px",
-            background: "#FECACA",
-            borderTopLeftRadius: "100%",
-            opacity: 0.3,
-          }}
-        />
-
+      <Card className="dashboard-card">
         <Card.Body className="p-4 text-center">
-          <Card.Title
-            className="mb-4"
-            style={{
-              fontFamily: "'Great Vibes', cursive",
-              color: "#BE123C",
-              fontSize: "2rem",
-            }}
-          >
-            Our Special Day
+          <Card.Title className="login-card-title">
+            Chuẩn Bị Cho Ngày Cưới Của Bạn
           </Card.Title>
 
           {user ? (
             <div className="d-flex flex-column align-items-center">
               <div className="d-flex align-items-center mb-3">
-                <span
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: "#9F1239",
-                    fontSize: "1.1rem",
-                  }}
-                >
+                <span className="login-user-greeting">
                   Xin chào, {user.displayName}
                 </span>
               </div>
@@ -163,47 +106,21 @@ export default function LoginPage() {
                 variant="outline-danger"
                 size="sm"
                 onClick={handleLogout}
-                style={{
-                  backgroundColor: "#BE123C",
-                  borderColor: "#BE123C",
-                  color: "white",
-                  fontFamily: "'Playfair Display', serif",
-                  borderRadius: "20px",
-                  padding: "8px 20px",
-                }}
-                className="mt-2"
+                className="btn-logout login-button"
               >
-                Đăng xuất
+                Đăng Xuất
               </Button>
             </div>
           ) : (
             <div className="d-flex flex-column align-items-center">
-              <Card.Text
-                className="mb-3"
-                style={{
-                  fontFamily: "'Playfair Display', serif",
-                  color: "#BE123C",
-                  fontStyle: "italic",
-                }}
-              >
-                Join us in celebrating love and togetherness
+              <Card.Text className="login-card-text">
+                Bắt đầu lên kế hoạch cho ngày cưới đáng nhớ của bạn
               </Card.Text>
               <Button
-                variant="outline-primary"
+                variant="primary"
                 size="sm"
                 onClick={handleLogin}
-                style={{
-                  backgroundColor: "#F43F5E",
-                  borderColor: "#F43F5E",
-                  color: "white",
-                  fontFamily: "'Playfair Display', serif",
-                  borderRadius: "20px",
-                  padding: "8px 20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                }}
+                className="btn-primary login-button"
               >
                 <svg
                   width="20"
@@ -212,6 +129,7 @@ export default function LoginPage() {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="me-2"
                 >
                   <path
                     strokeLinecap="round"
@@ -220,7 +138,7 @@ export default function LoginPage() {
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   ></path>
                 </svg>
-                Đăng nhập với Google
+                Đăng Nhập Với Google
               </Button>
             </div>
           )}
