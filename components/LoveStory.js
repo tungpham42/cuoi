@@ -15,7 +15,7 @@ const LoveStory = ({ text }) => {
         Chuyện Tình Yêu
       </h2>
       <div className="text-center">
-        <p className="mx-auto" style={{ whiteSpace: "pre-line" }}>
+        <p className="mx-auto px-5 py-3" style={{ whiteSpace: "pre-line" }}>
           {text}
         </p>
       </div>
