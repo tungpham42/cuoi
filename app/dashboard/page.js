@@ -58,6 +58,7 @@ import {
   faMoneyBillWave,
   faCommentDots,
   faSort,
+  faLink,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const dynamic = "force-dynamic";
@@ -221,7 +222,7 @@ export default function DashboardPage() {
       return !isTaken;
     } catch (err) {
       console.error("Error validating slug:", err);
-      setError("Lỗi khi kiểm tra slug. Vui lòng thử lại.");
+      setError("Lỗi khi kiểm tra liên kết. Vui lòng thử lại.");
       return false;
     }
   };
@@ -298,7 +299,7 @@ export default function DashboardPage() {
         setSlugError(
           isAvailable
             ? ""
-            : "Slug này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
+            : "Liên kết này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
         );
       };
       if (user) {
@@ -413,14 +414,16 @@ export default function DashboardPage() {
     }
 
     if (!form.slug) {
-      setError("Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug.");
+      setError(
+        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết."
+      );
       return;
     }
 
     const isSlugAvailable = await validateSlug(form.slug, user.uid);
     if (!isSlugAvailable) {
       setSlugError(
-        "Slug này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
+        "Liên kết này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
       );
       return;
     }
@@ -483,7 +486,7 @@ export default function DashboardPage() {
       router.push(`/dam-cuoi/${form.slug}`);
     } else {
       setError(
-        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug hợp lệ."
+        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết hợp lệ."
       );
     }
   };
@@ -493,7 +496,7 @@ export default function DashboardPage() {
       router.push(`/dam-cuoi/preview/${form.slug}`);
     } else {
       setError(
-        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo slug hợp lệ."
+        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết hợp lệ."
       );
     }
   };
@@ -591,7 +594,10 @@ export default function DashboardPage() {
               </Row>
 
               <Form.Group className="mb-3">
-                <Form.Label className="form-label">Slug</Form.Label>
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faLink} className="me-2" />
+                  Liên kết
+                </Form.Label>
                 <Form.Control
                   type="text"
                   name="slug"
@@ -785,7 +791,10 @@ export default function DashboardPage() {
                 />
               </Form.Group>
 
-              <h3 className="section-heading">Hiển thị thành phần</h3>
+              <h3 className="section-heading">
+                <FontAwesomeIcon icon={faEye} className="me-2" />
+                Hiển thị thành phần
+              </h3>
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">

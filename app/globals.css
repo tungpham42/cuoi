@@ -564,7 +564,7 @@ p {
   );
   font-family: "Playfair Display", serif;
   color: var(--foreground);
-  cursor: grab;
+  cursor: grab !important;
 }
 
 .wish-list-item {
