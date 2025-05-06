@@ -3,10 +3,14 @@ import { useEffect, useState } from "react";
 import { auth, provider, db } from "@/firebase/config";
 import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
-import { Button, Container, Card, Spinner } from "react-bootstrap";
+import { Button, Container, Card, Spinner, Row, Col } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSignOutAlt,
+  faUserCircle,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 export default function LoginPage() {
@@ -74,65 +78,71 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <Container
-        fluid
-        className="loading-container d-flex align-items-center justify-content-center min-vh-100"
-        data-theme="modern"
-      >
-        <Spinner animation="border" style={{ color: "var(--accent)" }} />
-        <span className="loading-text ms-2">Đang tải...</span>
+      <Container fluid className="loading-container">
+        <Spinner animation="border" className="login-icon" />
+        <span className="loading-text">Đang tải...</span>
       </Container>
     );
   }
 
   return (
-    <Container
-      fluid
-      className="wedding-section d-flex align-items-center justify-content-center min-vh-100"
-      data-theme="romantic"
-    >
-      <Card className="dashboard-card">
-        <Card.Body className="p-4 text-center">
-          <Card.Title className="login-card-title">
-            Chuẩn Bị Cho Ngày Cưới Của Bạn
-          </Card.Title>
-
-          {user ? (
-            <div className="d-flex flex-column align-items-center">
-              <div className="d-flex align-items-center mb-3">
-                <FontAwesomeIcon icon={faUserCircle} className="me-2" />
-                <span className="login-user-greeting">
-                  Xin chào, {user.displayName}
-                </span>
-              </div>
-              <Button
-                variant="outline-danger"
-                size="sm"
-                onClick={handleLogout}
-                className="btn-logout login-button"
-              >
-                <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-                Đăng Xuất
-              </Button>
-            </div>
-          ) : (
-            <div className="d-flex flex-column align-items-center">
-              <Card.Text className="login-card-text">
-                Bắt đầu lên kế hoạch cho ngày cưới đáng nhớ của bạn
-              </Card.Text>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleLogin}
-                className="btn-primary login-button"
-              >
-                <FontAwesomeIcon icon={faGoogle} className="me-2" />
-                Đăng Nhập Với Google
-              </Button>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </Container>
+    <div className="login-background" data-theme="romantic">
+      <div className="login-overlay"></div>
+      <div className="login-container">
+        <Row className="justify-content-center">
+          <Col md={8}>
+            <Card className="login-card">
+              <Card.Body className="p-5 text-center">
+                {user ? (
+                  <div className="d-flex flex-column align-items-center">
+                    <FontAwesomeIcon
+                      icon={faUserCircle}
+                      size="3x"
+                      className="login-icon"
+                    />
+                    <h4 className="login-user-greeting mb-4">
+                      Xin chào, {user.displayName}
+                    </h4>
+                    <Button
+                      variant="outline-danger"
+                      size="lg"
+                      onClick={handleLogout}
+                      className="login-btn-logout login-button"
+                    >
+                      <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                      Đăng Xuất
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="d-flex flex-column align-items-center">
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      size="3x"
+                      className="login-icon"
+                    />
+                    <h3 className="login-heading">
+                      Bắt Đầu Hành Trình Tình Yêu
+                    </h3>
+                    <p className="login-text">
+                      Đăng nhập để lên kế hoạch cho ngày cưới hoặc sự kiện đặc
+                      biệt của bạn với sự tinh tế và dễ dàng.
+                    </p>
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={handleLogin}
+                      className="login-btn-primary login-button"
+                    >
+                      <FontAwesomeIcon icon={faGoogle} className="me-2" />
+                      Đăng Nhập Với Google
+                    </Button>
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 }
