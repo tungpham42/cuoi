@@ -218,6 +218,9 @@ export default function DashboardPage() {
     { value: "Ms Madi", label: "Ms Madi" },
     { value: "Borel", label: "Borel" },
     { value: "Send Flowers", label: "Send Flowers" },
+    { value: "Pinyon Script", label: "Pinyon Script" },
+    { value: "Imperial Script", label: "Imperial Script" },
+    { value: "Ballet", label: "Ballet" },
   ];
 
   const secondaryFonts = [
@@ -227,6 +230,9 @@ export default function DashboardPage() {
     { value: "Georgia", label: "Georgia" },
     { value: "Times New Roman", label: "Times New Roman" },
     { value: "Crimson Text", label: "Crimson Text" },
+    { value: "Old Standard TT", label: "Old Standard TT" },
+    { value: "Taviraj", label: "Taviraj" },
+    { value: "Hahmlet", label: "Hahmlet" },
   ];
 
   const componentLabels = {
@@ -584,7 +590,7 @@ export default function DashboardPage() {
     return (
       <Container fluid className="loading-container">
         <Spinner animation="border" variant="danger" />
-        <span className="loading-text">Loading...</span>
+        <span className="loading-text">Đang tải...</span>
       </Container>
     );
   }
