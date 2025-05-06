@@ -1,4 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lovers+Quarrel&family=Roboto+Slab:wght@400;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+/*
+  Font choices rationale (and considerations for Vietnamese support):
+
+  - Great Vibes: Already used, a classic wedding cursive.
+  - Lovers Quarrel: Another elegant cursive option.
+  - Playfair Display: Good serif, already used.
+  - Roboto Slab: A more modern, bolder serif.
+  - Noto Serif: Designed for broad language support, including Vietnamese.
+
+  The strategy is to pair a cursive (Great Vibes or Lovers Quarrel) with a serif
+  (Playfair Display, Roboto Slab, or Noto Serif), testing combinations for each theme.
+  Noto Serif is prioritized where Vietnamese support is crucial.
+*/
 
 /* Base variables for default theme */
 :root {
@@ -10,21 +24,29 @@
   --gradient-end: #ffe4e6;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --card-border: 1px solid var(--border-color);
+
+  /* Default font pairing */
+  --primary-font: "Great Vibes", cursive; /* For headings/titles */
+  --secondary-font: "Noto Serif", serif; /* For paragraphs, etc. (Vietnamese support) */
 }
 
 /* Modern theme for wedding */
 [data-theme="modern"] {
   --background: #f5f7fa;
   --foreground: #263238;
-  --accent: #4dd0e1; /* Softer teal for wedding vibe */
+  --accent: #4dd0e1;
   --border-color: #b0bec5;
   --gradient-start: #eceff1;
-  --gradient-end: #b0bec5; /* Warmer gradient */
+  --gradient-end: #b0bec5;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
+
+  /* Modern font pairing - Roboto Slab for a bit more modern feel */
+  --primary-font: "Lovers Quarrel", cursive;
+  --secondary-font: "Roboto Slab", serif;
 }
 
-/* Other themes remain unchanged */
+/* Romantic theme */
 [data-theme="romantic"] {
   --background: #fff0f5;
   --foreground: #880e4f;
@@ -33,8 +55,13 @@
   --gradient-start: #fff1f2;
   --gradient-end: #ffe4e6;
   --card-border: 1px solid var(--border-color);
+
+  /* Romantic font pairing */
+  --primary-font: "Great Vibes", cursive;
+  --secondary-font: "Playfair Display", serif;
 }
 
+/* Rustic theme */
 [data-theme="rustic"] {
   --background: #f5f5dc;
   --foreground: #4e342e;
@@ -43,8 +70,13 @@
   --gradient-start: #efebe9;
   --gradient-end: #d7ccc8;
   --card-border: 1px solid var(--border-color);
+
+  /* Rustic font pairing - Noto Serif for better readability */
+  --primary-font: "Lovers Quarrel", cursive;
+  --secondary-font: "Noto Serif", serif;
 }
 
+/* Elegant theme */
 [data-theme="elegant"] {
   --background: #fefefe;
   --foreground: #333333;
@@ -53,8 +85,13 @@
   --gradient-start: #f3e5f5;
   --gradient-end: #e1bee7;
   --card-border: 1px solid var(--border-color);
+
+  /* Elegant font pairing */
+  --primary-font: "Great Vibes", cursive;
+  --secondary-font: "Playfair Display", serif;
 }
 
+/* Vintage theme */
 [data-theme="vintage"] {
   --background: #fdf6e3;
   --foreground: #5c4033;
@@ -63,8 +100,13 @@
   --gradient-start: #f4e4bc;
   --gradient-end: #ede4cd;
   --card-border: 1px solid var(--border-color);
+
+  /* Vintage font pairing */
+  --primary-font: "Lovers Quarrel", cursive;
+  --secondary-font: "Noto Serif", serif;
 }
 
+/* Bohemian theme */
 [data-theme="bohemian"] {
   --background: #f9ecec;
   --foreground: #4a3728;
@@ -73,8 +115,13 @@
   --gradient-start: #f7d9c4;
   --gradient-end: #f4c2c2;
   --card-border: 1px solid var(--border-color);
+
+  /* Bohemian font pairing */
+  --primary-font: "Great Vibes", cursive;
+  --secondary-font: "Roboto Slab", serif;
 }
 
+/* Classic theme */
 [data-theme="classic"] {
   --background: #ffffff;
   --foreground: #1a1a1a;
@@ -83,8 +130,13 @@
   --gradient-start: #f5f5f5;
   --gradient-end: #e6e6e6;
   --card-border: 1px solid var(--border-color);
+
+  /* Classic font pairing */
+  --primary-font: "Lovers Quarrel", cursive;
+  --secondary-font: "Noto Serif", serif;
 }
 
+/* Floral theme */
 [data-theme="floral"] {
   --background: #f0fff0;
   --foreground: #2e4a2e;
@@ -93,18 +145,23 @@
   --gradient-start: #e0ffee;
   --gradient-end: #c1ffc1;
   --card-border: 1px solid var(--border-color);
+
+  /* Floral font pairing */
+  --primary-font: "Great Vibes", cursive;
+  --secondary-font: "Playfair Display", serif;
 }
 
 /* Base styles applied to all themes */
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
 }
 
 a,
 button {
   color: var(--accent);
+  font-family: var(--secondary-font);
   transition: color 0.3s ease, transform 0.2s ease;
 }
 
@@ -117,13 +174,14 @@ button:hover {
 .container {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: var(--secondary-font);
 }
 
 /* Form elements */
 .form-control,
 .form-select {
   border-color: var(--border-color) !important;
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
 }
 
 .form-control:focus,
@@ -146,12 +204,12 @@ h6,
 .h5,
 .h6,
 .lead {
-  font-family: "Great Vibes", cursive !important;
+  font-family: var(--primary-font) !important;
   color: var(--foreground) !important;
 }
 
 p {
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
   color: var(--foreground) !important;
   font-size: 18px !important;
   line-height: 1.6 !important;
@@ -163,6 +221,7 @@ p {
   box-shadow: 0 2px 10px var(--shadow-color) !important;
   background-color: var(--background) !important;
   border-radius: 12px !important;
+  font-family: var(--secondary-font) !important;
 }
 
 /* Component-specific styling */
@@ -177,6 +236,7 @@ p {
   box-shadow: 0 4px 15px var(--shadow-color) !important;
   position: relative !important;
   overflow: hidden !important;
+  font-family: var(--secondary-font) !important;
 }
 
 /* Carousel controls styling */
@@ -211,9 +271,9 @@ p {
   justify-content: center !important;
 }
 
-.carousel-control-prev-icon::after,
+.carousel-control-prev-icon::dafter,
 .carousel-control-next-icon::after {
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
   color: #ffffff !important;
 }
 
@@ -262,7 +322,7 @@ p {
   border-color: var(--accent) !important;
   border-radius: 20px !important;
   padding: 8px 20px !important;
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
   transition: background-color 0.3s ease, transform 0.2s ease !important;
 }
 
@@ -278,7 +338,7 @@ p {
 /* Alerts */
 .alert {
   border-color: var(--border-color) !important;
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
 }
 
 /* Custom styling for checkbox toggle (switch) */
@@ -331,7 +391,7 @@ p {
 
 /* New classes for DashboardPage */
 .card-title.h2 {
-  font-family: "Great Vibes", cursive !important;
+  font-family: var(--primary-font) !important;
   color: var(--foreground) !important;
   font-size: 2rem !important;
   text-align: center !important;
@@ -367,7 +427,7 @@ p {
 /* Loading text */
 .loading-text {
   color: var(--foreground);
-  font-family: "Great Vibes", cursive;
+  font-family: var(--primary-font);
   margin-left: 0.5rem;
   font-size: 1.5rem;
 }
@@ -385,14 +445,14 @@ p {
 
 /* New classes for LoginPage */
 .login-card-title {
-  font-family: "Great Vibes", cursive !important;
+  font-family: var(--primary-font) !important;
   color: var(--foreground) !important;
   font-size: 2.2rem !important;
   margin-bottom: 1.5rem !important;
 }
 
 .login-card-text {
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
   color: var(--foreground) !important;
   font-style: italic !important;
   font-size: 1.1rem !important;
@@ -400,7 +460,7 @@ p {
 }
 
 .login-user-greeting {
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
   color: var(--foreground) !important;
   font-size: 1.2rem !important;
 }
@@ -410,6 +470,7 @@ p {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
+  font-family: var(--secondary-font) !important;
   transition: transform 0.2s ease !important;
 }
 
@@ -445,7 +506,7 @@ p {
 }
 
 .dashboard-card-title {
-  font-family: "Great Vibes", cursive;
+  font-family: var(--primary-font);
   color: var(--foreground);
   font-size: 2rem;
   text-align: center;
@@ -453,14 +514,14 @@ p {
 }
 
 .section-heading {
-  font-family: "Great Vibes", cursive;
+  font-family: var(--primary-font);
   color: var(--foreground);
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
 
 .form-label {
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   color: var(--foreground);
 }
 
@@ -471,10 +532,11 @@ p {
     var(--background) 95%,
     var(--border-color)
   );
+  font-family: var(--secondary-font);
 }
 
 .form-text {
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   color: var(--foreground);
   opacity: 0.7;
 }
@@ -483,7 +545,7 @@ p {
   background-color: var(--accent);
   border-color: var(--accent);
   color: white;
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   border-radius: 20px;
   padding: 8px 20px;
 }
@@ -497,7 +559,7 @@ p {
 .btn-save {
   background-color: #f43f5e;
   border-color: #f43f5e;
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   border-radius: 20px;
   padding: 8px 20px;
 }
@@ -512,7 +574,7 @@ p {
   border-color: var(--accent) !important;
   border-radius: 20px !important;
   padding: 8px 20px !important;
-  font-family: "Playfair Display", serif !important;
+  font-family: var(--secondary-font) !important;
   transition: background-color 0.3s ease, transform 0.2s ease !important;
 }
 
@@ -543,7 +605,7 @@ p {
   right: 8px;
   background-color: var(--accent);
   border-color: var(--accent);
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   opacity: 0.9;
 }
 
@@ -562,7 +624,7 @@ p {
     var(--background) 95%,
     var(--border-color)
   );
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   color: var(--foreground);
   cursor: grab !important;
 }
@@ -575,13 +637,13 @@ p {
 }
 
 .wish-name {
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   color: var(--foreground);
   font-weight: bold;
 }
 
 .wish-meta {
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   color: var(--foreground);
   font-size: 0.875rem;
 }
@@ -589,7 +651,7 @@ p {
 .btn-approve {
   background-color: #d97706;
   border-color: #d97706;
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
 }
 
 .btn-approve:hover {
@@ -600,7 +662,7 @@ p {
 .btn-reject {
   background-color: var(--accent);
   border-color: var(--accent);
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
 }
 
 .btn-reject:hover {
@@ -611,7 +673,7 @@ p {
 .btn-delete {
   border-color: var(--accent);
   color: var(--accent);
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
 }
 
 .btn-delete:hover {
@@ -621,7 +683,7 @@ p {
 }
 
 .no-wishes {
-  font-family: "Playfair Display", serif;
+  font-family: var(--secondary-font);
   color: var(--foreground);
 }
 
