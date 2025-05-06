@@ -11,7 +11,7 @@ const LoveStory = ({ text }) => {
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
       <h2 className="h2 text-center mb-4">
-        <FontAwesomeIcon icon={faHeart} className="text-danger me-2" />
+        <FontAwesomeIcon icon={faHeart} className="me-2" />
         Chuyện Tình Yêu
       </h2>
       <div className="text-center">
