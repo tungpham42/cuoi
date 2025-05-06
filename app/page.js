@@ -5,6 +5,13 @@ import { auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHeart,
+  faEnvelope,
+  faCamera,
+  faListCheck,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function HomePage() {
   const router = useRouter();
@@ -47,6 +54,7 @@ export default function HomePage() {
               </h3>
               <Link href="/login">
                 <Button className="btn-primary fs-5 px-4">
+                  <FontAwesomeIcon icon={faHeart} className="me-2" />
                   Bắt Đầu Lên Kế Hoạch Ngay
                 </Button>
               </Link>
@@ -57,6 +65,7 @@ export default function HomePage() {
               <Card className="card h-100 text-center">
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
+                    <FontAwesomeIcon icon={faEnvelope} className="me-2" />
                     Thiệp Mời Thanh Lịch
                   </Card.Title>
                   <Card.Text>
@@ -70,6 +79,7 @@ export default function HomePage() {
               <Card className="card h-100 text-center">
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
+                    <FontAwesomeIcon icon={faCamera} className="me-2" />
                     Khoảnh Khắc Đáng Nhớ
                   </Card.Title>
                   <Card.Text>
@@ -83,6 +93,7 @@ export default function HomePage() {
               <Card className="card h-100 text-center">
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
+                    <FontAwesomeIcon icon={faListCheck} className="me-2" />
                     Lên Kế Hoạch Mượt Mà
                   </Card.Title>
                   <Card.Text>

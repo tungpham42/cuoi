@@ -5,10 +5,13 @@ import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { Button, Container, Card, Spinner } from "react-bootstrap";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 export default function LoginPage() {
-  const [user, setUser] = useState(null); // Trạng thái theo dõi người dùng
-  const [loading, setLoading] = useState(true); // Trạng thái xử lý tải
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -38,7 +41,7 @@ export default function LoginPage() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setUser(null); // Xóa trạng thái người dùng khi đăng xuất
+      setUser(null);
       router.push("/");
     } catch (error) {
       console.error("Đăng xuất thất bại:", error);
@@ -59,17 +62,16 @@ export default function LoginPage() {
             createdAt: serverTimestamp(),
           });
         }
-        setUser(user); // Cập nhật trạng thái người dùng
+        setUser(user);
       } else {
-        setUser(null); // Xóa trạng thái nếu không xác thực
+        setUser(null);
       }
-      setLoading(false); // Hoàn tất tải
+      setLoading(false);
     });
 
-    return () => unsubscribe(); // Dọn dẹp subscription
+    return () => unsubscribe();
   }, []);
 
-  // Xử lý tải ban đầu
   if (loading) {
     return (
       <Container
@@ -98,6 +100,7 @@ export default function LoginPage() {
           {user ? (
             <div className="d-flex flex-column align-items-center">
               <div className="d-flex align-items-center mb-3">
+                <FontAwesomeIcon icon={faUserCircle} className="me-2" />
                 <span className="login-user-greeting">
                   Xin chào, {user.displayName}
                 </span>
@@ -108,6 +111,7 @@ export default function LoginPage() {
                 onClick={handleLogout}
                 className="btn-logout login-button"
               >
+                <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
                 Đăng Xuất
               </Button>
             </div>
@@ -122,22 +126,7 @@ export default function LoginPage() {
                 onClick={handleLogin}
                 className="btn-primary login-button"
               >
-                <svg
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="me-2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  ></path>
-                </svg>
+                <FontAwesomeIcon icon={faGoogle} className="me-2" />
                 Đăng Nhập Với Google
               </Button>
             </div>

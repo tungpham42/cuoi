@@ -1,9 +1,12 @@
+"use client";
 import React from "react";
 import { Card, Container, Image } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQrcode, faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
 
 const QRCode = ({ bankInfo }) => {
   const defaultBankInfo = {
-    bankName: bankInfo?.bankName || "VCB", // use bank code like "VCB" for Vietcombank
+    bankName: bankInfo?.bankName || "VCB",
     accountNumber: bankInfo?.accountNumber || "1234567890",
     accountHolder: bankInfo?.accountHolder || "Nguyen Van A",
     amount: bankInfo?.amount || "500000",
@@ -38,6 +41,7 @@ const QRCode = ({ bankInfo }) => {
               color: "#9F1239",
             }}
           >
+            <FontAwesomeIcon icon={faQrcode} className="me-2" />
             Quét mã QR để gửi tiền mừng:
           </p>
           <div className="mb-3">
@@ -45,6 +49,7 @@ const QRCode = ({ bankInfo }) => {
           </div>
           <div className="text-center">
             <p>
+              <FontAwesomeIcon icon={faMoneyBillWave} className="me-2" />
               <strong>Ngân hàng:</strong> {defaultBankInfo.bankName}
             </p>
             <p>

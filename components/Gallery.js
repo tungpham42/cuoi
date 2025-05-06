@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { Carousel, Image } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImages } from "@fortawesome/free-solid-svg-icons";
 
 const Gallery = ({ images }) => {
   if (!images || images.length === 0) return null;
@@ -9,7 +11,10 @@ const Gallery = ({ images }) => {
     <section className="wedding-section my-5 py-5 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
-      <h2 className="h2 text-center mb-4">Bộ ảnh cưới</h2>
+      <h2 className="h2 text-center mb-4">
+        <FontAwesomeIcon icon={faImages} className="me-2" />
+        Bộ ảnh cưới
+      </h2>
       <Carousel>
         {images.map((img, index) => (
           <Carousel.Item key={index}>
@@ -19,7 +24,7 @@ const Gallery = ({ images }) => {
               alt={`Ảnh cưới ${index + 1}`}
               style={{
                 maxHeight: "600px",
-                objectFit: "contain", // Changed from "cover" to "contain"
+                objectFit: "contain",
                 borderRadius: "10px",
               }}
             />

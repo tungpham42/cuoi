@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Countdown({ weddingDate }) {
   const [timeLeft, setTimeLeft] = useState({});
@@ -47,9 +49,13 @@ export default function Countdown({ weddingDate }) {
       <div className="decorative-corner-bottom"></div>
       <h3 className="h3 mb-3">Đếm ngược tới ngày cưới</h3>
       {isTimeUp ? (
-        <p>Chúc mừng! Ngày cưới đã đến!</p>
+        <p>
+          <FontAwesomeIcon icon={faCheckCircle} className="me-2" />
+          Chúc mừng! Ngày cưới đã đến!
+        </p>
       ) : (
         <p>
+          <FontAwesomeIcon icon={faClock} className="me-2" />
           {timeLeft.days || 0} ngày {timeLeft.hours || 0} giờ{" "}
           {timeLeft.minutes || 0} phút {timeLeft.seconds || 0} giây
         </p>

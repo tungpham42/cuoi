@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGift, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const WishForm = ({ onSubmit }) => {
   const [name, setName] = useState("");
@@ -28,7 +30,10 @@ const WishForm = ({ onSubmit }) => {
     <section className="wedding-section my-5 py-5 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
-      <h2 className="h2 text-center mb-4">Gửi lời chúc</h2>
+      <h2 className="h2 text-center mb-4">
+        <FontAwesomeIcon icon={faGift} className="me-2" />
+        Gửi lời chúc
+      </h2>
       <Form className="mx-auto px-3">
         {status === "success" && (
           <Alert variant="success">Cảm ơn bạn đã gửi lời chúc!</Alert>
@@ -57,6 +62,7 @@ const WishForm = ({ onSubmit }) => {
         </Form.Group>
         <div className="text-center">
           <Button variant="primary" type="submit" onClick={handleSubmit}>
+            <FontAwesomeIcon icon={faPaperPlane} className="me-2" />
             Gửi lời chúc
           </Button>
         </div>

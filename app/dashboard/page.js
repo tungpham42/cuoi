@@ -28,7 +28,7 @@ import { db, auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { slugify } from "@/utils/slug";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadImageToCloudinary } from "@/utils/cloudinary";
 import WeddingPreviewCard from "@/components/WeddingPreviewCard";
 import {
   DndContext,
@@ -44,6 +44,21 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSave,
+  faEye,
+  faSignOutAlt,
+  faUser,
+  faCalendarAlt,
+  faMapMarkerAlt,
+  faPalette,
+  faHeart,
+  faImages,
+  faMoneyBillWave,
+  faCommentDots,
+  faSort,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const dynamic = "force-dynamic";
 
@@ -326,7 +341,7 @@ export default function DashboardPage() {
     setError("");
     try {
       const uploadPromises = files.map(async (file) => {
-        const result = await uploadToCloudinary(file);
+        const result = await uploadImageToCloudinary(file);
         if (result && result.secure_url) {
           return {
             public_id: result.public_id,
@@ -504,6 +519,7 @@ export default function DashboardPage() {
             onClick={handleLogout}
             className="btn-logout"
           >
+            <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
             Đăng xuất
           </Button>
         </div>
@@ -546,7 +562,10 @@ export default function DashboardPage() {
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label className="form-label">Cô dâu</Form.Label>
+                    <Form.Label className="form-label">
+                      <FontAwesomeIcon icon={faUser} className="me-2" />
+                      Cô dâu
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       name="brideName"
@@ -557,7 +576,10 @@ export default function DashboardPage() {
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label className="form-label">Chú rể</Form.Label>
+                    <Form.Label className="form-label">
+                      <FontAwesomeIcon icon={faUser} className="me-2" />
+                      Chú rể
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       name="groomName"
@@ -584,7 +606,10 @@ export default function DashboardPage() {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label className="form-label">Ngày cưới</Form.Label>
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+                  Ngày cưới
+                </Form.Label>
                 <Form.Control
                   type="date"
                   name="weddingDate"
@@ -594,7 +619,10 @@ export default function DashboardPage() {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label className="form-label">Địa điểm</Form.Label>
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
+                  Địa điểm
+                </Form.Label>
                 <Form.Control
                   type="text"
                   name="location"
@@ -604,7 +632,10 @@ export default function DashboardPage() {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label className="form-label">Chủ đề</Form.Label>
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faPalette} className="me-2" />
+                  Chủ đề
+                </Form.Label>
                 <FormSelect
                   name="theme"
                   value={form.theme}
@@ -619,7 +650,10 @@ export default function DashboardPage() {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label className="form-label">Chuyện tình yêu</Form.Label>
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faHeart} className="me-2" />
+                  Chuyện tình yêu
+                </Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={4}
@@ -630,7 +664,10 @@ export default function DashboardPage() {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label className="form-label">Thư viện ảnh</Form.Label>
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faImages} className="me-2" />
+                  Thư viện ảnh
+                </Form.Label>
                 <Form.Control
                   type="file"
                   accept="image/*"
@@ -678,7 +715,10 @@ export default function DashboardPage() {
                 )}
               </Form.Group>
 
-              <h3 className="section-heading">Thông tin chuyển khoản</h3>
+              <h3 className="section-heading">
+                <FontAwesomeIcon icon={faMoneyBillWave} className="me-2" />
+                Thông tin chuyển khoản
+              </h3>
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
@@ -813,7 +853,10 @@ export default function DashboardPage() {
                 </Col>
               </Row>
 
-              <h3 className="section-heading">Sắp xếp thành phần</h3>
+              <h3 className="section-heading">
+                <FontAwesomeIcon icon={faSort} className="me-2" />
+                Sắp xếp thành phần
+              </h3>
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -833,7 +876,10 @@ export default function DashboardPage() {
                 </SortableContext>
               </DndContext>
 
-              <h3 className="section-heading">Quản lý lời chúc</h3>
+              <h3 className="section-heading">
+                <FontAwesomeIcon icon={faCommentDots} className="me-2" />
+                Quản lý lời chúc
+              </h3>
               {wishes.length > 0 ? (
                 <ListGroup className="mb-4">
                   {wishes.map((wish) => (
@@ -891,6 +937,7 @@ export default function DashboardPage() {
                   disabled={uploading || !!slugError}
                   className="btn-save"
                 >
+                  <FontAwesomeIcon icon={faSave} className="me-2" />
                   Lưu thông tin
                 </Button>
                 <Button
@@ -899,6 +946,7 @@ export default function DashboardPage() {
                   disabled={uploading || !form.slug || !!slugError}
                   className="btn-redirect"
                 >
+                  <FontAwesomeIcon icon={faEye} className="me-2" />
                   Xem trang cưới
                 </Button>
               </div>
