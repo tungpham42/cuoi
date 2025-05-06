@@ -10,7 +10,6 @@ import {
   Alert,
   ListGroup,
   Image,
-  FormSelect,
   Card,
 } from "react-bootstrap";
 import {
@@ -29,7 +28,7 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { slugify } from "@/utils/slug";
 import { uploadImageToCloudinary } from "@/utils/cloudinary";
-import WeddingPreviewCard from "@/components/WeddingPreviewCard";
+import WeddingPreviewPane from "@/components/WeddingPreviewPane";
 import {
   DndContext,
   closestCenter,
@@ -43,7 +42,6 @@ import {
   useSortable,
   arrayMove,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSave,
@@ -68,16 +66,16 @@ const SortableItem = ({ id, label }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
   return (
     <div
       ref={setNodeRef}
       className="sortable-item"
-      style={style}
+      style={{
+        transform: transform
+          ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+          : undefined,
+        transition,
+      }}
       {...attributes}
       {...listeners}
     >
@@ -86,6 +84,49 @@ const SortableItem = ({ id, label }) => {
     </div>
   );
 };
+
+const ThemePreview = ({ theme, isSelected, onSelect }) => (
+  <div
+    className={`card mb-2 ${isSelected ? "border-2 border-primary" : ""}`}
+    style={{
+      background: `linear-gradient(to bottom right, var(--gradient-start), var(--gradient-end))`,
+      border: `var(--card-border)`,
+      boxShadow: `0 2px 10px var(--shadow-color)`,
+      padding: "10px",
+      cursor: "pointer",
+    }}
+    data-theme={theme.value}
+    onClick={() => onSelect(theme.value)}
+  >
+    <div
+      style={{
+        color: `var(--foreground)`,
+        fontFamily: '"Playfair Display", serif',
+        fontSize: "14px",
+      }}
+    >
+      {theme.label}
+    </div>
+  </div>
+);
+
+const FontPreview = ({ font, isSelected, isPrimary, onSelect }) => (
+  <div
+    className={`card mb-2 ${isSelected ? "border-2 border-primary" : ""}`}
+    style={{
+      fontFamily: `"${font.value}", ${isPrimary ? "cursive" : "serif"}`,
+      padding: "10px",
+      border: `var(--card-border)`,
+      boxShadow: `0 2px 10px var(--shadow-color)`,
+      cursor: "pointer",
+    }}
+    onClick={() => onSelect(font.value)}
+  >
+    <div style={{ fontSize: "16px", color: `var(--foreground)` }}>
+      {font.label}
+    </div>
+  </div>
+);
 
 function useAuth() {
   const [user, setUser] = useState(null);
@@ -351,6 +392,18 @@ export default function DashboardPage() {
     }
   };
 
+  const handleSelectTheme = (themeValue) => {
+    setForm((prev) => ({ ...prev, theme: themeValue }));
+  };
+
+  const handleSelectPrimaryFont = (fontValue) => {
+    setForm((prev) => ({ ...prev, primaryFont: fontValue }));
+  };
+
+  const handleSelectSecondaryFont = (fontValue) => {
+    setForm((prev) => ({ ...prev, secondaryFont: fontValue }));
+  };
+
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -564,13 +617,19 @@ export default function DashboardPage() {
                 variant="success"
                 onClose={() => setShowSuccess(false)}
                 dismissible
+                className="alert"
               >
                 🎉 Thông tin đã được lưu thành công!
               </Alert>
             )}
 
             {error && (
-              <Alert variant="danger" onClose={() => setError("")} dismissible>
+              <Alert
+                variant="danger"
+                onClose={() => setError("")}
+                dismissible
+                className="alert"
+              >
                 {error}
               </Alert>
             )}
@@ -580,6 +639,7 @@ export default function DashboardPage() {
                 variant="danger"
                 onClose={() => setSlugError("")}
                 dismissible
+                className="alert"
               >
                 {slugError}
               </Alert>
@@ -598,6 +658,7 @@ export default function DashboardPage() {
                       name="brideName"
                       value={form.brideName}
                       onChange={handleChange}
+                      className="form-control"
                     />
                   </Form.Group>
                 </Col>
@@ -612,6 +673,7 @@ export default function DashboardPage() {
                       name="groomName"
                       value={form.groomName}
                       onChange={handleChange}
+                      className="form-control"
                     />
                   </Form.Group>
                 </Col>
@@ -645,6 +707,7 @@ export default function DashboardPage() {
                   name="weddingDate"
                   value={form.weddingDate}
                   onChange={handleChange}
+                  className="form-control"
                 />
               </Form.Group>
 
@@ -658,6 +721,7 @@ export default function DashboardPage() {
                   name="location"
                   value={form.location}
                   onChange={handleChange}
+                  className="form-control"
                 />
               </Form.Group>
 
@@ -666,17 +730,16 @@ export default function DashboardPage() {
                   <FontAwesomeIcon icon={faPalette} className="me-2" />
                   Chủ đề
                 </Form.Label>
-                <FormSelect
-                  name="theme"
-                  value={form.theme}
-                  onChange={handleChange}
-                >
+                <div className="mt-2">
                   {themes.map((theme) => (
-                    <option key={theme.value} value={theme.value}>
-                      {theme.label}
-                    </option>
+                    <ThemePreview
+                      key={theme.value}
+                      theme={theme}
+                      isSelected={form.theme === theme.value}
+                      onSelect={handleSelectTheme}
+                    />
                   ))}
-                </FormSelect>
+                </div>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -684,17 +747,17 @@ export default function DashboardPage() {
                   <FontAwesomeIcon icon={faFont} className="me-2" />
                   Font chính (Cursive)
                 </Form.Label>
-                <FormSelect
-                  name="primaryFont"
-                  value={form.primaryFont}
-                  onChange={handleChange}
-                >
+                <div className="mt-2">
                   {primaryFonts.map((font) => (
-                    <option key={font.value} value={font.value}>
-                      {font.label}
-                    </option>
+                    <FontPreview
+                      key={font.value}
+                      font={font}
+                      isSelected={form.primaryFont === font.value}
+                      isPrimary={true}
+                      onSelect={handleSelectPrimaryFont}
+                    />
                   ))}
-                </FormSelect>
+                </div>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -702,17 +765,17 @@ export default function DashboardPage() {
                   <FontAwesomeIcon icon={faFont} className="me-2" />
                   Font phụ (Serif)
                 </Form.Label>
-                <FormSelect
-                  name="secondaryFont"
-                  value={form.secondaryFont}
-                  onChange={handleChange}
-                >
+                <div className="mt-2">
                   {secondaryFonts.map((font) => (
-                    <option key={font.value} value={font.value}>
-                      {font.label}
-                    </option>
+                    <FontPreview
+                      key={font.value}
+                      font={font}
+                      isSelected={form.secondaryFont === font.value}
+                      isPrimary={false}
+                      onSelect={handleSelectSecondaryFont}
+                    />
                   ))}
-                </FormSelect>
+                </div>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -726,6 +789,7 @@ export default function DashboardPage() {
                   name="loveStory"
                   value={form.loveStory}
                   onChange={handleChange}
+                  className="form-control"
                 />
               </Form.Group>
 
@@ -740,6 +804,7 @@ export default function DashboardPage() {
                   multiple
                   onChange={handleImageUpload}
                   disabled={uploading}
+                  className="form-control"
                 />
                 {uploading && (
                   <Spinner
@@ -796,6 +861,7 @@ export default function DashboardPage() {
                       name="bankInfo.bankName"
                       value={form.bankInfo.bankName}
                       onChange={handleChange}
+                      className="form-control"
                     />
                   </Form.Group>
                 </Col>
@@ -807,6 +873,7 @@ export default function DashboardPage() {
                       name="bankInfo.accountNumber"
                       value={form.bankInfo.accountNumber}
                       onChange={handleChange}
+                      className="form-control"
                     />
                   </Form.Group>
                 </Col>
@@ -822,6 +889,7 @@ export default function DashboardPage() {
                       name="bankInfo.accountHolder"
                       value={form.bankInfo.accountHolder}
                       onChange={handleChange}
+                      className="form-control"
                     />
                   </Form.Group>
                 </Col>
@@ -835,6 +903,7 @@ export default function DashboardPage() {
                       name="bankInfo.amount"
                       value={form.bankInfo.amount}
                       onChange={handleChange}
+                      className="form-control"
                     />
                   </Form.Group>
                 </Col>
@@ -848,6 +917,7 @@ export default function DashboardPage() {
                   name="bankInfo.description"
                   value={form.bankInfo.description}
                   onChange={handleChange}
+                  className="form-control"
                 />
               </Form.Group>
 
@@ -1023,7 +1093,7 @@ export default function DashboardPage() {
           </Card.Body>
         </Card>
       </Container>
-      <WeddingPreviewCard form={form} wishes={approvedWishes} />
+      <WeddingPreviewPane form={form} wishes={approvedWishes} />
     </>
   );
 }

@@ -32,7 +32,7 @@ const SortableComponent = ({ id, children, disabled }) => {
   );
 };
 
-const WeddingPreviewCard = ({ form, wishes }) => {
+const WeddingPreviewPane = ({ form, wishes }) => {
   const componentOrder = form.componentOrder || [
     "WeddingHeader",
     "Countdown",
@@ -125,4 +125,4 @@ const WeddingPreviewCard = ({ form, wishes }) => {
   );
 };
 
-export default WeddingPreviewCard;
+export default WeddingPreviewPane;
