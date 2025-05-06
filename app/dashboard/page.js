@@ -80,6 +80,7 @@ const SortableItem = ({ id, label }) => {
       {...attributes}
       {...listeners}
     >
+      <FontAwesomeIcon icon={faSort} className="me-3" />
       {label}
     </div>
   );
