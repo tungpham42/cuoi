@@ -227,7 +227,7 @@ export default function DashboardPage() {
     { value: "Lora", label: "Lora" },
     { value: "Merriweather", label: "Merriweather" },
     { value: "Playfair Display", label: "Playfair Display" },
-    { value: "Georgia", label: "Georgia" },
+    { value: "EB Garamond", label: "EB Garamond" },
     { value: "Times New Roman", label: "Times New Roman" },
     { value: "Crimson Text", label: "Crimson Text" },
     { value: "Old Standard TT", label: "Old Standard TT" },
