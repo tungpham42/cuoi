@@ -121,7 +121,7 @@ export default function LoginPage() {
                       className="login-icon mb-3"
                     />
                     <h3 className="login-heading mb-3">
-                      Bắt Đầu Lên Kế Hoạch Đám Cưới
+                      Bắt Đầu Tạo Trang Đám Cưới
                     </h3>
                     <p className="login-text mb-4">
                       Đăng nhập để tạo thiệp mời cá nhân hóa, quản lý ảnh, lời
