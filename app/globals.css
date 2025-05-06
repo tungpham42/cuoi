@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lovers+Quarrel&family=Roboto+Slab:wght@400;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Great+Vibes&family=Lovers+Quarrel&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto+Slab:wght@100..900&display=swap");
 
 /*
   Font choices rationale (and considerations for Vietnamese support):
@@ -42,7 +42,7 @@
   --shadow-color: rgba(0, 0, 0, 0.05);
 
   /* Modern font pairing - Roboto Slab for a bit more modern feel */
-  --primary-font: "Lovers Quarrel", cursive;
+  --primary-font: "Dancing Script", cursive;
   --secondary-font: "Roboto Slab", serif;
 }
 
@@ -87,7 +87,7 @@
   --card-border: 1px solid var(--border-color);
 
   /* Elegant font pairing */
-  --primary-font: "Great Vibes", cursive;
+  --primary-font: "Dancing Script", cursive;
   --secondary-font: "Playfair Display", serif;
 }
 
@@ -117,7 +117,7 @@
   --card-border: 1px solid var(--border-color);
 
   /* Bohemian font pairing */
-  --primary-font: "Great Vibes", cursive;
+  --primary-font: "Dancing Script", cursive;
   --secondary-font: "Roboto Slab", serif;
 }
 
