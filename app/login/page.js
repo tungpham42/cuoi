@@ -78,9 +78,9 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <Container fluid className="loading-container">
-        <Spinner animation="border" className="login-icon" />
-        <span className="loading-text">Đang tải...</span>
+      <Container fluid className="loading-container text-center">
+        <Spinner animation="border" className="login-icon" variant="danger" />
+        <span className="loading-text fs-4">Đang tải...</span>
       </Container>
     );
   }
@@ -98,10 +98,10 @@ export default function LoginPage() {
                     <FontAwesomeIcon
                       icon={faUserCircle}
                       size="3x"
-                      className="login-icon"
+                      className="login-icon mb-3"
                     />
                     <h4 className="login-user-greeting mb-4">
-                      Xin chào, {user.displayName}
+                      Chào mừng, {user.displayName}
                     </h4>
                     <Button
                       variant="outline-danger"
@@ -118,14 +118,14 @@ export default function LoginPage() {
                     <FontAwesomeIcon
                       icon={faHeart}
                       size="3x"
-                      className="login-icon"
+                      className="login-icon mb-3"
                     />
-                    <h3 className="login-heading">
-                      Bắt Đầu Hành Trình Tình Yêu
+                    <h3 className="login-heading mb-3">
+                      Bắt Đầu Lên Kế Hoạch Đám Cưới
                     </h3>
-                    <p className="login-text">
-                      Đăng nhập để lên kế hoạch cho ngày cưới hoặc sự kiện đặc
-                      biệt của bạn với sự tinh tế và dễ dàng.
+                    <p className="login-text mb-4">
+                      Đăng nhập để tạo thiệp mời cá nhân hóa, quản lý ảnh, lời
+                      chúc, và thông tin khác cho ngày cưới trong mơ của bạn.
                     </p>
                     <Button
                       variant="primary"

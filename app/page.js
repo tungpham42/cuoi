@@ -35,20 +35,22 @@ export default function HomePage() {
       {isLoading ? (
         <div className="loading-container">
           <div className="loading-text fs-1">
-            Chuẩn bị cho sự kiện đặc biệt của bạn...
+            Chuẩn bị cho ngày đặc biệt của bạn...
           </div>
         </div>
       ) : (
-        <Container className="event-section my-5 p-5 position-relative">
+        <Container className="wedding-section my-5 p-5 position-relative">
           <div className="decorative-corner-top" />
           <div className="decorative-corner-bottom" />
           <Row className="justify-content-center text-center mb-5">
             <Col md={8}>
-              <h1 className="display-3 mb-4">Tạo Sự Kiện Đặc Biệt Của Bạn</h1>
+              <h1 className="display-3 mb-4">
+                Chào Mừng Đến Với Đám Cưới Trong Mơ
+              </h1>
               <h3 className="mb-4">
-                Lên kế hoạch cho sự kiện của bạn với sự tinh tế và dễ dàng. Tùy
-                chỉnh thiệp mời, chia sẻ khoảnh khắc, và quản lý mọi chi tiết để
-                tạo nên một trải nghiệm khó quên.
+                Tạo dựng một trang cưới độc đáo với thiệp mời cá nhân hóa, quản
+                lý khoảnh khắc đáng nhớ, và tổ chức mọi chi tiết một cách tinh
+                tế và dễ dàng.
               </h3>
               <Link href="/login">
                 <Button className="btn-primary fs-5 px-4">
@@ -64,11 +66,11 @@ export default function HomePage() {
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
                     <FontAwesomeIcon icon={faEnvelope} className="me-2" />
-                    Thiệp Mời Tùy Chỉnh
+                    Thiệp Mời Độc Đáo
                   </Card.Title>
                   <Card.Text>
-                    Thiết kế thiệp mời độc đáo với các chủ đề và phông chữ cá
-                    nhân hóa để tạo ấn tượng cho sự kiện của bạn.
+                    Thiết kế thiệp mời riêng biệt với các chủ đề, phông chữ và
+                    màu sắc tùy chỉnh để tạo dấu ấn cho ngày trọng đại.
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -81,8 +83,8 @@ export default function HomePage() {
                     Lưu Giữ Kỷ Niệm
                   </Card.Title>
                   <Card.Text>
-                    Tải lên và chia sẻ bộ sưu tập ảnh để lưu giữ những khoảnh
-                    khắc đáng nhớ của sự kiện.
+                    Tải lên và quản lý bộ sưu tập ảnh để lưu giữ và chia sẻ
+                    những khoảnh khắc đẹp nhất của bạn.
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -92,11 +94,11 @@ export default function HomePage() {
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
                     <FontAwesomeIcon icon={faListCheck} className="me-2" />
-                    Quản Lý Toàn Diện
+                    Quản Lý Thông Minh
                   </Card.Title>
                   <Card.Text>
-                    Sắp xếp các thành phần, quản lý lời chúc, và tích hợp thông
-                    tin chuyển khoản với bảng điều khiển thông minh.
+                    Tổ chức thông tin chuyển khoản, lời chúc và các thành phần
+                    sự kiện với bảng điều khiển tiện lợi và dễ sử dụng.
                   </Card.Text>
                 </Card.Body>
               </Card>
