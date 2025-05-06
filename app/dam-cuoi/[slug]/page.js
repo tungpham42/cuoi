@@ -185,7 +185,7 @@ export default function WeddingPage({ params }) {
   }
 
   return (
-    <Container fluid className="py-5" data-theme={weddingData.theme}>
+    <Container fluid className="p-0" data-theme={weddingData.theme}>
       <style
         dangerouslySetInnerHTML={{
           __html: `
