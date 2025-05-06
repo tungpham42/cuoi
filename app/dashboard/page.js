@@ -59,6 +59,7 @@ import {
   faCommentDots,
   faSort,
   faLink,
+  faFont,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const dynamic = "force-dynamic";
@@ -149,6 +150,8 @@ export default function DashboardPage() {
       "WishForm",
       "WishList",
     ],
+    primaryFont: "Dancing Script",
+    secondaryFont: "Lora",
   });
   const [wishes, setWishes] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -165,6 +168,24 @@ export default function DashboardPage() {
     { value: "bohemian", label: "Bohemian" },
     { value: "classic", label: "Classic" },
     { value: "floral", label: "Floral" },
+  ];
+
+  const primaryFonts = [
+    { value: "Dancing Script", label: "Dancing Script" },
+    { value: "Great Vibes", label: "Great Vibes" },
+    { value: "Playwrite Danmark Loopet", label: "Playwrite Danmark Loopet" },
+    { value: "Ms Madi", label: "Ms Madi" },
+    { value: "Borel", label: "Borel" },
+    { value: "Send Flowers", label: "Send Flowers" },
+  ];
+
+  const secondaryFonts = [
+    { value: "Lora", label: "Lora" },
+    { value: "Merriweather", label: "Merriweather" },
+    { value: "Playfair Display", label: "Playfair Display" },
+    { value: "Georgia", label: "Georgia" },
+    { value: "Times New Roman", label: "Times New Roman" },
+    { value: "Crimson Text", label: "Crimson Text" },
   ];
 
   const componentLabels = {
@@ -268,6 +289,8 @@ export default function DashboardPage() {
                 "WishForm",
                 "WishList",
               ],
+              primaryFont: data.primaryFont || "Dancing Script",
+              secondaryFont: data.secondaryFont || "Lora",
             });
           }
 
@@ -651,6 +674,42 @@ export default function DashboardPage() {
                   {themes.map((theme) => (
                     <option key={theme.value} value={theme.value}>
                       {theme.label}
+                    </option>
+                  ))}
+                </FormSelect>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faFont} className="me-2" />
+                  Font chính (Cursive)
+                </Form.Label>
+                <FormSelect
+                  name="primaryFont"
+                  value={form.primaryFont}
+                  onChange={handleChange}
+                >
+                  {primaryFonts.map((font) => (
+                    <option key={font.value} value={font.value}>
+                      {font.label}
+                    </option>
+                  ))}
+                </FormSelect>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label className="form-label">
+                  <FontAwesomeIcon icon={faFont} className="me-2" />
+                  Font phụ (Serif)
+                </Form.Label>
+                <FormSelect
+                  name="secondaryFont"
+                  value={form.secondaryFont}
+                  onChange={handleChange}
+                >
+                  {secondaryFonts.map((font) => (
+                    <option key={font.value} value={font.value}>
+                      {font.label}
                     </option>
                   ))}
                 </FormSelect>

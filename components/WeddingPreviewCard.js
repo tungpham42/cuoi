@@ -75,7 +75,34 @@ const WeddingPreviewCard = ({ form, wishes }) => {
 
   return (
     <Container fluid className="py-5" data-theme={form.theme}>
-      <Card className="shadow-lg border-0 mx-auto">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        .wedding-preview,
+        .wedding-preview p,
+        .wedding-preview span {
+        font-family: "${form.secondaryFont || "Lora"}", serif !important;
+        }
+        .wedding-preview h1,
+        .wedding-preview h2,
+        .wedding-preview h3,
+        .wedding-preview h4,
+        .wedding-preview h5,
+        .wedding-preview h6,
+        .wedding-preview .h1,
+        .wedding-preview .h2,
+        .wedding-preview .h3,
+        .wedding-preview .h4,
+        .wedding-preview .h5,
+        .wedding-preview .h6 {
+        font-family: "${
+          form.primaryFont || "Dancing Script"
+        }", cursive !important;
+        }
+      `,
+        }}
+      />
+      <Card className="shadow-lg border-0 mx-auto wedding-preview">
         <Card.Title className="text-center mt-4 h2">
           Xem trước giao diện đám cưới
         </Card.Title>
