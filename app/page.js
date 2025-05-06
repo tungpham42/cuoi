@@ -55,7 +55,7 @@ export default function HomePage() {
               <Link href="/login">
                 <Button className="btn-primary fs-5 px-4">
                   <FontAwesomeIcon icon={faHeart} className="me-2" />
-                  Bắt Đầu Lên Kế Hoạch Ngay
+                  Bắt Đầu Tạo Trang Cưới Ngay
                 </Button>
               </Link>
             </Col>
