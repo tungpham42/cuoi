@@ -327,6 +327,11 @@ p {
   opacity: 1 !important;
 }
 
+.carousel-control-prev:hover span.carousel-control-prev-icon::after,
+.carousel-control-next:hover span.carousel-control-next-icon::after {
+  color: var(--accent) !important;
+}
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-image: none !important;
