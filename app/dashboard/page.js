@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Container,
   Form,
@@ -11,6 +11,7 @@ import {
   ListGroup,
   Image,
   Card,
+  Dropdown as BootstrapDropdown,
 } from "react-bootstrap";
 import {
   doc,
@@ -87,11 +88,11 @@ const SortableItem = ({ id, label }) => {
 
 const ThemePreview = ({ theme }) => (
   <div
-    className="card mb-2"
+    className="card mb-2 w-100"
     style={{
       background: `linear-gradient(to bottom right, var(--gradient-start), var(--gradient-end))`,
       border: `var(--card-border)`,
-      boxShadow: `itif 2px 10px var(--shadow-color)`,
+      boxShadow: `0 2px 10px var(--shadow-color)`,
       padding: "10px",
     }}
     data-theme={theme.value}
@@ -110,7 +111,7 @@ const ThemePreview = ({ theme }) => (
 
 const FontPreview = ({ font, isPrimary }) => (
   <div
-    className="card mb-2"
+    className="card mb-2 w-100"
     style={{
       fontFamily: `"${font.value}", ${isPrimary ? "cursive" : "serif"}`,
       padding: "10px",
@@ -123,6 +124,82 @@ const FontPreview = ({ font, isPrimary }) => (
     </div>
   </div>
 );
+
+// Custom Dropdown Component
+const CustomDropdown = ({
+  name,
+  value,
+  options,
+  onChange,
+  previewComponent: PreviewComponent,
+  isPrimary = false,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (optionValue) => {
+    onChange({ target: { name, value: optionValue } });
+    setIsOpen(false);
+  };
+
+  const selectedOption =
+    options.find((option) => option.value === value) || options[0];
+
+  return (
+    <div className="custom-dropdown" ref={dropdownRef}>
+      <Form.Label className="form-label">
+        <FontAwesomeIcon icon={faFont} className="me-2" />
+        {name === "theme"
+          ? "Chủ đề"
+          : name === "primaryFont"
+          ? "Font tiêu đề (Cursive)"
+          : "Font nội dung (Serif)"}
+      </Form.Label>
+      <div className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
+        <PreviewComponent
+          theme={name === "theme" ? selectedOption : undefined}
+          font={name !== "theme" ? selectedOption : undefined}
+          isPrimary={isPrimary}
+        />
+      </div>
+      {isOpen && (
+        <div
+          className="dropdown-menu show"
+          style={{
+            maxHeight: "300px",
+            overflowY: "auto",
+            width: "fit-content",
+          }}
+        >
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className="dropdown-item"
+              onClick={() => handleSelect(option.value)}
+              style={{ cursor: "pointer" }}
+            >
+              <PreviewComponent
+                theme={name === "theme" ? option : undefined}
+                font={name !== "theme" ? option : undefined}
+                isPrimary={isPrimary}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 function useAuth() {
   const [user, setUser] = useState(null);
@@ -742,83 +819,37 @@ export default function DashboardPage() {
               <Row>
                 <Col md={4}>
                   <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      <FontAwesomeIcon icon={faPalette} className="me-2" />
-                      Chủ đề
-                    </Form.Label>
-                    <Form.Select
+                    <CustomDropdown
                       name="theme"
                       value={form.theme}
+                      options={themes}
                       onChange={handleChange}
-                      className="form-control"
-                    >
-                      {themes.map((theme) => (
-                        <option key={theme.value} value={theme.value}>
-                          {theme.label}
-                        </option>
-                      ))}
-                    </Form.Select>
-                    <div className="mt-2">
-                      <ThemePreview
-                        theme={themes.find((t) => t.value === form.theme)}
-                      />
-                    </div>
+                      previewComponent={ThemePreview}
+                    />
                   </Form.Group>
                 </Col>
                 <Col md={4}>
                   <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      <FontAwesomeIcon icon={faFont} className="me-2" />
-                      Font tiêu đề (Cursive)
-                    </Form.Label>
-                    <Form.Select
+                    <CustomDropdown
                       name="primaryFont"
                       value={form.primaryFont}
+                      options={primaryFonts}
                       onChange={handleChange}
-                      className="form-control"
-                    >
-                      {primaryFonts.map((font) => (
-                        <option key={font.value} value={font.value}>
-                          {font.label}
-                        </option>
-                      ))}
-                    </Form.Select>
-                    <div className="mt-2">
-                      <FontPreview
-                        font={primaryFonts.find(
-                          (f) => f.value === form.primaryFont
-                        )}
-                        isPrimary={true}
-                      />
-                    </div>
+                      previewComponent={FontPreview}
+                      isPrimary={true}
+                    />
                   </Form.Group>
                 </Col>
                 <Col md={4}>
                   <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      <FontAwesomeIcon icon={faFont} className="me-2" />
-                      Font nội dung (Serif)
-                    </Form.Label>
-                    <Form.Select
+                    <CustomDropdown
                       name="secondaryFont"
                       value={form.secondaryFont}
+                      options={secondaryFonts}
                       onChange={handleChange}
-                      className="form-control"
-                    >
-                      {secondaryFonts.map((font) => (
-                        <option key={font.value} value={font.value}>
-                          {font.label}
-                        </option>
-                      ))}
-                    </Form.Select>
-                    <div className="mt-2">
-                      <FontPreview
-                        font={secondaryFonts.find(
-                          (f) => f.value === form.secondaryFont
-                        )}
-                        isPrimary={false}
-                      />
-                    </div>
+                      previewComponent={FontPreview}
+                      isPrimary={false}
+                    />
                   </Form.Group>
                 </Col>
               </Row>

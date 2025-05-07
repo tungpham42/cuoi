@@ -872,3 +872,7 @@ p {
     transform: translateY(0);
   }
 }
+
+.custom-dropdown .dropdown-toggle:after {
+  display: none !important;
+}
