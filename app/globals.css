@@ -872,7 +872,19 @@ p {
     transform: translateY(0);
   }
 }
-
+.custom-dropdown .dropdown-toggle {
+  cursor: pointer !important;
+}
 .custom-dropdown .dropdown-toggle:after {
   display: none !important;
+}
+.custom-dropdown .dropdown-menu {
+  border: none !important;
+}
+.custom-dropdown .dropdown-item {
+  padding: 0 !important;
+}
+.custom-dropdown .dropdown-item.active,
+.custom-dropdown .dropdown-item:active {
+  background-color: none !important;
 }
