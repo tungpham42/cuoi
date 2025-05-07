@@ -88,7 +88,7 @@ const SortableItem = ({ id, label }) => {
 
 const ThemePreview = ({ theme }) => (
   <div
-    className="card mb-2 w-100"
+    className="card theme-preview mb-1 w-100"
     style={{
       background: `linear-gradient(to bottom right, var(--gradient-start), var(--gradient-end))`,
       border: `var(--card-border)`,
@@ -111,7 +111,7 @@ const ThemePreview = ({ theme }) => (
 
 const FontPreview = ({ font, isPrimary }) => (
   <div
-    className="card font-preview mb-2 w-100"
+    className="card font-preview mb-0 w-100"
     style={{
       fontFamily: `"${font.value}", ${isPrimary ? "cursive" : "serif"}`,
       padding: "10px",

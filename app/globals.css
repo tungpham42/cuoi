@@ -892,3 +892,6 @@ p {
   border: none !important;
   box-shadow: none !important;
 }
+.custom-dropdown .dropdown-item .card.theme-preview {
+  border-radius: 0 !important;
+}
