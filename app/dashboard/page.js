@@ -85,18 +85,16 @@ const SortableItem = ({ id, label }) => {
   );
 };
 
-const ThemePreview = ({ theme, isSelected, onSelect }) => (
+const ThemePreview = ({ theme }) => (
   <div
-    className={`card mb-2 ${isSelected ? "border-2 border-primary" : ""}`}
+    className="card mb-2"
     style={{
       background: `linear-gradient(to bottom right, var(--gradient-start), var(--gradient-end))`,
       border: `var(--card-border)`,
-      boxShadow: `0 2px 10px var(--shadow-color)`,
+      boxShadow: `itif 2px 10px var(--shadow-color)`,
       padding: "10px",
-      cursor: "pointer",
     }}
     data-theme={theme.value}
-    onClick={() => onSelect(theme.value)}
   >
     <div
       style={{
@@ -110,17 +108,15 @@ const ThemePreview = ({ theme, isSelected, onSelect }) => (
   </div>
 );
 
-const FontPreview = ({ font, isSelected, isPrimary, onSelect }) => (
+const FontPreview = ({ font, isPrimary }) => (
   <div
-    className={`card mb-2 ${isSelected ? "border-2 border-primary" : ""}`}
+    className="card mb-2"
     style={{
       fontFamily: `"${font.value}", ${isPrimary ? "cursive" : "serif"}`,
       padding: "10px",
       border: `var(--card-border)`,
       boxShadow: `0 2px 10px var(--shadow-color)`,
-      cursor: "pointer",
     }}
-    onClick={() => onSelect(font.value)}
   >
     <div style={{ fontSize: "16px", color: `var(--foreground)` }}>
       {font.label}
@@ -424,18 +420,6 @@ export default function DashboardPage() {
         [name]: type === "checkbox" ? checked : value,
       }));
     }
-  };
-
-  const handleSelectTheme = (themeValue) => {
-    setForm((prev) => ({ ...prev, theme: themeValue }));
-  };
-
-  const handleSelectPrimaryFont = (fontValue) => {
-    setForm((prev) => ({ ...prev, primaryFont: fontValue }));
-  };
-
-  const handleSelectSecondaryFont = (fontValue) => {
-    setForm((prev) => ({ ...prev, secondaryFont: fontValue }));
   };
 
   const handleImageUpload = async (e) => {
@@ -755,58 +739,85 @@ export default function DashboardPage() {
                   className="form-control"
                 />
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faPalette} className="me-2" />
-                  Chủ đề
-                </Form.Label>
-                <div className="mt-2">
-                  {themes.map((theme) => (
-                    <ThemePreview
-                      key={theme.value}
-                      theme={theme}
-                      isSelected={form.theme === theme.value}
-                      onSelect={handleSelectTheme}
-                    />
-                  ))}
-                </div>
-              </Form.Group>
               <Row>
-                <Col md={6}>
+                <Col md={4}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="form-label">
+                      <FontAwesomeIcon icon={faPalette} className="me-2" />
+                      Chủ đề
+                    </Form.Label>
+                    <Form.Select
+                      name="theme"
+                      value={form.theme}
+                      onChange={handleChange}
+                      className="form-control"
+                    >
+                      {themes.map((theme) => (
+                        <option key={theme.value} value={theme.value}>
+                          {theme.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    <div className="mt-2">
+                      <ThemePreview
+                        theme={themes.find((t) => t.value === form.theme)}
+                      />
+                    </div>
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
                   <Form.Group className="mb-3">
                     <Form.Label className="form-label">
                       <FontAwesomeIcon icon={faFont} className="me-2" />
                       Font tiêu đề (Cursive)
                     </Form.Label>
-                    <div className="mt-2">
+                    <Form.Select
+                      name="primaryFont"
+                      value={form.primaryFont}
+                      onChange={handleChange}
+                      className="form-control"
+                    >
                       {primaryFonts.map((font) => (
-                        <FontPreview
-                          key={font.value}
-                          font={font}
-                          isSelected={form.primaryFont === font.value}
-                          isPrimary={true}
-                          onSelect={handleSelectPrimaryFont}
-                        />
+                        <option key={font.value} value={font.value}>
+                          {font.label}
+                        </option>
                       ))}
+                    </Form.Select>
+                    <div className="mt-2">
+                      <FontPreview
+                        font={primaryFonts.find(
+                          (f) => f.value === form.primaryFont
+                        )}
+                        isPrimary={true}
+                      />
                     </div>
                   </Form.Group>
                 </Col>
-                <Col md={6}>
+                <Col md={4}>
                   <Form.Group className="mb-3">
                     <Form.Label className="form-label">
                       <FontAwesomeIcon icon={faFont} className="me-2" />
                       Font nội dung (Serif)
                     </Form.Label>
-                    <div className="mt-2">
+                    <Form.Select
+                      name="secondaryFont"
+                      value={form.secondaryFont}
+                      onChange={handleChange}
+                      className="form-control"
+                    >
                       {secondaryFonts.map((font) => (
-                        <FontPreview
-                          key={font.value}
-                          font={font}
-                          isSelected={form.secondaryFont === font.value}
-                          isPrimary={false}
-                          onSelect={handleSelectSecondaryFont}
-                        />
+                        <option key={font.value} value={font.value}>
+                          {font.label}
+                        </option>
                       ))}
+                    </Form.Select>
+                    <div className="mt-2">
+                      <FontPreview
+                        font={secondaryFonts.find(
+                          (f) => f.value === form.secondaryFont
+                        )}
+                        isPrimary={false}
+                      />
                     </div>
                   </Form.Group>
                 </Col>
