@@ -23,7 +23,7 @@ export default function Auth() {
       });
     }
 
-    router.push("/dashboard");
+    router.push("/quan-tri");
   };
 
   useEffect(() => {

@@ -1,20 +1,17 @@
-import "./globals.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 export async function generateMetadata({ params, searchParams }, parent) {
   const domain = parent?.req?.headers?.host || "localhost:3000";
   const baseUrl = `https://${domain}`;
 
   return {
-    title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
+    title: "Tình Yêu Vĩnh Cửu - Đăng Nhập",
     description:
       "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
     openGraph: {
-      title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
+      title: "Tình Yêu Vĩnh Cửu - Đăng Nhập",
       description:
         "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
       type: "website",
-      url: baseUrl,
+      url: `${baseUrl}/dang-nhap`,
       images: [
         {
           url: `${baseUrl}/1200x630.jpg`,
@@ -26,7 +23,7 @@ export async function generateMetadata({ params, searchParams }, parent) {
   };
 }
 
-export default function RootLayout({ children }) {
+export default function LoginLayout({ children }) {
   return (
     <html lang="vi">
       <body>{children}</body>

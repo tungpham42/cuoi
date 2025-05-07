@@ -21,7 +21,7 @@ export default function HomePage() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsLoading(false);
       if (user) {
-        router.push("/dashboard");
+        router.push("/quan-tri");
       } else {
         router.push("/");
       }
@@ -52,7 +52,7 @@ export default function HomePage() {
                 lý khoảnh khắc đáng nhớ, và tổ chức mọi chi tiết một cách tinh
                 tế và dễ dàng.
               </h3>
-              <Link href="/login">
+              <Link href="/dang-nhap">
                 <Button className="btn-primary fs-5 px-4">
                   <FontAwesomeIcon icon={faHeart} className="me-2" />
                   Bắt Đầu Tạo Trang Cưới Ngay

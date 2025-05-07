@@ -1,8 +1,10 @@
 import { db } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, parent }) {
   const { slug } = params;
+  const domain = parent?.req?.headers?.host || "localhost:3000";
+  const baseUrl = `https://${domain}`;
 
   try {
     // Query Firestore for a user document with the matching slug
@@ -24,10 +26,10 @@ export async function generateMetadata({ params }) {
           description:
             "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
           type: "website",
-          url: `https://cuoi.soft.io.vn/dam-cuoi/${slug}`,
+          url: `${baseUrl}/dam-cuoi/${slug}`,
           images: [
             {
-              url: "https://cuoi.soft.io.vn/1200x630.jpg",
+              url: `${baseUrl}/1200x630.jpg`,
               width: 1200,
               height: 630,
             },
@@ -45,10 +47,10 @@ export async function generateMetadata({ params }) {
           description:
             "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
           type: "website",
-          url: `https://cuoi.soft.io.vn/dam-cuoi/${slug}`,
+          url: `${baseUrl}/dam-cuoi/${slug}`,
           images: [
             {
-              url: "https://cuoi.soft.io.vn/1200x630.jpg",
+              url: `${baseUrl}/1200x630.jpg`,
               width: 1200,
               height: 630,
             },
@@ -68,10 +70,10 @@ export async function generateMetadata({ params }) {
         description:
           "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
         type: "website",
-        url: `https://cuoi.soft.io.vn/dam-cuoi/${slug}`,
+        url: `${baseUrl}/dam-cuoi/${slug}`,
         images: [
           {
-            url: "https://cuoi.soft.io.vn/1200x630.jpg",
+            url: `${baseUrl}/1200x630.jpg`,
             width: 1200,
             height: 630,
           },
