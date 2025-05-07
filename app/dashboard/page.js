@@ -212,7 +212,7 @@ export default function DashboardPage() {
     { value: "nautical", label: "Nautical" },
     { value: "artistic", label: "Artistic" },
     { value: "whimsical", label: "Whimsical" },
-    { value: "minimalist", label: "Mminimalist" },
+    { value: "minimalist", label: "Minimalist" },
     { value: "playful", label: "Playful" },
     { value: "art-deco", label: "Art Deco" },
     { value: "enchanted", label: "Enchanted" },
