@@ -88,11 +88,9 @@ const SortableItem = ({ id, label }) => {
 
 const ThemePreview = ({ theme }) => (
   <div
-    className="card theme-preview mb-1 w-100"
+    className="card theme-preview mb-0 w-100"
     style={{
       background: `linear-gradient(to bottom right, var(--gradient-start), var(--gradient-end))`,
-      border: `var(--card-border)`,
-      boxShadow: `0 2px 10px var(--shadow-color)`,
       padding: "10px",
     }}
     data-theme={theme.value}
