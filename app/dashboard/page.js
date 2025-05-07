@@ -111,15 +111,20 @@ const ThemePreview = ({ theme }) => (
 
 const FontPreview = ({ font, isPrimary }) => (
   <div
-    className="card mb-2 w-100"
+    className="card font-preview mb-2 w-100"
     style={{
       fontFamily: `"${font.value}", ${isPrimary ? "cursive" : "serif"}`,
       padding: "10px",
-      border: `var(--card-border)`,
-      boxShadow: `0 2px 10px var(--shadow-color)`,
     }}
   >
-    <div style={{ fontSize: "16px", color: `var(--foreground)` }}>
+    <div
+      style={{
+        fontSize: "16px",
+        color: `var(--foreground)`,
+        border: "none !important",
+        boxShadow: "none !important",
+      }}
+    >
       {font.label}
     </div>
   </div>

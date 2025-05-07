@@ -888,3 +888,7 @@ p {
 .custom-dropdown .dropdown-item:active {
   background-color: transparent !important;
 }
+.custom-dropdown .dropdown-item .card.font-preview {
+  border: none !important;
+  box-shadow: none !important;
+}
