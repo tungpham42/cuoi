@@ -771,40 +771,46 @@ export default function DashboardPage() {
                   ))}
                 </div>
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faFont} className="me-2" />
-                  Font tiêu đề (Cursive)
-                </Form.Label>
-                <div className="mt-2">
-                  {primaryFonts.map((font) => (
-                    <FontPreview
-                      key={font.value}
-                      font={font}
-                      isSelected={form.primaryFont === font.value}
-                      isPrimary={true}
-                      onSelect={handleSelectPrimaryFont}
-                    />
-                  ))}
-                </div>
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faFont} className="me-2" />
-                  Font nội dung (Serif)
-                </Form.Label>
-                <div className="mt-2">
-                  {secondaryFonts.map((font) => (
-                    <FontPreview
-                      key={font.value}
-                      font={font}
-                      isSelected={form.secondaryFont === font.value}
-                      isPrimary={false}
-                      onSelect={handleSelectSecondaryFont}
-                    />
-                  ))}
-                </div>
-              </Form.Group>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="form-label">
+                      <FontAwesomeIcon icon={faFont} className="me-2" />
+                      Font tiêu đề (Cursive)
+                    </Form.Label>
+                    <div className="mt-2">
+                      {primaryFonts.map((font) => (
+                        <FontPreview
+                          key={font.value}
+                          font={font}
+                          isSelected={form.primaryFont === font.value}
+                          isPrimary={true}
+                          onSelect={handleSelectPrimaryFont}
+                        />
+                      ))}
+                    </div>
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="form-label">
+                      <FontAwesomeIcon icon={faFont} className="me-2" />
+                      Font nội dung (Serif)
+                    </Form.Label>
+                    <div className="mt-2">
+                      {secondaryFonts.map((font) => (
+                        <FontPreview
+                          key={font.value}
+                          font={font}
+                          isSelected={form.secondaryFont === font.value}
+                          isPrimary={false}
+                          onSelect={handleSelectSecondaryFont}
+                        />
+                      ))}
+                    </div>
+                  </Form.Group>
+                </Col>
+              </Row>
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faHeart} className="me-2" />
