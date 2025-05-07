@@ -3,204 +3,220 @@
 /* Base variables for default theme */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-  --accent: #e91e63;
-  --border-color: #fecaca;
-  --gradient-start: #fff1f2;
-  --gradient-end: #ffe4e6;
+  --foreground: #1f2937;
+  --accent: #ec4899;
+  --border-color: #fbcfe8;
+  --gradient-start: #fef2f2;
+  --gradient-end: #fce7f3;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --card-border: 1px solid var(--border-color);
 }
 
-/* Modern theme for wedding */
+/* Modern theme */
 [data-theme="modern"] {
-  --background: #f5f7fa;
-  --foreground: #263238;
-  --accent: #4dd0e1; /* Softer teal for wedding vibe */
-  --border-color: #b0bec5;
-  --gradient-start: #eceff1;
-  --gradient-end: #b0bec5; /* Warmer gradient */
+  --background: #f0f9ff;
+  --foreground: #1e3a8a;
+  --accent: #3b82f6;
+  --border-color: #bfdbfe;
+  --gradient-start: #e0f2fe;
+  --gradient-end: #bae6fd;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Other themes remain unchanged */
+/* Romantic theme */
 [data-theme="romantic"] {
-  --background: #fff0f5;
-  --foreground: #880e4f;
-  --accent: #f48fb1;
-  --border-color: #fecaca;
-  --gradient-start: #fff1f2;
-  --gradient-end: #ffe4e6;
+  --background: #fef2f2;
+  --foreground: #701a75;
+  --accent: #db2777;
+  --border-color: #f9a8d4;
+  --gradient-start: #fce7f3;
+  --gradient-end: #f9d2e4;
   --card-border: 1px solid var(--border-color);
 }
 
+/* Rustic theme */
 [data-theme="rustic"] {
-  --background: #f5f5dc;
-  --foreground: #4e342e;
-  --accent: #8d6e63;
-  --border-color: #d7ccc8;
-  --gradient-start: #efebe9;
-  --gradient-end: #d7ccc8;
+  --background: #fefce8;
+  --foreground: #3f2b1d;
+  --accent: #a16207;
+  --border-color: #fed7aa;
+  --gradient-start: #fef9c3;
+  --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
 }
 
+/* Elegant theme */
 [data-theme="elegant"] {
-  --background: #fefefe;
-  --foreground: #333333;
-  --accent: #9c27b0;
-  --border-color: #e1bee7;
-  --gradient-start: #f3e5f5;
-  --gradient-end: #e1bee7;
+  --background: #f5f5f5;
+  --foreground: #27272a;
+  --accent: #6d28d9;
+  --border-color: #d8b4fe;
+  --gradient-start: #f3e8ff;
+  --gradient-end: #e9d5ff;
   --card-border: 1px solid var(--border-color);
 }
 
+/* Vintage theme */
 [data-theme="vintage"] {
-  --background: #fdf6e3;
-  --foreground: #5c4033;
-  --accent: #d4a373;
-  --border-color: #e6ccb2;
-  --gradient-start: #f4e4bc;
-  --gradient-end: #ede4cd;
+  --background: #fff7ed;
+  --foreground: #43371f;
+  --accent: #d97706;
+  --border-color: #fed7aa;
+  --gradient-start: #ffedd5;
+  --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
 }
 
+/* Bohemian theme */
 [data-theme="bohemian"] {
-  --background: #f9ecec;
-  --foreground: #4a3728;
-  --accent: #e2725b;
-  --border-color: #f4c2c2;
-  --gradient-start: #f7d9c4;
-  --gradient-end: #f4c2c2;
+  --background: #fef2e8;
+  --foreground: #3c2f2f;
+  --accent: #ea580c;
+  --border-color: #fdba74;
+  --gradient-start: #ffedd5;
+  --gradient-end: #fed7aa;
   --card-border: 1px solid var(--border-color);
 }
 
+/* Classic theme */
 [data-theme="classic"] {
-  --background: #ffffff;
-  --foreground: #1a1a1a;
-  --accent: #b8860b;
-  --border-color: #d9d9d9;
-  --gradient-start: #f5f5f5;
-  --gradient-end: #e6e6e6;
+  --background: #fafafa;
+  --foreground: #18181b;
+  --accent: #ca8a04;
+  --border-color: #fef08a;
+  --gradient-start: #fefce8;
+  --gradient-end: #fef9c3;
   --card-border: 1px solid var(--border-color);
 }
 
+/* Floral theme */
 [data-theme="floral"] {
-  --background: #f0fff0;
-  --foreground: #2e4a2e;
-  --accent: #ff69b4;
-  --border-color: #98fb98;
-  --gradient-start: #e0ffee;
-  --gradient-end: #c1ffc1;
+  --background: #ecfdf5;
+  --foreground: #064e3b;
+  --accent: #10b981;
+  --border-color: #6ee7b7;
+  --gradient-start: #d1fae5;
+  --gradient-end: #a7f3d0;
   --card-border: 1px solid var(--border-color);
 }
 
+/* Nautical theme */
 [data-theme="nautical"] {
-  --background: #e6f0fa;
-  --foreground: #1c2526;
-  --accent: #2a4d69; /* Deep navy blue */
-  --border-color: #a3bffa;
-  --gradient-start: #d6e4ff;
-  --gradient-end: #a3bffa; /* Coastal gradient */
+  --background: #eff6ff;
+  --foreground: #0c4a6e;
+  --accent: #0284c7;
+  --border-color: #93c5fd;
+  --gradient-start: #dbeafe;
+  --gradient-end: #bfdbfe;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.08);
 }
 
+/* Artistic theme */
 [data-theme="artistic"] {
-  --background: #f0f8ff;
-  --foreground: #4b0082;
-  --accent: #ff4500; /* Vivid orange */
-  --border-color: #add8e6;
-  --gradient-start: #e6e6fa;
-  --gradient-end: #add8e6; /* Artistic gradient */
+  --background: #f5f3ff;
+  --foreground: #4c1d95;
+  --accent: #8b5cf6;
+  --border-color: #c4b5fd;
+  --gradient-start: #ede9fe;
+  --gradient-end: #ddd6fe;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Whimsical theme */
 [data-theme="whimsical"] {
-  --background: #fff8dc;
-  --foreground: #8b4513;
-  --accent: #ff6347; /* Tomato red */
-  --border-color: #ffe4b5;
-  --gradient-start: #fffacd;
-  --gradient-end: #ffe4b5; /* Whimsical gradient */
+  --background: #fff1f2;
+  --foreground: #831843;
+  --accent: #f472b6;
+  --border-color: #f9a8d4;
+  --gradient-start: #fce7f3;
+  --gradient-end: #f9d2e4;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Minimalist theme */
 [data-theme="minimalist"] {
-  --background: #ffffff;
-  --foreground: #333333;
-  --accent: #000000; /* Black for minimalist */
-  --border-color: #cccccc;
-  --gradient-start: #f0f0f0;
-  --gradient-end: #e0e0e0; /* Minimalist gradient */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --accent: #475569;
+  --border-color: #e2e8f0;
+  --gradient-start: #f1f5f9;
+  --gradient-end: #e2e8f0;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
+/* Playful theme */
 [data-theme="playful"] {
-  --background: #fff0f5;
-  --foreground: #4b0082;
-  --accent: #ff69b4; /* Hot pink */
-  --border-color: #ffb6c1;
-  --gradient-start: #ffe4e1;
-  --gradient-end: #ffb6c1; /* Playful gradient */
+  --background: #fdf4ff;
+  --foreground: #6b21a8;
+  --accent: #d946ef;
+  --border-color: #f3e8ff;
+  --gradient-start: #fae8ff;
+  --gradient-end: #f3e8ff;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Art-deco theme */
 [data-theme="art-deco"] {
-  --background: #f5f5dc;
-  --foreground: #4b0082;
-  --accent: #ffd700; /* Gold */
-  --border-color: #dcdcdc;
-  --gradient-start: #fff8dc;
-  --gradient-end: #dcdcdc; /* Art Deco gradient */
+  --background: #f1f5f9;
+  --foreground: #1e293b;
+  --accent: #b45309;
+  --border-color: #fed7aa;
+  --gradient-start: #fefce8;
+  --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Enchanted theme */
 [data-theme="enchanted"] {
-  --background: #f0fff0;
-  --foreground: #4b0082;
-  --accent: #ff69b4; /* Hot pink */
-  --border-color: #98fb98;
-  --gradient-start: #e6ffe6;
-  --gradient-end: #98fb98; /* Enchanted gradient */
+  --background: #f0f9ff;
+  --foreground: #2e1065;
+  --accent: #7e22ce;
+  --border-color: #d8b4fe;
+  --gradient-start: #f3e8ff;
+  --gradient-end: #e9d5ff;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Celestial theme */
 [data-theme="celestial"] {
-  --background: #f0f8ff;
-  --foreground: #4b0082;
-  --accent: #ff4500; /* Vivid orange */
-  --border-color: #add8e6;
-  --gradient-start: #e6e6fa;
-  --gradient-end: #add8e6; /* Celestial gradient */
+  --background: #eef2ff;
+  --foreground: #312e81;
+  --accent: #4f46e5;
+  --border-color: #c7d2fe;
+  --gradient-start: #e0e7ff;
+  --gradient-end: #c7d2fe;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Tropical theme */
 [data-theme="tropical"] {
-  --background: #fffaf0;
-  --foreground: #4b0082;
-  --accent: #ff6347; /* Tomato red */
-  --border-color: #ffe4b5;
-  --gradient-start: #fffacd;
-  --gradient-end: #ffe4b5; /* Tropical gradient */
+  --background: #ecfeff;
+  --foreground: #134e4a;
+  --accent: #14b8a6;
+  --border-color: #5eead4;
+  --gradient-start: #ccfbf1;
+  --gradient-end: #99f6e4;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Fairy-tale theme */
 [data-theme="fairy-tale"] {
-  --background: #f0fff0;
-  --foreground: #4b0082;
-  --accent: #ff69b4; /* Hot pink */
-  --border-color: #98fb98;
-  --gradient-start: #e6ffe6;
-  --gradient-end: #98fb98; /* Fairy Tale gradient */
+  --background: #f5f0ff;
+  --foreground: #4a044e;
+  --accent: #c026d3;
+  --border-color: #f0abfc;
+  --gradient-start: #fae8ff;
+  --gradient-end: #f3e8ff;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
