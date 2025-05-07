@@ -175,7 +175,7 @@ const CustomDropdown = ({
   return (
     <div className="custom-dropdown" ref={dropdownRef}>
       <Form.Label className="form-label">
-        <FontAwesomeIcon icon={faFont} className="me-2" />
+        <FontAwesomeIcon icon={faPalette} className="me-2" />
         {name === "theme"
           ? "Chủ đề"
           : name === "primaryFont"
