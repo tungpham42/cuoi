@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Ballet&family=Borel&family=Crimson+Text&family=Dancing+Script&family=EB+Garamond&family=Great+Vibes&family=Hahmlet&family=Imperial+Script&family=Lora&family=Merriweather&family=Ms+Madi&family=Old+Standard+TT&family=Pinyon+Script&family=Playfair+Display&family=Playwrite+Danmark+Loopet&family=Send+Flowers&family=Taviraj&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Aleo&family=Andada+Pro&family=Ballet&family=Birthstone&family=Borel&family=Cactus+Classical+Serif&family=Crimson+Text&family=Dancing+Script&family=EB+Garamond&family=Fleur+De+Leah&family=Grape+Nuts&family=Great+Vibes&family=Hahmlet&family=Hepta+Slab&family=Imperial+Script&family=Italianno&family=Lobster&family=Lora&family=Mea+Culpa&family=Merriweather&family=Montagu+Slab&family=MonteCarlo&family=Ms+Madi&family=Noticia+Text&family=Oooh+Baby&family=Old+Standard+TT&family=Pinyon+Script&family=Playfair+Display&family=Playwrite+Danmark+Loopet&family=Pridi&family=Rokkitt&family=Send+Flowers&family=Taviraj&family=Updock&family=Xanh+Mono&display=swap");
 
 /* Base variables for default theme */
 :root {
@@ -93,6 +93,116 @@
   --gradient-start: #e0ffee;
   --gradient-end: #c1ffc1;
   --card-border: 1px solid var(--border-color);
+}
+
+[data-theme="nautical"] {
+  --background: #e6f0fa;
+  --foreground: #1c2526;
+  --accent: #2a4d69; /* Deep navy blue */
+  --border-color: #a3bffa;
+  --gradient-start: #d6e4ff;
+  --gradient-end: #a3bffa; /* Coastal gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="artistic"] {
+  --background: #f0f8ff;
+  --foreground: #4b0082;
+  --accent: #ff4500; /* Vivid orange */
+  --border-color: #add8e6;
+  --gradient-start: #e6e6fa;
+  --gradient-end: #add8e6; /* Artistic gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="whimsical"] {
+  --background: #fff8dc;
+  --foreground: #8b4513;
+  --accent: #ff6347; /* Tomato red */
+  --border-color: #ffe4b5;
+  --gradient-start: #fffacd;
+  --gradient-end: #ffe4b5; /* Whimsical gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="minimalist"] {
+  --background: #ffffff;
+  --foreground: #333333;
+  --accent: #000000; /* Black for minimalist */
+  --border-color: #cccccc;
+  --gradient-start: #f0f0f0;
+  --gradient-end: #e0e0e0; /* Minimalist gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="playful"] {
+  --background: #fff0f5;
+  --foreground: #4b0082;
+  --accent: #ff69b4; /* Hot pink */
+  --border-color: #ffb6c1;
+  --gradient-start: #ffe4e1;
+  --gradient-end: #ffb6c1; /* Playful gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="art-deco"] {
+  --background: #f5f5dc;
+  --foreground: #4b0082;
+  --accent: #ffd700; /* Gold */
+  --border-color: #dcdcdc;
+  --gradient-start: #fff8dc;
+  --gradient-end: #dcdcdc; /* Art Deco gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="enchanted"] {
+  --background: #f0fff0;
+  --foreground: #4b0082;
+  --accent: #ff69b4; /* Hot pink */
+  --border-color: #98fb98;
+  --gradient-start: #e6ffe6;
+  --gradient-end: #98fb98; /* Enchanted gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="celestial"] {
+  --background: #f0f8ff;
+  --foreground: #4b0082;
+  --accent: #ff4500; /* Vivid orange */
+  --border-color: #add8e6;
+  --gradient-start: #e6e6fa;
+  --gradient-end: #add8e6; /* Celestial gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="tropical"] {
+  --background: #fffaf0;
+  --foreground: #4b0082;
+  --accent: #ff6347; /* Tomato red */
+  --border-color: #ffe4b5;
+  --gradient-start: #fffacd;
+  --gradient-end: #ffe4b5; /* Tropical gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="fairy-tale"] {
+  --background: #f0fff0;
+  --foreground: #4b0082;
+  --accent: #ff69b4; /* Hot pink */
+  --border-color: #98fb98;
+  --gradient-start: #e6ffe6;
+  --gradient-end: #98fb98; /* Fairy Tale gradient */
+  --card-border: 1px solid var(--border-color);
+  --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Base styles applied to all themes */

@@ -209,6 +209,16 @@ export default function DashboardPage() {
     { value: "bohemian", label: "Bohemian" },
     { value: "classic", label: "Classic" },
     { value: "floral", label: "Floral" },
+    { value: "nautical", label: "Nautical" },
+    { value: "artistic", label: "Artistic" },
+    { value: "whimsical", label: "Whimsical" },
+    { value: "minimalist", label: "Mminimalist" },
+    { value: "playful", label: "Playful" },
+    { value: "art-deco", label: "Art Deco" },
+    { value: "enchanted", label: "Enchanted" },
+    { value: "celestial", label: "Celestial" },
+    { value: "tropical", label: "Tropical" },
+    { value: "fairy-tale", label: "Fairy Tale" },
   ];
 
   const primaryFonts = [
@@ -221,6 +231,15 @@ export default function DashboardPage() {
     { value: "Pinyon Script", label: "Pinyon Script" },
     { value: "Imperial Script", label: "Imperial Script" },
     { value: "Ballet", label: "Ballet" },
+    { value: "Italianno", label: "Italianno" },
+    { value: "Oooh Baby", label: "Oooh Baby" },
+    { value: "Grape Nuts", label: "Grape Nuts" },
+    { value: "Mea Culpa", label: "Mea Culpa" },
+    { value: "Fleur De Leah", label: "Fleur De Leah" },
+    { value: "Birthstone", label: "Birthstone" },
+    { value: "Lobster", label: "Lobster" },
+    { value: "Updock", label: "Updock" },
+    { value: "MonteCarlo", label: "MonteCarlo" },
   ];
 
   const secondaryFonts = [
@@ -233,6 +252,15 @@ export default function DashboardPage() {
     { value: "Old Standard TT", label: "Old Standard TT" },
     { value: "Taviraj", label: "Taviraj" },
     { value: "Hahmlet", label: "Hahmlet" },
+    { value: "Noticia Text", label: "Noticia Text" },
+    { value: "Aleo", label: "Aleo" },
+    { value: "Rokkitt", label: "Rokkitt" },
+    { value: "Andada Pro", label: "Andada Pro" },
+    { value: "Pridi", label: "Pridi" },
+    { value: "Montagu Slab", label: "Montagu Slab" },
+    { value: "Hepta Slab", label: "Hepta Slab" },
+    { value: "Xanh Mono", label: "Xanh Mono" },
+    { value: "Cactus Classical Serif", label: "Cactus Classical Serif" },
   ];
 
   const componentLabels = {
@@ -684,7 +712,6 @@ export default function DashboardPage() {
                   </Form.Group>
                 </Col>
               </Row>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faLink} className="me-2" />
@@ -702,7 +729,6 @@ export default function DashboardPage() {
                   Tự động tạo từ tên cô dâu, chú rể và ngày cưới
                 </Form.Text>
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
@@ -716,7 +742,6 @@ export default function DashboardPage() {
                   className="form-control"
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
@@ -730,7 +755,6 @@ export default function DashboardPage() {
                   className="form-control"
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faPalette} className="me-2" />
@@ -747,11 +771,10 @@ export default function DashboardPage() {
                   ))}
                 </div>
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faFont} className="me-2" />
-                  Font chính (Cursive)
+                  Font tiêu đề (Cursive)
                 </Form.Label>
                 <div className="mt-2">
                   {primaryFonts.map((font) => (
@@ -765,11 +788,10 @@ export default function DashboardPage() {
                   ))}
                 </div>
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faFont} className="me-2" />
-                  Font phụ (Serif)
+                  Font nội dung (Serif)
                 </Form.Label>
                 <div className="mt-2">
                   {secondaryFonts.map((font) => (
@@ -783,7 +805,6 @@ export default function DashboardPage() {
                   ))}
                 </div>
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faHeart} className="me-2" />
@@ -798,7 +819,6 @@ export default function DashboardPage() {
                   className="form-control"
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label className="form-label">
                   <FontAwesomeIcon icon={faImages} className="me-2" />
@@ -851,7 +871,6 @@ export default function DashboardPage() {
                   </Row>
                 )}
               </Form.Group>
-
               <h3 className="section-heading">
                 <FontAwesomeIcon icon={faMoneyBillWave} className="me-2" />
                 Thông tin chuyển khoản
@@ -926,7 +945,6 @@ export default function DashboardPage() {
                   className="form-control"
                 />
               </Form.Group>
-
               <h3 className="section-heading">
                 <FontAwesomeIcon icon={faEye} className="me-2" />
                 Hiển thị thành phần
@@ -997,7 +1015,6 @@ export default function DashboardPage() {
                   </Form.Group>
                 </Col>
               </Row>
-
               <h3 className="section-heading">
                 <FontAwesomeIcon icon={faSort} className="me-2" />
                 Sắp xếp thành phần
@@ -1020,7 +1037,6 @@ export default function DashboardPage() {
                   ))}
                 </SortableContext>
               </DndContext>
-
               <h3 className="section-heading">
                 <FontAwesomeIcon icon={faCommentDots} className="me-2" />
                 Quản lý lời chúc
@@ -1074,7 +1090,6 @@ export default function DashboardPage() {
               ) : (
                 <p className="no-wishes">Chưa có lời chúc nào.</p>
               )}
-
               <div className="d-flex gap-2">
                 <Button
                   variant="primary"
