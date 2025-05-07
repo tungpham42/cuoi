@@ -135,7 +135,9 @@ const CustomDropdown = ({
   isPrimary = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [toggleWidth, setToggleWidth] = useState("auto");
   const dropdownRef = useRef(null);
+  const toggleRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -145,6 +147,18 @@ const CustomDropdown = ({
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (toggleRef.current) {
+        const width = toggleRef.current.getBoundingClientRect().width;
+        setToggleWidth(`${width}px`);
+      }
+    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   const handleSelect = (optionValue) => {
@@ -165,7 +179,11 @@ const CustomDropdown = ({
           ? "Font tiêu đề (Cursive)"
           : "Font nội dung (Serif)"}
       </Form.Label>
-      <div className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
+      <div
+        className="dropdown-toggle"
+        ref={toggleRef}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <PreviewComponent
           theme={name === "theme" ? selectedOption : undefined}
           font={name !== "theme" ? selectedOption : undefined}
@@ -178,7 +196,7 @@ const CustomDropdown = ({
           style={{
             maxHeight: "300px",
             overflowY: "auto",
-            width: "fit-content",
+            width: toggleWidth,
           }}
         >
           {options.map((option) => (
@@ -319,7 +337,6 @@ export default function DashboardPage() {
     { value: "Lora", label: "Lora" },
     { value: "Merriweather", label: "Merriweather" },
     { value: "Playfair Display", label: "Playfair Display" },
-    { value: "EB Garamond", label: "EB Garamond" },
     { value: "Times New Roman", label: "Times New Roman" },
     { value: "Crimson Text", label: "Crimson Text" },
     { value: "Old Standard TT", label: "Old Standard TT" },
@@ -1092,7 +1109,7 @@ export default function DashboardPage() {
               {wishes.length > 0 ? (
                 <ListGroup className="mb-4">
                   {wishes.map((wish) => (
-                    <ListGroup.Item key={wish.id} className="wish-list-item">
+                    <ListGroup.Item key={wish} className="wish-list-item">
                       <div>
                         <strong className="wish-name">{wish.name}</strong>:{" "}
                         {wish.message}

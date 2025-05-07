@@ -886,5 +886,5 @@ p {
 }
 .custom-dropdown .dropdown-item.active,
 .custom-dropdown .dropdown-item:active {
-  background-color: none !important;
+  background-color: transparent !important;
 }
