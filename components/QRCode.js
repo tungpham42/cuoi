@@ -9,13 +9,12 @@ const QRCode = ({ bankInfo }) => {
     bankName: bankInfo?.bankName || "VCB",
     accountNumber: bankInfo?.accountNumber || "1234567890",
     accountHolder: bankInfo?.accountHolder || "Nguyen Van A",
-    amount: bankInfo?.amount || "500000",
     description: bankInfo?.description || "Qua mung dam cuoi",
   };
 
   const qrURL = `https://img.vietqr.io/image/${defaultBankInfo.bankName}-${
     defaultBankInfo.accountNumber
-  }-print.png?amount=${defaultBankInfo.amount}&addInfo=${encodeURIComponent(
+  }-print.png?addInfo=${encodeURIComponent(
     defaultBankInfo.description
   )}&accountName=${encodeURIComponent(defaultBankInfo.accountHolder)}`;
 
@@ -57,9 +56,6 @@ const QRCode = ({ bankInfo }) => {
             </p>
             <p>
               <strong>Chủ tài khoản:</strong> {defaultBankInfo.accountHolder}
-            </p>
-            <p>
-              <strong>Số tiền đề xuất:</strong> {defaultBankInfo.amount} VNĐ
             </p>
           </div>
         </Card.Body>

@@ -276,7 +276,6 @@ export default function DashboardPage() {
       bankName: "",
       accountNumber: "",
       accountHolder: "",
-      amount: "",
       description: "",
     },
     componentOrder: [
@@ -386,7 +385,6 @@ export default function DashboardPage() {
                 bankName: data.bankInfo?.bankName || "",
                 accountNumber: data.bankInfo?.accountNumber || "",
                 accountHolder: data.bankInfo?.accountHolder || "",
-                amount: data.bankInfo?.amount || "",
                 description: data.bankInfo?.description || "",
               },
               componentOrder: data.componentOrder || [
@@ -930,30 +928,18 @@ export default function DashboardPage() {
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label className="form-label">
-                      Số tiền đề xuất (VNĐ)
+                      Nội dung chuyển khoản
                     </Form.Label>
                     <Form.Control
-                      type="number"
-                      name="bankInfo.amount"
-                      value={form.bankInfo.amount}
+                      type="text"
+                      name="bankInfo.description"
+                      value={form.bankInfo.description}
                       onChange={handleChange}
                       className="form-control"
                     />
                   </Form.Group>
                 </Col>
               </Row>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  Nội dung chuyển khoản
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  name="bankInfo.description"
-                  value={form.bankInfo.description}
-                  onChange={handleChange}
-                  className="form-control"
-                />
-              </Form.Group>
               <h3 className="section-heading">
                 <FontAwesomeIcon icon={faEye} className="me-2" />
                 Hiển thị thành phần
