@@ -15,7 +15,7 @@ const Gallery = ({ images }) => {
         <FontAwesomeIcon icon={faImages} className="me-2" />
         Bộ ảnh cưới
       </h2>
-      <Carousel>
+      <Carousel indicators={false} interval={2000} fade>
         {images.map((img, index) => (
           <Carousel.Item key={index}>
             <Image
