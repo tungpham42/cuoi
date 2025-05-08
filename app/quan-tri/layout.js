@@ -1,6 +1,7 @@
-export async function generateMetadata({ params, searchParams }, parent) {
-  const domain = parent?.req?.headers?.host || "localhost:3000";
-  const baseUrl = `https://${domain}`;
+import { getDomain } from "@/utils/getDomain";
+
+export async function generateMetadata(parent) {
+  const baseUrl = getDomain(parent);
 
   return {
     title: "Tình Yêu Vĩnh Cửu - Quản Trị",

@@ -1,9 +1,9 @@
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { getDomain } from "@/utils/getDomain";
 
-export async function generateMetadata({ params, searchParams }, parent) {
-  const domain = parent?.req?.headers?.host || "localhost:3000";
-  const baseUrl = `https://${domain}`;
+export async function generateMetadata(parent) {
+  const baseUrl = getDomain(parent);
 
   return {
     title: "Tình Yêu Vĩnh Cửu - Hành Trình Hôn Nhân",
