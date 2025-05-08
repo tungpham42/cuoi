@@ -60,6 +60,9 @@ import {
   faLink,
   faFont,
 } from "@fortawesome/free-solid-svg-icons";
+import themes from "@/data/themes";
+import primaryFonts from "@/data/primaryFonts";
+import secondaryFonts from "@/data/secondaryFonts";
 
 export const dynamic = "force-dynamic";
 
@@ -293,68 +296,6 @@ export default function DashboardPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [slugError, setSlugError] = useState("");
-
-  const themes = [
-    { value: "romantic", label: "Romantic" },
-    { value: "rustic", label: "Rustic" },
-    { value: "modern", label: "Modern" },
-    { value: "elegant", label: "Elegant" },
-    { value: "vintage", label: "Vintage" },
-    { value: "bohemian", label: "Bohemian" },
-    { value: "classic", label: "Classic" },
-    { value: "floral", label: "Floral" },
-    { value: "nautical", label: "Nautical" },
-    { value: "artistic", label: "Artistic" },
-    { value: "whimsical", label: "Whimsical" },
-    { value: "minimalist", label: "Minimalist" },
-    { value: "playful", label: "Playful" },
-    { value: "art-deco", label: "Art Deco" },
-    { value: "enchanted", label: "Enchanted" },
-    { value: "celestial", label: "Celestial" },
-    { value: "tropical", label: "Tropical" },
-    { value: "fairy-tale", label: "Fairy Tale" },
-  ];
-
-  const primaryFonts = [
-    { value: "Dancing Script", label: "Dancing Script" },
-    { value: "Great Vibes", label: "Great Vibes" },
-    { value: "Playwrite Danmark Loopet", label: "Playwrite Danmark Loopet" },
-    { value: "Ms Madi", label: "Ms Madi" },
-    { value: "Borel", label: "Borel" },
-    { value: "Send Flowers", label: "Send Flowers" },
-    { value: "Pinyon Script", label: "Pinyon Script" },
-    { value: "Imperial Script", label: "Imperial Script" },
-    { value: "Ballet", label: "Ballet" },
-    { value: "Italianno", label: "Italianno" },
-    { value: "Oooh Baby", label: "Oooh Baby" },
-    { value: "Grape Nuts", label: "Grape Nuts" },
-    { value: "Mea Culpa", label: "Mea Culpa" },
-    { value: "Fleur De Leah", label: "Fleur De Leah" },
-    { value: "Birthstone", label: "Birthstone" },
-    { value: "Lobster", label: "Lobster" },
-    { value: "Updock", label: "Updock" },
-    { value: "MonteCarlo", label: "MonteCarlo" },
-  ];
-
-  const secondaryFonts = [
-    { value: "Lora", label: "Lora" },
-    { value: "Merriweather", label: "Merriweather" },
-    { value: "Playfair Display", label: "Playfair Display" },
-    { value: "Times New Roman", label: "Times New Roman" },
-    { value: "Crimson Text", label: "Crimson Text" },
-    { value: "Old Standard TT", label: "Old Standard TT" },
-    { value: "Taviraj", label: "Taviraj" },
-    { value: "Hahmlet", label: "Hahmlet" },
-    { value: "Noticia Text", label: "Noticia Text" },
-    { value: "Aleo", label: "Aleo" },
-    { value: "Rokkitt", label: "Rokkitt" },
-    { value: "Andada Pro", label: "Andada Pro" },
-    { value: "Pridi", label: "Pridi" },
-    { value: "Montagu Slab", label: "Montagu Slab" },
-    { value: "Hepta Slab", label: "Hepta Slab" },
-    { value: "Xanh Mono", label: "Xanh Mono" },
-    { value: "Cactus Classical Serif", label: "Cactus Classical Serif" },
-  ];
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",

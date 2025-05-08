@@ -1,0 +1,21 @@
+const themes = [
+  { value: "romantic", label: "Romantic" },
+  { value: "rustic", label: "Rustic" },
+  { value: "modern", label: "Modern" },
+  { value: "elegant", label: "Elegant" },
+  { value: "vintage", label: "Vintage" },
+  { value: "bohemian", label: "Bohemian" },
+  { value: "classic", label: "Classic" },
+  { value: "floral", label: "Floral" },
+  { value: "nautical", label: "Nautical" },
+  { value: "artistic", label: "Artistic" },
+  { value: "whimsical", label: "Whimsical" },
+  { value: "minimalist", label: "Minimalist" },
+  { value: "playful", label: "Playful" },
+  { value: "art-deco", label: "Art Deco" },
+  { value: "enchanted", label: "Enchanted" },
+  { value: "celestial", label: "Celestial" },
+  { value: "tropical", label: "Tropical" },
+  { value: "fairy-tale", label: "Fairy Tale" },
+];
+export default themes;

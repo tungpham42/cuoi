@@ -1,0 +1,20 @@
+const secondaryFonts = [
+  { value: "Lora", label: "Lora" },
+  { value: "Merriweather", label: "Merriweather" },
+  { value: "Playfair Display", label: "Playfair Display" },
+  { value: "Times New Roman", label: "Times New Roman" },
+  { value: "Crimson Text", label: "Crimson Text" },
+  { value: "Old Standard TT", label: "Old Standard TT" },
+  { value: "Taviraj", label: "Taviraj" },
+  { value: "Hahmlet", label: "Hahmlet" },
+  { value: "Noticia Text", label: "Noticia Text" },
+  { value: "Aleo", label: "Aleo" },
+  { value: "Rokkitt", label: "Rokkitt" },
+  { value: "Andada Pro", label: "Andada Pro" },
+  { value: "Pridi", label: "Pridi" },
+  { value: "Montagu Slab", label: "Montagu Slab" },
+  { value: "Hepta Slab", label: "Hepta Slab" },
+  { value: "Xanh Mono", label: "Xanh Mono" },
+  { value: "Cactus Classical Serif", label: "Cactus Classical Serif" },
+];
+export default secondaryFonts;

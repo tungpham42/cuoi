@@ -1,0 +1,21 @@
+const primaryFonts = [
+  { value: "Dancing Script", label: "Dancing Script" },
+  { value: "Great Vibes", label: "Great Vibes" },
+  { value: "Playwrite Danmark Loopet", label: "Playwrite Danmark Loopet" },
+  { value: "Ms Madi", label: "Ms Madi" },
+  { value: "Borel", label: "Borel" },
+  { value: "Send Flowers", label: "Send Flowers" },
+  { value: "Pinyon Script", label: "Pinyon Script" },
+  { value: "Imperial Script", label: "Imperial Script" },
+  { value: "Ballet", label: "Ballet" },
+  { value: "Italianno", label: "Italianno" },
+  { value: "Oooh Baby", label: "Oooh Baby" },
+  { value: "Grape Nuts", label: "Grape Nuts" },
+  { value: "Mea Culpa", label: "Mea Culpa" },
+  { value: "Fleur De Leah", label: "Fleur De Leah" },
+  { value: "Birthstone", label: "Birthstone" },
+  { value: "Lobster", label: "Lobster" },
+  { value: "Updock", label: "Updock" },
+  { value: "MonteCarlo", label: "MonteCarlo" },
+];
+export default primaryFonts;
