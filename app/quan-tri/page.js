@@ -64,6 +64,7 @@ import {
   faPlus,
   faTrash,
   faEdit,
+  faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import themes from "@/data/themes";
 import primaryFonts from "@/data/primaryFonts";
@@ -302,7 +303,10 @@ export default function DashboardPage() {
   const [error, setError] = useState("");
   const [slugError, setSlugError] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [newWeddingName, setNewWeddingName] = useState("");
+  const [editWeddingId, setEditWeddingId] = useState(null);
+  const [editWeddingName, setEditWeddingName] = useState("");
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",
@@ -480,7 +484,7 @@ export default function DashboardPage() {
         setWishes([]);
       }
     } catch (err) {
-      setError("Lỗi khi tải dữ liệu đám cưới. Vui lòng thử lại.");
+      setError("Lỗi khi tải dữ liệu. Vui lòng thử lại.");
     }
   };
 
@@ -723,6 +727,35 @@ export default function DashboardPage() {
     }
   };
 
+  const handleEditWeddingName = async () => {
+    if (!user || !editWeddingId) {
+      setError(
+        "Không thể chỉnh sửa tên đám cưới vì chưa đăng nhập hoặc chưa chọn đám cưới."
+      );
+      return;
+    }
+    try {
+      const weddingRef = doc(db, "users", user.uid, "weddings", editWeddingId);
+      await updateDoc(weddingRef, {
+        name: editWeddingName || "Đám cưới mới",
+      });
+      setWeddings((prev) =>
+        prev.map((wedding) =>
+          wedding.id === editWeddingId
+            ? { ...wedding, name: editWeddingName || "Đám cưới mới" }
+            : wedding
+        )
+      );
+      setShowEditModal(false);
+      setEditWeddingId(null);
+      setEditWeddingName("");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      setError("Lỗi khi chỉnh sửa tên đám cưới. Vui lòng thử lại.");
+    }
+  };
+
   const handleDeleteWedding = async (weddingId) => {
     if (!user) {
       setError("Không thể xóa đám cưới vì chưa đăng nhập.");
@@ -874,16 +907,6 @@ export default function DashboardPage() {
     }
   };
 
-  const handlePreview = () => {
-    if (form.slug && !slugError) {
-      router.push(`/dam-cuoi/preview/${form.slug}`);
-    } else {
-      setError(
-        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết hợp lệ."
-      );
-    }
-  };
-
   const approvedWishes = wishes.filter((wish) => wish.approved);
 
   if (loading || !user) {
@@ -950,6 +973,35 @@ export default function DashboardPage() {
           </Modal.Footer>
         </Modal>
 
+        <Modal
+          show={showEditModal}
+          onHide={() => setShowEditModal(false)}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Chỉnh sửa tên đám cưới</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>Tên đám cưới</Form.Label>
+              <Form.Control
+                type="text"
+                value={editWeddingName}
+                onChange={(e) => setEditWeddingName(e.target.value)}
+                placeholder="Nhập tên đám cưới"
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+              Hủy
+            </Button>
+            <Button variant="primary" onClick={handleEditWeddingName}>
+              Lưu
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <Card className="dashboard-card">
           <div className="decorative-corner-top" />
           <div className="decorative-corner-bottom" />
@@ -998,24 +1050,37 @@ export default function DashboardPage() {
               </Form.Label>
               <div className="d-flex flex-wrap gap-2">
                 {weddings.map((wedding) => (
-                  <Button
-                    key={wedding.id}
-                    variant={
-                      selectedWeddingId === wedding.id
-                        ? "primary"
-                        : "outline-primary"
-                    }
-                    onClick={() => setSelectedWeddingId(wedding.id)}
-                    className="d-flex align-items-center"
-                  >
-                    {wedding.name ||
-                      (wedding.brideName && wedding.groomName
-                        ? `${wedding.brideName} & ${wedding.groomName}`
-                        : "Chưa đặt tên")}
+                  <div key={wedding.id} className="d-flex align-items-center">
+                    <Button
+                      variant={
+                        selectedWeddingId === wedding.id
+                          ? "primary"
+                          : "outline-primary"
+                      }
+                      onClick={() => setSelectedWeddingId(wedding.id)}
+                      className="d-flex align-items-center me-2"
+                    >
+                      {wedding.name ||
+                        (wedding.brideName && wedding.groomName
+                          ? `${wedding.brideName} & ${wedding.groomName}`
+                          : "Chưa đặt tên")}
+                    </Button>
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      className="me-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditWeddingId(wedding.id);
+                        setEditWeddingName(wedding.name || "");
+                        setShowEditModal(true);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPen} />
+                    </Button>
                     <Button
                       variant="danger"
                       size="sm"
-                      className="ms-2"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteWedding(wedding.id);
@@ -1023,7 +1088,7 @@ export default function DashboardPage() {
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </Button>
-                  </Button>
+                  </div>
                 ))}
               </div>
               {weddings.length === 0 && (
@@ -1428,7 +1493,7 @@ export default function DashboardPage() {
                   <Button
                     variant="primary"
                     onClick={handleSave}
-                    disabled={uploading || !!slugError || !selectedWeddingId}
+                    disabled={uploading || !selectedWeddingId}
                     className="btn-save"
                   >
                     <FontAwesomeIcon icon={faSave} className="me-2" />
@@ -1437,12 +1502,7 @@ export default function DashboardPage() {
                   <Button
                     variant="success"
                     onClick={handleRedirect}
-                    disabled={
-                      uploading ||
-                      !form.slug ||
-                      !!slugError ||
-                      !selectedWeddingId
-                    }
+                    disabled={uploading || !form.slug || !selectedWeddingId}
                     className="btn-redirect"
                   >
                     <FontAwesomeIcon icon={faEye} className="me-2" />

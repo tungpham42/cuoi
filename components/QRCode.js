@@ -14,7 +14,7 @@ const QRCode = ({ bankInfo }) => {
 
   const qrURL = `https://img.vietqr.io/image/${defaultBankInfo.bankName}-${
     defaultBankInfo.accountNumber
-  }-print.png?addInfo=${encodeURIComponent(
+  }-qr_only.png?addInfo=${encodeURIComponent(
     defaultBankInfo.description
   )}&accountName=${encodeURIComponent(defaultBankInfo.accountHolder)}`;
 
