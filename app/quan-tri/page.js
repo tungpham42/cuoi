@@ -1108,7 +1108,7 @@ export default function DashboardPage() {
                       >
                         <FontAwesomeIcon
                           icon={faPen}
-                          className="text-warning"
+                          className="text-light"
                           style={{ cursor: "pointer" }}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1119,7 +1119,7 @@ export default function DashboardPage() {
                         />
                         <FontAwesomeIcon
                           icon={faTrash}
-                          className="text-danger"
+                          className="text-light"
                           style={{ cursor: "pointer" }}
                           onClick={(e) => {
                             e.stopPropagation();

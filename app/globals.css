@@ -940,3 +940,7 @@ p {
 .wedding-id {
   padding-right: 60px !important;
 }
+.wedding-id.btn-outline-primary .text-light,
+.wedding-id.btn-primary:hover .text-light {
+  color: var(--accent) !important;
+}
