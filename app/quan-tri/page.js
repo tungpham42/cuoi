@@ -307,6 +307,8 @@ export default function DashboardPage() {
   const [newWeddingName, setNewWeddingName] = useState("");
   const [editWeddingId, setEditWeddingId] = useState(null);
   const [editWeddingName, setEditWeddingName] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteWeddingId, setDeleteWeddingId] = useState(null);
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",
@@ -775,6 +777,14 @@ export default function DashboardPage() {
     }
   };
 
+  const handleConfirmDelete = async () => {
+    if (deleteWeddingId) {
+      await handleDeleteWedding(deleteWeddingId);
+      setShowDeleteModal(false);
+      setDeleteWeddingId(null);
+    }
+  };
+
   const handleSave = async () => {
     if (!user) {
       setError("Không thể lưu thông tin vì chưa đăng nhập.");
@@ -1002,6 +1012,34 @@ export default function DashboardPage() {
           </Modal.Footer>
         </Modal>
 
+        <Modal
+          show={showDeleteModal}
+          onHide={() => setShowDeleteModal(false)}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Xác nhận xóa đám cưới</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Bạn có chắc chắn muốn xóa đám cưới này? Hành động này không thể hoàn
+            tác.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowDeleteModal(false);
+                setDeleteWeddingId(null);
+              }}
+            >
+              Hủy
+            </Button>
+            <Button variant="primary" onClick={handleConfirmDelete}>
+              Xóa
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <Card className="dashboard-card">
           <div className="decorative-corner-top" />
           <div className="decorative-corner-bottom" />
@@ -1058,35 +1096,38 @@ export default function DashboardPage() {
                           : "outline-primary"
                       }
                       onClick={() => setSelectedWeddingId(wedding.id)}
-                      className="d-flex align-items-center me-2"
+                      className="d-flex align-items-center me-2 position-relative wedding-id"
                     >
                       {wedding.name ||
                         (wedding.brideName && wedding.groomName
                           ? `${wedding.brideName} & ${wedding.groomName}`
                           : "Chưa đặt tên")}
-                    </Button>
-                    <Button
-                      variant="warning"
-                      size="sm"
-                      className="me-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditWeddingId(wedding.id);
-                        setEditWeddingName(wedding.name || "");
-                        setShowEditModal(true);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faPen} />
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteWedding(wedding.id);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
+                      <div
+                        className="position-absolute"
+                        style={{ right: "10px", display: "flex", gap: "10px" }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faPen}
+                          className="text-warning"
+                          style={{ cursor: "pointer" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditWeddingId(wedding.id);
+                            setEditWeddingName(wedding.name || "");
+                            setShowEditModal(true);
+                          }}
+                        />
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          className="text-danger"
+                          style={{ cursor: "pointer" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteWeddingId(wedding.id);
+                            setShowDeleteModal(true);
+                          }}
+                        />
+                      </div>
                     </Button>
                   </div>
                 ))}
