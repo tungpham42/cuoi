@@ -32,7 +32,6 @@ export default function LoginPage() {
         });
       }
 
-      // Redirect immediately after successful login
       router.push("/quan-tri");
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
@@ -54,7 +53,6 @@ export default function LoginPage() {
           });
         }
         setUser(user);
-        // Redirect to dashboard immediately if user is authenticated
         router.push("/quan-tri");
       } else {
         setUser(null);
@@ -63,7 +61,7 @@ export default function LoginPage() {
     });
 
     return () => unsubscribe();
-  }, [router]); // Add router to dependency array
+  }, [router]);
 
   if (loading) {
     return (

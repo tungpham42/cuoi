@@ -12,6 +12,7 @@ import {
   Image,
   Card,
   Dropdown as BootstrapDropdown,
+  Modal,
 } from "react-bootstrap";
 import {
   doc,
@@ -23,6 +24,7 @@ import {
   deleteDoc,
   query,
   where,
+  addDoc,
 } from "firebase/firestore";
 import { db, auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
@@ -59,6 +61,9 @@ import {
   faSort,
   faLink,
   faFont,
+  faPlus,
+  faTrash,
+  faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import themes from "@/data/themes";
 import primaryFonts from "@/data/primaryFonts";
@@ -131,7 +136,6 @@ const FontPreview = ({ font, isPrimary }) => (
   </div>
 );
 
-// Custom Dropdown Component
 const CustomDropdown = ({
   name,
   value,
@@ -257,6 +261,8 @@ function useAuth() {
 export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [weddings, setWeddings] = useState([]);
+  const [selectedWeddingId, setSelectedWeddingId] = useState(null);
   const [form, setForm] = useState({
     brideName: "",
     groomName: "",
@@ -295,6 +301,8 @@ export default function DashboardPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [slugError, setSlugError] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newWeddingName, setNewWeddingName] = useState("");
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",
@@ -335,19 +343,27 @@ export default function DashboardPage() {
     }
   };
 
-  const validateSlug = async (slug, currentUserId) => {
+  const validateSlug = async (slug, currentUserId, currentWeddingId) => {
     if (!slug) return false;
     try {
       const usersRef = collection(db, "users");
-      const q = query(usersRef, where("slug", "==", slug));
-      const querySnapshot = await getDocs(q);
-
+      const userQuery = query(usersRef);
+      const userSnapshot = await getDocs(userQuery);
       let isTaken = false;
-      querySnapshot.forEach((doc) => {
-        if (doc.id !== currentUserId) {
-          isTaken = true;
-        }
-      });
+
+      for (const userDoc of userSnapshot.docs) {
+        const weddingsRef = collection(db, "users", userDoc.id, "weddings");
+        const q = query(weddingsRef, where("slug", "==", slug));
+        const weddingSnapshot = await getDocs(q);
+        weddingSnapshot.forEach((doc) => {
+          if (
+            userDoc.id !== currentUserId ||
+            (currentWeddingId && doc.id !== currentWeddingId)
+          ) {
+            isTaken = true;
+          }
+        });
+      }
 
       return !isTaken;
     } catch (err) {
@@ -357,90 +373,183 @@ export default function DashboardPage() {
     }
   };
 
+  const loadWeddings = async () => {
+    if (!user) return;
+    try {
+      const weddingsRef = collection(db, "users", user.uid, "weddings");
+      const weddingsSnap = await getDocs(weddingsRef);
+      const weddingsList = weddingsSnap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setWeddings(weddingsList);
+    } catch (err) {
+      setError("Lỗi khi tải danh sách đám cưới. Vui lòng thử lại.");
+    }
+  };
+
+  const loadWeddingData = async (weddingId) => {
+    try {
+      const weddingRef = doc(db, "users", user.uid, "weddings", weddingId);
+      const docSnap = await getDoc(weddingRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setForm({
+          brideName: data.brideName || "",
+          groomName: data.groomName || "",
+          weddingDate:
+            data.weddingDate?.toDate().toISOString().substring(0, 10) || "",
+          location: data.location || "",
+          loveStory: data.loveStory || "",
+          theme: data.theme || "romantic",
+          slug: data.slug || "",
+          gallery: data.gallery || [],
+          showCountdown: data.showCountdown !== false,
+          showGallery: data.showGallery !== false,
+          showLoveStory: data.showLoveStory !== false,
+          showWishForm: data.showWishForm !== false,
+          showWishList: data.showWishList !== false,
+          showQRCode: data.showQRCode || false,
+          bankInfo: {
+            bankName: data.bankInfo?.bankName || "",
+            accountNumber: data.bankInfo?.accountNumber || "",
+            accountHolder: data.bankInfo?.accountHolder || "",
+            description: data.bankInfo?.description || "",
+          },
+          componentOrder: data.componentOrder || [
+            "WeddingHeader",
+            "Countdown",
+            "Gallery",
+            "LoveStory",
+            "QRCode",
+            "WishForm",
+            "WishList",
+          ],
+          primaryFont: data.primaryFont || "Dancing Script",
+          secondaryFont: data.secondaryFont || "Lora",
+        });
+
+        const wishesRef = collection(
+          db,
+          "users",
+          user.uid,
+          "weddings",
+          weddingId,
+          "wishes"
+        );
+        const wishesSnap = await getDocs(wishesRef);
+        const wishesList = wishesSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setWishes(wishesList);
+      } else {
+        setForm({
+          brideName: "",
+          groomName: "",
+          weddingDate: "",
+          location: "",
+          loveStory: "",
+          theme: "romantic",
+          slug: "",
+          gallery: [],
+          showCountdown: true,
+          showGallery: true,
+          showLoveStory: true,
+          showWishForm: true,
+          showWishList: true,
+          showQRCode: true,
+          bankInfo: {
+            bankName: "",
+            accountNumber: "",
+            accountHolder: "",
+            description: "",
+          },
+          componentOrder: [
+            "WeddingHeader",
+            "Countdown",
+            "Gallery",
+            "LoveStory",
+            "QRCode",
+            "WishForm",
+            "WishList",
+          ],
+          primaryFont: "Dancing Script",
+          secondaryFont: "Lora",
+        });
+        setWishes([]);
+      }
+    } catch (err) {
+      setError("Lỗi khi tải dữ liệu đám cưới. Vui lòng thử lại.");
+    }
+  };
+
   useEffect(() => {
     if (user) {
-      const loadUserData = async () => {
-        try {
-          const docRef = doc(db, "users", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setForm({
-              brideName: data.brideName || "",
-              groomName: data.groomName || "",
-              weddingDate:
-                data.weddingDate?.toDate().toISOString().substring(0, 10) || "",
-              location: data.location || "",
-              loveStory: data.loveStory || "",
-              theme: data.theme || "romantic",
-              slug: data.slug || "",
-              gallery: data.gallery || [],
-              showCountdown: data.showCountdown !== false,
-              showGallery: data.showGallery !== false,
-              showLoveStory: data.showLoveStory !== false,
-              showWishForm: data.showWishForm !== false,
-              showWishList: data.showWishList !== false,
-              showQRCode: data.showQRCode || false,
-              bankInfo: {
-                bankName: data.bankInfo?.bankName || "",
-                accountNumber: data.bankInfo?.accountNumber || "",
-                accountHolder: data.bankInfo?.accountHolder || "",
-                description: data.bankInfo?.description || "",
-              },
-              componentOrder: data.componentOrder || [
-                "WeddingHeader",
-                "Countdown",
-                "Gallery",
-                "LoveStory",
-                "QRCode",
-                "WishForm",
-                "WishList",
-              ],
-              primaryFont: data.primaryFont || "Dancing Script",
-              secondaryFont: data.secondaryFont || "Lora",
-            });
-          }
-
-          const wishesRef = collection(db, "users", user.uid, "wishes");
-          const wishesSnap = await getDocs(wishesRef);
-          const wishesList = wishesSnap.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setWishes(wishesList);
-        } catch (err) {
-          setError("Lỗi khi tải dữ liệu người dùng. Vui lòng thử lại.");
-        }
-      };
-      loadUserData();
-    }
+      loadWeddings();
+    } // eslint-disable-next-line
   }, [user]);
 
   useEffect(() => {
-    if (form.brideName && form.groomName) {
+    if (selectedWeddingId) {
+      loadWeddingData(selectedWeddingId);
+    } else {
+      setForm({
+        brideName: "",
+        groomName: "",
+        weddingDate: "",
+        location: "",
+        loveStory: "",
+        theme: "romantic",
+        slug: "",
+        gallery: [],
+        showCountdown: true,
+        showGallery: true,
+        showLoveStory: true,
+        showWishForm: true,
+        showWishList: true,
+        showQRCode: true,
+        bankInfo: {
+          bankName: "",
+          accountNumber: "",
+          accountHolder: "",
+          description: "",
+        },
+        componentOrder: [
+          "WeddingHeader",
+          "Countdown",
+          "Gallery",
+          "LoveStory",
+          "QRCode",
+          "WishForm",
+          "WishList",
+        ],
+        primaryFont: "Dancing Script",
+        secondaryFont: "Lora",
+      });
+      setWishes([]);
+    } // eslint-disable-next-line
+  }, [selectedWeddingId]);
+
+  useEffect(() => {
+    if (form.brideName && form.groomName && selectedWeddingId) {
       let combinedName = `${form.brideName} ${form.groomName}`;
       if (form.weddingDate) {
         combinedName += ` ${form.weddingDate}`;
       }
       const newSlug = slugify(combinedName);
       setForm((prev) => ({ ...prev, slug: newSlug }));
-
-      const checkSlug = async () => {
-        const isAvailable = await validateSlug(newSlug, user?.uid || "");
-        setSlugError(
-          isAvailable
-            ? ""
-            : "Liên kết này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
-        );
-      };
-      if (user) {
-        checkSlug();
-      }
     } else {
       setForm((prev) => ({ ...prev, slug: "" }));
       setSlugError("");
     }
-  }, [form.brideName, form.groomName, form.weddingDate, user]);
+  }, [
+    form.brideName,
+    form.groomName,
+    form.weddingDate,
+    user,
+    selectedWeddingId,
+  ]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -459,6 +568,10 @@ export default function DashboardPage() {
   };
 
   const handleImageUpload = async (e) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn hoặc tạo một đám cưới trước khi tải ảnh.");
+      return;
+    }
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
@@ -494,8 +607,14 @@ export default function DashboardPage() {
       setForm((prev) => {
         const updatedGallery = [...prev.gallery, ...uploadedImages];
         if (user) {
-          const userRef = doc(db, "users", user.uid);
-          updateDoc(userRef, { gallery: updatedGallery }).catch((err) => {
+          const weddingRef = doc(
+            db,
+            "users",
+            user.uid,
+            "weddings",
+            selectedWeddingId
+          );
+          updateDoc(weddingRef, { gallery: updatedGallery }).catch((err) => {
             console.error("Firestore save error:", err);
             setError("Lỗi khi lưu hình ảnh vào Firestore. Vui lòng thử lại.");
           });
@@ -521,13 +640,23 @@ export default function DashboardPage() {
   };
 
   const handleRemoveImage = (public_id) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn một đám cưới trước khi xóa ảnh.");
+      return;
+    }
     setForm((prev) => {
       const updatedGallery = prev.gallery.filter(
         (img) => img.public_id !== public_id
       );
       if (user) {
-        const userRef = doc(db, "users", user.uid);
-        updateDoc(userRef, { gallery: updatedGallery }).catch((err) => {
+        const weddingRef = doc(
+          db,
+          "users",
+          user.uid,
+          "weddings",
+          selectedWeddingId
+        );
+        updateDoc(weddingRef, { gallery: updatedGallery }).catch((err) => {
           console.error("Firestore save error:", err);
           setError(
             "Lỗi khi cập nhật thư viện ảnh trong Firestore. Vui lòng thử lại."
@@ -538,12 +667,90 @@ export default function DashboardPage() {
     });
   };
 
+  const handleCreateWedding = async () => {
+    if (!user) {
+      setError("Không thể tạo đám cưới vì chưa đăng nhập.");
+      return;
+    }
+    try {
+      const weddingsRef = collection(db, "users", user.uid, "weddings");
+      const newWeddingRef = await addDoc(weddingsRef, {
+        brideName: "",
+        groomName: "",
+        weddingDate: null,
+        location: "",
+        loveStory: "",
+        theme: "romantic",
+        slug: "",
+        gallery: [],
+        showCountdown: true,
+        showGallery: true,
+        showLoveStory: true,
+        showWishForm: true,
+        showWishList: true,
+        showQRCode: true,
+        bankInfo: {
+          bankName: "",
+          accountNumber: "",
+          accountHolder: "",
+          description: "",
+        },
+        componentOrder: [
+          "WeddingHeader",
+          "Countdown",
+          "Gallery",
+          "LoveStory",
+          "QRCode",
+          "WishForm",
+          "WishList",
+        ],
+        primaryFont: "Dancing Script",
+        secondaryFont: "Lora",
+        createdAt: new Date(),
+        name: newWeddingName || "Đám cưới mới",
+      });
+      setWeddings((prev) => [
+        ...prev,
+        { id: newWeddingRef.id, name: newWeddingName || "Đám cưới mới" },
+      ]);
+      setSelectedWeddingId(newWeddingRef.id);
+      setShowCreateModal(false);
+      setNewWeddingName("");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      setError("Lỗi khi tạo đám cưới mới. Vui lòng thử lại.");
+    }
+  };
+
+  const handleDeleteWedding = async (weddingId) => {
+    if (!user) {
+      setError("Không thể xóa đám cưới vì chưa đăng nhập.");
+      return;
+    }
+    try {
+      const weddingRef = doc(db, "users", user.uid, "weddings", weddingId);
+      await deleteDoc(weddingRef);
+      setWeddings((prev) => prev.filter((wedding) => wedding.id !== weddingId));
+      if (selectedWeddingId === weddingId) {
+        setSelectedWeddingId(null);
+      }
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      setError("Lỗi khi xóa đám cưới. Vui lòng thử lại.");
+    }
+  };
+
   const handleSave = async () => {
     if (!user) {
       setError("Không thể lưu thông tin vì chưa đăng nhập.");
       return;
     }
-
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn hoặc tạo một đám cưới để lưu.");
+      return;
+    }
     if (!form.slug) {
       setError(
         "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết."
@@ -551,7 +758,11 @@ export default function DashboardPage() {
       return;
     }
 
-    const isSlugAvailable = await validateSlug(form.slug, user.uid);
+    const isSlugAvailable = await validateSlug(
+      form.slug,
+      user.uid,
+      selectedWeddingId
+    );
     if (!isSlugAvailable) {
       setSlugError(
         "Liên kết này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
@@ -560,12 +771,17 @@ export default function DashboardPage() {
     }
 
     try {
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
+      const weddingRef = doc(
+        db,
+        "users",
+        user.uid,
+        "weddings",
+        selectedWeddingId
+      );
+      await updateDoc(weddingRef, {
         ...form,
         weddingDate: form.weddingDate ? new Date(form.weddingDate) : null,
       });
-
       setShowSuccess(true);
       setSlugError("");
       setTimeout(() => setShowSuccess(false), 3000);
@@ -575,8 +791,20 @@ export default function DashboardPage() {
   };
 
   const handleApproveWish = async (wishId) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn một đám cưới trước khi duyệt lời chúc.");
+      return;
+    }
     try {
-      const wishRef = doc(db, "users", user.uid, "wishes", wishId);
+      const wishRef = doc(
+        db,
+        "users",
+        user.uid,
+        "weddings",
+        selectedWeddingId,
+        "wishes",
+        wishId
+      );
       await setDoc(wishRef, { approved: true }, { merge: true });
       setWishes(
         wishes.map((wish) =>
@@ -589,8 +817,20 @@ export default function DashboardPage() {
   };
 
   const handleRejectWish = async (wishId) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn một đám cưới trước khi từ chối lời chúc.");
+      return;
+    }
     try {
-      const wishRef = doc(db, "users", user.uid, "wishes", wishId);
+      const wishRef = doc(
+        db,
+        "users",
+        user.uid,
+        "weddings",
+        selectedWeddingId,
+        "wishes",
+        wishId
+      );
       await setDoc(wishRef, { approved: false }, { merge: true });
       setWishes(
         wishes.map((wish) =>
@@ -603,8 +843,20 @@ export default function DashboardPage() {
   };
 
   const handleDeleteWish = async (wishId) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn một đám cưới trước khi xóa lời chúc.");
+      return;
+    }
     try {
-      const wishRef = doc(db, "users", user.uid, "wishes", wishId);
+      const wishRef = doc(
+        db,
+        "users",
+        user.uid,
+        "weddings",
+        selectedWeddingId,
+        "wishes",
+        wishId
+      );
       await deleteDoc(wishRef);
       setWishes(wishes.filter((wish) => wish.id !== wishId));
     } catch (err) {
@@ -646,7 +898,15 @@ export default function DashboardPage() {
   return (
     <>
       <Container fluid className="dashboard-container wedding-section">
-        <div className="d-flex justify-content-end mb-4">
+        <div className="d-flex justify-content-between mb-4">
+          <Button
+            variant="primary"
+            onClick={() => setShowCreateModal(true)}
+            className="btn-create"
+          >
+            <FontAwesomeIcon icon={faPlus} className="me-2" />
+            Tạo đám cưới mới
+          </Button>
           <Button
             variant="outline-danger"
             size="sm"
@@ -657,6 +917,38 @@ export default function DashboardPage() {
             Đăng xuất
           </Button>
         </div>
+
+        <Modal
+          show={showCreateModal}
+          onHide={() => setShowCreateModal(false)}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Tạo đám cưới mới</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>Tên đám cưới (tùy chọn)</Form.Label>
+              <Form.Control
+                type="text"
+                value={newWeddingName}
+                onChange={(e) => setNewWeddingName(e.target.value)}
+                placeholder="Nhập tên đám cưới"
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowCreateModal(false)}
+            >
+              Hủy
+            </Button>
+            <Button variant="primary" onClick={handleCreateWedding}>
+              Tạo
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         <Card className="dashboard-card">
           <div className="decorative-corner-top" />
@@ -699,417 +991,477 @@ export default function DashboardPage() {
               </Alert>
             )}
 
-            <Form>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      <FontAwesomeIcon icon={faUser} className="me-2" />
-                      Cô dâu
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="brideName"
-                      value={form.brideName}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      <FontAwesomeIcon icon={faUser} className="me-2" />
-                      Chú rể
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="groomName"
-                      value={form.groomName}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faLink} className="me-2" />
-                  Liên kết
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  name="slug"
-                  value={form.slug}
-                  readOnly
-                  disabled
-                  className="form-control-disabled"
-                />
-                <Form.Text className="form-text">
-                  Tự động tạo từ tên cô dâu, chú rể và ngày cưới
-                </Form.Text>
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
-                  Ngày cưới
-                </Form.Label>
-                <Form.Control
-                  type="date"
-                  name="weddingDate"
-                  value={form.weddingDate}
-                  onChange={handleChange}
-                  className="form-control"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
-                  Địa điểm
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  name="location"
-                  value={form.location}
-                  onChange={handleChange}
-                  className="form-control"
-                />
-              </Form.Group>
-              <Row>
-                <Col md={4}>
-                  <Form.Group className="mb-3">
-                    <CustomDropdown
-                      name="theme"
-                      value={form.theme}
-                      options={themes}
-                      onChange={handleChange}
-                      previewComponent={ThemePreview}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group className="mb-3">
-                    <CustomDropdown
-                      name="primaryFont"
-                      value={form.primaryFont}
-                      options={primaryFonts}
-                      onChange={handleChange}
-                      previewComponent={FontPreview}
-                      isPrimary={true}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group className="mb-3">
-                    <CustomDropdown
-                      name="secondaryFont"
-                      value={form.secondaryFont}
-                      options={secondaryFonts}
-                      onChange={handleChange}
-                      previewComponent={FontPreview}
-                      isPrimary={false}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faHeart} className="me-2" />
-                  Chuyện tình yêu
-                </Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={4}
-                  name="loveStory"
-                  value={form.loveStory}
-                  onChange={handleChange}
-                  className="form-control"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="form-label">
-                  <FontAwesomeIcon icon={faImages} className="me-2" />
-                  Thư viện ảnh
-                </Form.Label>
-                <Form.Control
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageUpload}
-                  disabled={uploading}
-                  className="form-control"
-                />
-                {uploading && (
-                  <Spinner
-                    animation="border"
-                    size="sm"
-                    className="mt-2"
-                    variant="danger"
+            <Form.Group className="mb-4">
+              <Form.Label className="form-label">
+                <FontAwesomeIcon icon={faEdit} className="me-2" />
+                Chọn đám cưới
+              </Form.Label>
+              <div className="d-flex flex-wrap gap-2">
+                {weddings.map((wedding) => (
+                  <Button
+                    key={wedding.id}
+                    variant={
+                      selectedWeddingId === wedding.id
+                        ? "primary"
+                        : "outline-primary"
+                    }
+                    onClick={() => setSelectedWeddingId(wedding.id)}
+                    className="d-flex align-items-center"
+                  >
+                    {wedding.name ||
+                      (wedding.brideName && wedding.groomName
+                        ? `${wedding.brideName} & ${wedding.groomName}`
+                        : "Chưa đặt tên")}
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className="ms-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteWedding(wedding.id);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </Button>
+                  </Button>
+                ))}
+              </div>
+              {weddings.length === 0 && (
+                <p className="text-muted mt-2">
+                  Chưa có đám cưới nào. Hãy tạo một đám cưới mới!
+                </p>
+              )}
+            </Form.Group>
+
+            {selectedWeddingId ? (
+              <Form>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label">
+                        <FontAwesomeIcon icon={faUser} className="me-2" />
+                        Cô dâu
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="brideName"
+                        value={form.brideName}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label">
+                        <FontAwesomeIcon icon={faUser} className="me-2" />
+                        Chú rể
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="groomName"
+                        value={form.groomName}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faLink} className="me-2" />
+                    Liên kết
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="slug"
+                    value={form.slug}
+                    readOnly
+                    disabled
+                    className="form-control-disabled"
                   />
-                )}
-                {form.gallery.length > 0 && (
-                  <Row className="mt-3 g-2">
-                    {form.gallery.map((img) => (
-                      <Col
-                        xs={6}
-                        sm={4}
-                        md={3}
-                        lg={2}
-                        xl={2}
-                        key={img.public_id}
-                      >
-                        <div className="gallery-image-wrapper">
-                          <Image
-                            src={img.url}
-                            alt="Gallery item"
-                            className="gallery-image"
-                          />
+                  <Form.Text className="form-text">
+                    Tự động tạo từ tên cô dâu, chú rể và ngày cưới
+                  </Form.Text>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+                    Ngày cưới
+                  </Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="weddingDate"
+                    value={form.weddingDate}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
+                    Địa điểm
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </Form.Group>
+                <Row>
+                  <Col md={4}>
+                    <Form.Group className="mb-3">
+                      <CustomDropdown
+                        name="theme"
+                        value={form.theme}
+                        options={themes}
+                        onChange={handleChange}
+                        previewComponent={ThemePreview}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group className="mb-3">
+                      <CustomDropdown
+                        name="primaryFont"
+                        value={form.primaryFont}
+                        options={primaryFonts}
+                        onChange={handleChange}
+                        previewComponent={FontPreview}
+                        isPrimary={true}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group className="mb-3">
+                      <CustomDropdown
+                        name="secondaryFont"
+                        value={form.secondaryFont}
+                        options={secondaryFonts}
+                        onChange={handleChange}
+                        previewComponent={FontPreview}
+                        isPrimary={false}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faHeart} className="me-2" />
+                    Chuyện tình yêu
+                  </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={4}
+                    name="loveStory"
+                    value={form.loveStory}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faImages} className="me-2" />
+                    Thư viện ảnh
+                  </Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                    className="form-control"
+                  />
+                  {uploading && (
+                    <Spinner
+                      animation="border"
+                      size="sm"
+                      className="mt-2"
+                      variant="danger"
+                    />
+                  )}
+                  {form.gallery.length > 0 && (
+                    <Row className="mt-3 g-2">
+                      {form.gallery.map((img) => (
+                        <Col
+                          xs={6}
+                          sm={4}
+                          md={3}
+                          lg={2}
+                          xl={2}
+                          key={img.public_id}
+                        >
+                          <div className="gallery-image-wrapper">
+                            <Image
+                              src={img.url}
+                              alt="Gallery item"
+                              className="gallery-image"
+                            />
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleRemoveImage(img.public_id)}
+                              className="gallery-delete-button"
+                            >
+                              Xóa
+                            </Button>
+                          </div>
+                        </Col>
+                      ))}
+                    </Row>
+                  )}
+                </Form.Group>
+                <h3 className="section-heading">
+                  <FontAwesomeIcon icon={faMoneyBillWave} className="me-2" />
+                  Thông tin chuyển khoản
+                </h3>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label">
+                        Tên ngân hàng
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="bankInfo.bankName"
+                        value={form.bankInfo.bankName}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label">
+                        Số tài khoản
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="bankInfo.accountNumber"
+                        value={form.bankInfo.accountNumber}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label">
+                        Chủ tài khoản
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="bankInfo.accountHolder"
+                        value={form.bankInfo.accountHolder}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label">
+                        Nội dung chuyển khoản
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="bankInfo.description"
+                        value={form.bankInfo.description}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <h3 className="section-heading">
+                  <FontAwesomeIcon icon={faEye} className="me-2" />
+                  Hiển thị thành phần
+                </h3>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showCountdown"
+                        name="showCountdown"
+                        label="Đếm ngược"
+                        checked={form.showCountdown}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showGallery"
+                        name="showGallery"
+                        label="Thư viện ảnh"
+                        checked={form.showGallery}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showLoveStory"
+                        name="showLoveStory"
+                        label="Chuyện tình yêu"
+                        checked={form.showLoveStory}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showWishForm"
+                        name="showWishForm"
+                        label="Form lời chúc"
+                        checked={form.showWishForm}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showWishList"
+                        name="showWishList"
+                        label="Danh sách lời chúc"
+                        checked={form.showWishList}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showQRCode"
+                        name="showQRCode"
+                        label="Mã QR chuyển khoản"
+                        checked={form.showQRCode}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <h3 className="section-heading">
+                  <FontAwesomeIcon icon={faSort} className="me-2" />
+                  Sắp xếp thành phần
+                </h3>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={form.componentOrder}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {form.componentOrder.map((id) => (
+                      <SortableItem
+                        key={id}
+                        id={id}
+                        label={componentLabels[id]}
+                      />
+                    ))}
+                  </SortableContext>
+                </DndContext>
+                <h3 className="section-heading">
+                  <FontAwesomeIcon icon={faCommentDots} className="me-2" />
+                  Quản lý lời chúc
+                </h3>
+                {wishes.length > 0 ? (
+                  <ListGroup className="mb-4">
+                    {wishes.map((wish) => (
+                      <ListGroup.Item key={wish.id} className="wish-list-item">
+                        <div>
+                          <strong className="wish-name">{wish.name}</strong>:{" "}
+                          {wish.message}
+                          <br />
+                          <small className="wish-meta">
+                            {wish.createdAt
+                              .toDate()
+                              .toLocaleDateString("vi-VN")}{" "}
+                            - {wish.approved ? "Đã duyệt" : "Chưa duyệt"}
+                          </small>
+                        </div>
+                        <div className="d-flex gap-2">
+                          {!wish.approved && (
+                            <Button
+                              variant="success"
+                              size="sm"
+                              onClick={() => handleApproveWish(wish.id)}
+                              className="btn-approve"
+                            >
+                              Duyệt
+                            </Button>
+                          )}
+                          {wish.approved && (
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleRejectWish(wish.id)}
+                              className="btn-reject"
+                            >
+                              Hủy duyệt
+                            </Button>
+                          )}
                           <Button
-                            variant="danger"
+                            variant="outline-danger"
                             size="sm"
-                            onClick={() => handleRemoveImage(img.public_id)}
-                            className="gallery-delete-button"
+                            onClick={() => handleDeleteWish(wish.id)}
+                            className="btn-delete"
                           >
                             Xóa
                           </Button>
                         </div>
-                      </Col>
+                      </ListGroup.Item>
                     ))}
-                  </Row>
+                  </ListGroup>
+                ) : (
+                  <p className="no-wishes">Chưa có lời chúc nào.</p>
                 )}
-              </Form.Group>
-              <h3 className="section-heading">
-                <FontAwesomeIcon icon={faMoneyBillWave} className="me-2" />
-                Thông tin chuyển khoản
-              </h3>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      Tên ngân hàng
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="bankInfo.bankName"
-                      value={form.bankInfo.bankName}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label">Số tài khoản</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="bankInfo.accountNumber"
-                      value={form.bankInfo.accountNumber}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      Chủ tài khoản
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="bankInfo.accountHolder"
-                      value={form.bankInfo.accountHolder}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label">
-                      Nội dung chuyển khoản
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="bankInfo.description"
-                      value={form.bankInfo.description}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <h3 className="section-heading">
-                <FontAwesomeIcon icon={faEye} className="me-2" />
-                Hiển thị thành phần
-              </h3>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Check
-                      type="switch"
-                      id="showCountdown"
-                      name="showCountdown"
-                      label="Đếm ngược"
-                      checked={form.showCountdown}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Check
-                      type="switch"
-                      id="showGallery"
-                      name="showGallery"
-                      label="Thư viện ảnh"
-                      checked={form.showGallery}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Check
-                      type="switch"
-                      id="showLoveStory"
-                      name="showLoveStory"
-                      label="Chuyện tình yêu"
-                      checked={form.showLoveStory}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Check
-                      type="switch"
-                      id="showWishForm"
-                      name="showWishForm"
-                      label="Form lời chúc"
-                      checked={form.showWishForm}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Check
-                      type="switch"
-                      id="showWishList"
-                      name="showWishList"
-                      label="Danh sách lời chúc"
-                      checked={form.showWishList}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Check
-                      type="switch"
-                      id="showQRCode"
-                      name="showQRCode"
-                      label="Mã QR chuyển khoản"
-                      checked={form.showQRCode}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <h3 className="section-heading">
-                <FontAwesomeIcon icon={faSort} className="me-2" />
-                Sắp xếp thành phần
-              </h3>
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={form.componentOrder}
-                  strategy={verticalListSortingStrategy}
-                >
-                  {form.componentOrder.map((id) => (
-                    <SortableItem
-                      key={id}
-                      id={id}
-                      label={componentLabels[id]}
-                    />
-                  ))}
-                </SortableContext>
-              </DndContext>
-              <h3 className="section-heading">
-                <FontAwesomeIcon icon={faCommentDots} className="me-2" />
-                Quản lý lời chúc
-              </h3>
-              {wishes.length > 0 ? (
-                <ListGroup className="mb-4">
-                  {wishes.map((wish) => (
-                    <ListGroup.Item key={wish} className="wish-list-item">
-                      <div>
-                        <strong className="wish-name">{wish.name}</strong>:{" "}
-                        {wish.message}
-                        <br />
-                        <small className="wish-meta">
-                          {wish.createdAt.toDate().toLocaleDateString("vi-VN")}{" "}
-                          - {wish.approved ? "Đã duyệt" : "Chưa duyệt"}
-                        </small>
-                      </div>
-                      <div className="d-flex gap-2">
-                        {!wish.approved && (
-                          <Button
-                            variant="success"
-                            size="sm"
-                            onClick={() => handleApproveWish(wish.id)}
-                            className="btn-approve"
-                          >
-                            Duyệt
-                          </Button>
-                        )}
-                        {wish.approved && (
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => handleRejectWish(wish.id)}
-                            className="btn-reject"
-                          >
-                            Hủy duyệt
-                          </Button>
-                        )}
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => handleDeleteWish(wish.id)}
-                          className="btn-delete"
-                        >
-                          Xóa
-                        </Button>
-                      </div>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              ) : (
-                <p className="no-wishes">Chưa có lời chúc nào.</p>
-              )}
-              <div className="d-flex gap-2">
-                <Button
-                  variant="primary"
-                  onClick={handleSave}
-                  disabled={uploading || !!slugError}
-                  className="btn-save"
-                >
-                  <FontAwesomeIcon icon={faSave} className="me-2" />
-                  Lưu thông tin
-                </Button>
-                <Button
-                  variant="success"
-                  onClick={handleRedirect}
-                  disabled={uploading || !form.slug || !!slugError}
-                  className="btn-redirect"
-                >
-                  <FontAwesomeIcon icon={faEye} className="me-2" />
-                  Xem trang cưới
-                </Button>
-              </div>
-            </Form>
+                <div className="d-flex gap-2">
+                  <Button
+                    variant="primary"
+                    onClick={handleSave}
+                    disabled={uploading || !!slugError || !selectedWeddingId}
+                    className="btn-save"
+                  >
+                    <FontAwesomeIcon icon={faSave} className="me-2" />
+                    Lưu thông tin
+                  </Button>
+                  <Button
+                    variant="success"
+                    onClick={handleRedirect}
+                    disabled={
+                      uploading ||
+                      !form.slug ||
+                      !!slugError ||
+                      !selectedWeddingId
+                    }
+                    className="btn-redirect"
+                  >
+                    <FontAwesomeIcon icon={faEye} className="me-2" />
+                    Xem trang cưới
+                  </Button>
+                </div>
+              </Form>
+            ) : (
+              <p className="text-muted">
+                Vui lòng chọn một đám cưới để chỉnh sửa hoặc tạo một đám cưới
+                mới.
+              </p>
+            )}
           </Card.Body>
         </Card>
       </Container>
-      <WeddingPreviewPane form={form} wishes={approvedWishes} />
+      {selectedWeddingId && (
+        <WeddingPreviewPane form={form} wishes={approvedWishes} />
+      )}
     </>
   );
 }

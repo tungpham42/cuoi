@@ -1,11 +1,5 @@
 "use client";
-import WeddingHeader from "./WeddingHeader";
-import Countdown from "./Countdown";
-import Gallery from "./Gallery";
-import LoveStory from "./LoveStory";
-import WishList from "./WishList";
-import QRCode from "./QRCode";
-import { Card, Container } from "react-bootstrap";
+import { Container, Card, Alert } from "react-bootstrap";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -13,7 +7,14 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import WeddingHeader from "./WeddingHeader";
+import Countdown from "./Countdown";
+import Gallery from "./Gallery";
+import LoveStory from "./LoveStory";
+import WishList from "./WishList";
+import QRCode from "./QRCode";
 
+// Sortable component for drag-and-drop functionality
 const SortableComponent = ({ id, children, disabled }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id, disabled });
@@ -32,7 +33,20 @@ const SortableComponent = ({ id, children, disabled }) => {
   );
 };
 
+// Main WeddingPreviewPane component
 const WeddingPreviewPane = ({ form, wishes }) => {
+  // If no form data, render a placeholder message
+  if (!form) {
+    return (
+      <Container fluid className="py-5">
+        <Alert variant="info" className="text-center">
+          Vui lòng chọn một đám cưới để xem trước.
+        </Alert>
+      </Container>
+    );
+  }
+
+  // Default values for form fields to prevent undefined errors
   const componentOrder = form.componentOrder || [
     "WeddingHeader",
     "Countdown",
@@ -41,65 +55,80 @@ const WeddingPreviewPane = ({ form, wishes }) => {
     "QRCode",
     "WishList",
   ];
+  const primaryFont = form.primaryFont || "Dancing Script";
+  const secondaryFont = form.secondaryFont || "Lora";
+  const theme = form.theme || "romantic";
+  const brideName = form.brideName || "";
+  const groomName = form.groomName || "";
+  const weddingDate = form.weddingDate || "";
+  const gallery = form.gallery || [];
+  const loveStory = form.loveStory || "";
+  const bankInfo = form.bankInfo || {};
+  const showCountdown = form.showCountdown !== false;
+  const showGallery = form.showGallery !== false;
+  const showLoveStory = form.showLoveStory !== false;
+  const showWishList = form.showWishList !== false;
+  const showQRCode = form.showQRCode !== false;
 
+  // Render individual components based on ID
   const renderComponent = (componentId) => {
     switch (componentId) {
       case "WeddingHeader":
-        return <WeddingHeader data={form} />;
+        return brideName || groomName ? (
+          <WeddingHeader data={{ brideName, groomName, ...form }} />
+        ) : null;
       case "Countdown":
-        return (
-          form.showCountdown &&
-          form.weddingDate && <Countdown weddingDate={form.weddingDate} />
-        );
+        return showCountdown && weddingDate ? (
+          <Countdown weddingDate={weddingDate} />
+        ) : null;
       case "Gallery":
-        return (
-          form.showGallery &&
-          form.gallery?.length > 0 && <Gallery images={form.gallery} />
-        );
+        return showGallery && gallery.length > 0 ? (
+          <Gallery images={gallery} />
+        ) : null;
       case "LoveStory":
-        return (
-          form.showLoveStory &&
-          form.loveStory && <LoveStory text={form.loveStory} />
-        );
+        return showLoveStory && loveStory.trim() ? (
+          <LoveStory text={loveStory} />
+        ) : null;
       case "QRCode":
-        return form.showQRCode && <QRCode bankInfo={form.bankInfo} />;
+        return showQRCode &&
+          bankInfo &&
+          Object.values(bankInfo).some((value) => value) ? (
+          <QRCode bankInfo={bankInfo} />
+        ) : null;
       case "WishList":
-        return (
-          form.showWishList &&
-          wishes?.length > 0 && <WishList wishes={wishes} />
-        );
+        return showWishList && wishes?.length > 0 ? (
+          <WishList wishes={wishes} />
+        ) : null;
       default:
         return null;
     }
   };
 
   return (
-    <Container fluid className="py-5" data-theme={form.theme}>
+    <Container fluid className="py-5" data-theme={theme}>
       <style
         dangerouslySetInnerHTML={{
           __html: `
-        .wedding-preview,
-        .wedding-preview p,
-        .wedding-preview span {
-        font-family: "${form.secondaryFont || "Lora"}", serif !important;
-        }
-        .wedding-preview h1,
-        .wedding-preview h2,
-        .wedding-preview h3,
-        .wedding-preview h4,
-        .wedding-preview h5,
-        .wedding-preview h6,
-        .wedding-preview .h1,
-        .wedding-preview .h2,
-        .wedding-preview .h3,
-        .wedding-preview .h4,
-        .wedding-preview .h5,
-        .wedding-preview .h6 {
-        font-family: "${
-          form.primaryFont || "Dancing Script"
-        }", cursive !important;
-        }
-      `,
+            .wedding-preview,
+            .wedding-preview p,
+            .wedding-preview span {
+              font-family: "${secondaryFont}", serif !important;
+            }
+            .wedding-preview h1,
+            .wedding-preview h2,
+            .wedding-preview h3,
+            .wedding-preview h4,
+            .wedding-preview h5,
+            .wedding-preview h6,
+            .wedding-preview .h1,
+            .wedding-preview .h2,
+            .wedding-preview .h3,
+            .wedding-preview .h4,
+            .wedding-preview .h5,
+            .wedding-preview .h6 {
+              font-family: "${primaryFont}", cursive !important;
+            }
+          `,
         }}
       />
       <Card className="shadow-lg border-0 mx-auto wedding-preview">

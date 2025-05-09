@@ -49,19 +49,34 @@ export default function WeddingPage({ params }) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const q = query(collection(db, "users"), where("slug", "==", slug));
-        const snapshot = await getDocs(q);
+        const usersRef = collection(db, "users");
+        const userQuery = query(usersRef);
+        const userSnapshot = await getDocs(userQuery);
+        let userId = null;
+        let weddingId = null;
+        let weddingDoc = null;
 
-        if (snapshot.empty) {
-          throw new Error("Không tìm thấy thông tin đám cưới.");
+        for (const userDoc of userSnapshot.docs) {
+          const weddingsRef = collection(db, "users", userDoc.id, "weddings");
+          const q = query(weddingsRef, where("slug", "==", slug));
+          const weddingSnapshot = await getDocs(q);
+          if (!weddingSnapshot.empty) {
+            userId = userDoc.id;
+            weddingDoc = weddingSnapshot.docs[0];
+            weddingId = weddingDoc.id;
+            break;
+          }
         }
 
-        const userDoc = snapshot.docs[0];
-        const userId = userDoc.id;
-        const data = userDoc.data();
+        if (!userId || !weddingDoc) {
+          throw new Error("Không Warna tìm thấy thông tin đám cưới.");
+        }
+
+        const data = weddingDoc.data();
 
         const formattedWedding = {
           id: userId,
+          weddingId: weddingId,
           brideName: data.brideName || "",
           groomName: data.groomName || "",
           weddingDate:
@@ -90,7 +105,14 @@ export default function WeddingPage({ params }) {
           secondaryFont: data.secondaryFont || "Lora",
         };
 
-        const wishesRef = collection(db, "users", userId, "wishes");
+        const wishesRef = collection(
+          db,
+          "users",
+          userId,
+          "weddings",
+          weddingId,
+          "wishes"
+        );
         const wishesQuery = query(wishesRef, where("approved", "==", true));
         const wishesSnap = await getDocs(wishesQuery);
         const wishesList = wishesSnap.docs.map((doc) => ({
@@ -111,8 +133,15 @@ export default function WeddingPage({ params }) {
   }, [slug]);
 
   const addWish = async (name, message) => {
-    if (!weddingData?.id) return;
-    const wishesRef = collection(db, "users", weddingData.id, "wishes");
+    if (!weddingData?.id || !weddingData?.weddingId) return;
+    const wishesRef = collection(
+      db,
+      "users",
+      weddingData.id,
+      "weddings",
+      weddingData.weddingId,
+      "wishes"
+    );
     await addDoc(wishesRef, {
       name,
       message,
