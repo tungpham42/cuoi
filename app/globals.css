@@ -10,6 +10,7 @@
   --gradient-end: #fce7f3;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="8" fill="%23fbcfe8" fill-opacity="0.6"/></svg>');
 }
 
 /* Modern theme */
@@ -22,6 +23,7 @@
   --gradient-end: #bae6fd;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect x="10" y="10" width="20" height="20" fill="%23bfdbfe" fill-opacity="0.6"/></svg>');
 }
 
 /* Romantic theme */
@@ -33,6 +35,7 @@
   --gradient-start: #fce7f3;
   --gradient-end: #f9d2e4;
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f9a8d4" fill-opacity="0.6" d="M20 10c-2-4-6-6-8-2s0 8 2 10l6 6 6-6c2-2 4-6 2-10s-6-2-8 2z"/></svg>');
 }
 
 /* Rustic theme */
@@ -44,6 +47,7 @@
   --gradient-start: #fef9c3;
   --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fed7aa" fill-opacity="0.6" d="M10 10h20v20H10z"/></svg>');
 }
 
 /* Elegant theme */
@@ -55,6 +59,7 @@
   --gradient-start: #f3e8ff;
   --gradient-end: #e9d5ff;
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23d8b4fe" fill-opacity="0.6" d="M20 10l10 10-10 10-10-10z"/></svg>');
 }
 
 /* Vintage theme */
@@ -66,6 +71,7 @@
   --gradient-start: #ffedd5;
   --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="10" cy="10" r="5" fill="%23fed7aa" fill-opacity="0.6"/><circle cx="30" cy="30" r="5" fill="%23fed7aa" fill-opacity="0.6"/></svg>');
 }
 
 /* Bohemian theme */
@@ -77,6 +83,7 @@
   --gradient-start: #ffedd5;
   --gradient-end: #fed7aa;
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fdba74" fill-opacity="0.6" d="M20 10l10 10-10 10-10-10z"/></svg>');
 }
 
 /* Classic theme */
@@ -88,6 +95,7 @@
   --gradient-start: #fefce8;
   --gradient-end: #fef9c3;
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect x="10" y="10" width="20" height="20" fill="%23fef08a" fill-opacity="0.6"/></svg>');
 }
 
 /* Floral theme */
@@ -99,6 +107,7 @@
   --gradient-start: #d1fae5;
   --gradient-end: #a7f3d0;
   --card-border: 1px solid var(--border-color);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%236ee7b7" fill-opacity="0.6" d="M20 10c-4 0-6 4-4 6 2 2 6 2 8 0 2-2 0-6-4-6zm-6 14c-2 0-3 2-2 3s3 1 4 0c1-1 0-3-2-3zm12 0c-2 0-3 2-2 3s3 1 4 0c1-1 0-3-2-3z"/></svg>');
 }
 
 /* Nautical theme */
@@ -111,6 +120,7 @@
   --gradient-end: #bfdbfe;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.08);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%2393c5fd" fill-opacity="0.6" d="M20 10l10 10-10 20-10-20z"/></svg>');
 }
 
 /* Artistic theme */
@@ -123,6 +133,7 @@
   --gradient-end: #ddd6fe;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23c4b5fd" fill-opacity="0.6" d="M10 10h10v10h-10zM20 20h10v10h-10z"/></svg>');
 }
 
 /* Whimsical theme */
@@ -135,6 +146,7 @@
   --gradient-end: #f9d2e4;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f9a8d4" fill-opacity="0.6" d="M20 10c-3 0-5 3-3 5s5 2 6 0 1-5-3-5zm-6 14c-2 0-3 2-1 3s4 0 4-2c0-1-1-3-3-1zm12 0c-2 0-3 2-1 3s4 0 4-2c0-1-1-3-3-1z"/></svg>');
 }
 
 /* Minimalist theme */
@@ -147,6 +159,7 @@
   --gradient-end: #e2e8f0;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><line x1="10" y1="10" x2="30" y2="30" stroke="%23e2e8f0" stroke-opacity="0.6" stroke-width="2"/></svg>');
 }
 
 /* Playful theme */
@@ -159,6 +172,7 @@
   --gradient-end: #f3e8ff;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="8" fill="%23f3e8ff" fill-opacity="0.6"/><circle cx="10" cy="10" r="4" fill="%23f3e8ff" fill-opacity="0.6"/><circle cx="30" cy="30" r="4" fill="%23f3e8ff" fill-opacity="0.6"/></svg>');
 }
 
 /* Art-deco theme */
@@ -171,6 +185,7 @@
   --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fed7aa" fill-opacity="0.6" d="M20 5l15 15-15 15-15-15z"/></svg>');
 }
 
 /* Enchanted theme */
@@ -183,6 +198,7 @@
   --gradient-end: #e9d5ff;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23d8b4fe" fill-opacity="0.6" d="M20 5l5 10 10 0-8 8 2 10-9-5-9 5 2-10-8-8 10 0z"/></svg>');
 }
 
 /* Celestial theme */
@@ -195,6 +211,7 @@
   --gradient-end: #c7d2fe;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23c7d2fe" fill-opacity="0.6" d="M20 5l5 10 10 0-8 8 2 10-9-5-9 5 2-10-8-8 10 0z"/></svg>');
 }
 
 /* Tropical theme */
@@ -207,6 +224,7 @@
   --gradient-end: #99f6e4;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%235eead4" fill-opacity="0.6" d="M20 10c-4 0-6 4-4 6s6 2 8 0c2-2 0-6-4-6zm0 14c-4 0-6 4-4 6s6 2 8 0c2-2 0-6-4-6z"/></svg>');
 }
 
 /* Fairy-tale theme */
@@ -219,6 +237,7 @@
   --gradient-end: #f3e8ff;
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f0abfc" fill-opacity="0.6" d="M20 5l5 10 10 0-8 8 2 10-9-5-9 5 2-10-8-8 10 0z"/></svg>');
 }
 
 /* Base styles applied to all themes */
@@ -291,6 +310,16 @@ p {
   border-radius: 12px !important;
 }
 
+.wedding-preview,
+.wedding-page {
+  background-image: var(--pattern) !important;
+  background-position-x: center !important;
+  background-position-y: center !important;
+  background-repeat: repeat !important;
+  background-size: contain !important;
+  background-attachment: fixed !important;
+}
+
 /* Component-specific styling */
 .wedding-section {
   background: linear-gradient(
@@ -303,6 +332,7 @@ p {
   box-shadow: 0 4px 15px var(--shadow-color) !important;
   position: relative !important;
   overflow: hidden !important;
+  opacity: 0.8 !important;
 }
 
 /* Carousel controls styling */
@@ -715,7 +745,7 @@ p {
 }
 
 .gallery-delete-button:hover {
-  background-color: darken(var(--accent), 10%);
+  background-color: darken(to srgb, var(--accent), 10%);
   border-color: var(--accent);
 }
 
