@@ -19,7 +19,9 @@ const QRCode = ({ bankInfo }) => {
   )}&accountName=${encodeURIComponent(defaultBankInfo.accountHolder)}`;
 
   return (
-    <Container className="py-4">
+    <section className="wedding-section my-5 p-5 mx-auto">
+      <div className="decorative-corner-top"></div>
+      <div className="decorative-corner-bottom"></div>
       <Card
         className="shadow-sm border-0 mx-auto"
         style={{ maxWidth: "400px" }}
@@ -60,7 +62,7 @@ const QRCode = ({ bankInfo }) => {
           </div>
         </Card.Body>
       </Card>
-    </Container>
+    </section>
   );
 };
 
