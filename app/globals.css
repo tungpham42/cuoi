@@ -732,10 +732,13 @@ p {
   font-family: "Playfair Display", serif;
   color: var(--foreground);
   cursor: grab !important;
-  user-select: none !important; /* Disable text selection */
-  -webkit-user-select: none !important; /* For Safari */
-  -moz-user-select: none !important; /* For Firefox */
-  -ms-user-select: none !important; /* For Edge */
+}
+
+.no-select {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
 }
 
 .wish-list-item {

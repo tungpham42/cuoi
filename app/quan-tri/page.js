@@ -78,11 +78,11 @@ const SortableItem = ({ id, label }) => {
     useSortable({ id });
 
   const handleDragStart = () => {
-    document.body.classList.add("no-scroll");
+    document.body.classList.add("no-scroll", "no-select");
   };
 
   const handleDragEnd = () => {
-    document.body.classList.remove("no-scroll");
+    document.body.classList.remove("no-scroll", "no-select");
   };
 
   return (
