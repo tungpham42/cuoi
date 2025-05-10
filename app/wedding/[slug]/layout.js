@@ -1,19 +1,31 @@
-import { db } from "@/firebase/config";
+import { db, auth } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
 
   try {
-    // Query Firestore for a user document with the matching slug
-    const usersRef = collection(db, "users");
-    const q = query(usersRef, where("slug", "==", slug));
+    // Get the current authenticated user
+    const user = await new Promise((resolve, reject) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          resolve(user);
+        } else {
+          reject(new Error("No authenticated user"));
+        }
+      });
+    });
+
+    // Query Firestore for a wedding document with the matching slug within the user's weddings subcollection
+    const weddingsRef = collection(db, "users", user.uid, "weddings");
+    const q = query(weddingsRef, where("slug", "==", slug));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
       // Get the first matching document
-      const userDoc = querySnapshot.docs[0].data();
-      const { brideName, groomName } = userDoc;
+      const weddingDoc = querySnapshot.docs[0].data();
+      const { brideName, groomName } = weddingDoc;
 
       // Return dynamic metadata
       return {
@@ -24,7 +36,7 @@ export async function generateMetadata({ params }) {
           description:
             "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
           type: "website",
-          url: `https://marry.io.vn/wedding/${slug}`,
+          url: `https://marry.io.vn/wedding/${slug}`, // Adjust URL based on the file
           images: [
             {
               url: "https://marry.io.vn/1200x630.jpg",
@@ -45,7 +57,7 @@ export async function generateMetadata({ params }) {
           description:
             "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
           type: "website",
-          url: `https://marry.io.vn/wedding/${slug}`,
+          url: `https://marry.io.vn/wedding/${slug}`, // Adjust URL based on the file
           images: [
             {
               url: "https://marry.io.vn/1200x630.jpg",
@@ -68,7 +80,7 @@ export async function generateMetadata({ params }) {
         description:
           "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
         type: "website",
-        url: `https://marry.io.vn/wedding/${slug}`,
+        url: `https://marry.io.vn/wedding/${slug}`, // Adjust URL based on the file
         images: [
           {
             url: "https://marry.io.vn/1200x630.jpg",
