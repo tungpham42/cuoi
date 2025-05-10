@@ -944,3 +944,9 @@ p {
 .wedding-id.btn-primary:hover .text-light {
   color: var(--accent) !important;
 }
+.wedding-id .text-light {
+  transition: transform 0.2s ease !important;
+}
+.wedding-id .text-light:hover {
+  transform: scale(1.25) !important;
+}
