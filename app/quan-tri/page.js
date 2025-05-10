@@ -38,6 +38,7 @@ import {
   useSensor,
   useSensors,
   PointerSensor,
+  TouchSensor,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -76,6 +77,14 @@ const SortableItem = ({ id, label }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
+  const handleDragStart = () => {
+    document.body.classList.add("no-scroll");
+  };
+
+  const handleDragEnd = () => {
+    document.body.classList.remove("no-scroll");
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -88,6 +97,10 @@ const SortableItem = ({ id, label }) => {
       }}
       {...attributes}
       {...listeners}
+      onTouchStart={handleDragStart}
+      onTouchEnd={handleDragEnd}
+      onMouseDown={handleDragStart}
+      onMouseUp={handleDragEnd}
     >
       <FontAwesomeIcon icon={faSort} className="me-3" />
       {label}
@@ -169,7 +182,7 @@ const CustomDropdown = ({
     };
     updateWidth();
     window.addEventListener("resize", updateWidth);
-    return () => window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   const handleSelect = (optionValue) => {
@@ -324,6 +337,12 @@ export default function DashboardPage() {
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 8,
       },
     })
   );
