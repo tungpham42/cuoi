@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Container, Spinner, Alert, Card } from "react-bootstrap";
+import { Container, Spinner, Alert, Card, Button } from "react-bootstrap"; // Added Button
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { db, auth } from "@/firebase/config"; // Added auth import
+import { onAuthStateChanged } from "firebase/auth"; // Added Firebase Auth import
 import WeddingHeader from "@/components/WeddingHeader";
 import Gallery from "@/components/Gallery";
 import LoveStory from "@/components/LoveStory";
@@ -17,6 +18,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import Link from "next/link"; // Added Link for navigation
 
 const SortableComponent = ({ id, children, disabled }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -42,6 +44,17 @@ export default function WeddingPage({ params }) {
   const [wishes, setWishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [user, setUser] = useState(null); // Added state for user
+
+  useEffect(() => {
+    // Listen for authentication state changes
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (!slug) return;
@@ -217,6 +230,15 @@ export default function WeddingPage({ params }) {
       />
       <Card className="shadow-lg border-0 mx-auto wedding-page">
         <Card.Body>
+          {user && (
+            <div className="d-flex justify-content-left mb-4">
+              <Link href="/quan-tri" passHref>
+                <Button variant="outline-primary">
+                  Quay lại trang quản trị
+                </Button>
+              </Link>
+            </div>
+          )}
           <DndContext collisionDetection={closestCenter}>
             <SortableContext
               items={weddingData.componentOrder}
