@@ -169,7 +169,7 @@ const CustomDropdown = ({
     };
     updateWidth();
     window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
+    return () => window.addEventListener("resize", updateWidth);
   }, []);
 
   const handleSelect = (optionValue) => {
@@ -349,27 +349,21 @@ export default function DashboardPage() {
     }
   };
 
-  const validateSlug = async (slug, currentUserId, currentWeddingId) => {
+  const validateSlug = async (slug, currentWeddingId) => {
     if (!slug) return false;
     try {
-      const usersRef = collection(db, "users");
-      const userQuery = query(usersRef);
-      const userSnapshot = await getDocs(userQuery);
+      const weddingsRef = collection(db, "weddings");
+      const q = query(weddingsRef, where("slug", "==", slug));
+      const weddingSnapshot = await getDocs(q);
       let isTaken = false;
 
-      for (const userDoc of userSnapshot.docs) {
-        const weddingsRef = collection(db, "users", userDoc.id, "weddings");
-        const q = query(weddingsRef, where("slug", "==", slug));
-        const weddingSnapshot = await getDocs(q);
-        weddingSnapshot.forEach((doc) => {
-          if (
-            userDoc.id !== currentUserId ||
-            (currentWeddingId && doc.id !== currentWeddingId)
-          ) {
-            isTaken = true;
-          }
-        });
-      }
+      weddingSnapshot.forEach((doc) => {
+        if (currentWeddingId && doc.id !== currentWeddingId) {
+          isTaken = true;
+        } else if (!currentWeddingId) {
+          isTaken = true;
+        }
+      });
 
       return !isTaken;
     } catch (err) {
@@ -382,8 +376,9 @@ export default function DashboardPage() {
   const loadWeddings = async () => {
     if (!user) return;
     try {
-      const weddingsRef = collection(db, "users", user.uid, "weddings");
-      const weddingsSnap = await getDocs(weddingsRef);
+      const weddingsRef = collection(db, "weddings");
+      const q = query(weddingsRef, where("userId", "==", user.uid));
+      const weddingsSnap = await getDocs(q);
       const weddingsList = weddingsSnap.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -396,7 +391,7 @@ export default function DashboardPage() {
 
   const loadWeddingData = async (weddingId) => {
     try {
-      const weddingRef = doc(db, "users", user.uid, "weddings", weddingId);
+      const weddingRef = doc(db, "weddings", weddingId);
       const docSnap = await getDoc(weddingRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -435,14 +430,7 @@ export default function DashboardPage() {
           secondaryFont: data.secondaryFont || "Lora",
         });
 
-        const wishesRef = collection(
-          db,
-          "users",
-          user.uid,
-          "weddings",
-          weddingId,
-          "wishes"
-        );
+        const wishesRef = collection(db, "weddings", weddingId, "wishes");
         const wishesSnap = await getDocs(wishesRef);
         const wishesList = wishesSnap.docs.map((doc) => ({
           id: doc.id,
@@ -534,7 +522,7 @@ export default function DashboardPage() {
         secondaryFont: "Lora",
       });
       setWishes([]);
-    } // eslint-disable-next-line
+    }
   }, [selectedWeddingId]);
 
   useEffect(() => {
@@ -613,13 +601,7 @@ export default function DashboardPage() {
       setForm((prev) => {
         const updatedGallery = [...prev.gallery, ...uploadedImages];
         if (user) {
-          const weddingRef = doc(
-            db,
-            "users",
-            user.uid,
-            "weddings",
-            selectedWeddingId
-          );
+          const weddingRef = doc(db, "weddings", selectedWeddingId);
           updateDoc(weddingRef, { gallery: updatedGallery }).catch((err) => {
             console.error("Firestore save error:", err);
             setError("Lỗi khi lưu hình ảnh vào Firestore. Vui lòng thử lại.");
@@ -655,13 +637,7 @@ export default function DashboardPage() {
         (img) => img.public_id !== public_id
       );
       if (user) {
-        const weddingRef = doc(
-          db,
-          "users",
-          user.uid,
-          "weddings",
-          selectedWeddingId
-        );
+        const weddingRef = doc(db, "weddings", selectedWeddingId);
         updateDoc(weddingRef, { gallery: updatedGallery }).catch((err) => {
           console.error("Firestore save error:", err);
           setError(
@@ -679,8 +655,9 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const weddingsRef = collection(db, "users", user.uid, "weddings");
+      const weddingsRef = collection(db, "weddings");
       const newWeddingRef = await addDoc(weddingsRef, {
+        userId: user.uid,
         brideName: "",
         groomName: "",
         weddingDate: null,
@@ -737,7 +714,7 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const weddingRef = doc(db, "users", user.uid, "weddings", editWeddingId);
+      const weddingRef = doc(db, "weddings", editWeddingId);
       await updateDoc(weddingRef, {
         name: editWeddingName || "Đám cưới mới",
       });
@@ -764,7 +741,7 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const weddingRef = doc(db, "users", user.uid, "weddings", weddingId);
+      const weddingRef = doc(db, "weddings", weddingId);
       await deleteDoc(weddingRef);
       setWeddings((prev) => prev.filter((wedding) => wedding.id !== weddingId));
       if (selectedWeddingId === weddingId) {
@@ -801,11 +778,7 @@ export default function DashboardPage() {
       return;
     }
 
-    const isSlugAvailable = await validateSlug(
-      form.slug,
-      user.uid,
-      selectedWeddingId
-    );
+    const isSlugAvailable = await validateSlug(form.slug, selectedWeddingId);
     if (!isSlugAvailable) {
       setSlugError(
         "Liên kết này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
@@ -814,15 +787,10 @@ export default function DashboardPage() {
     }
 
     try {
-      const weddingRef = doc(
-        db,
-        "users",
-        user.uid,
-        "weddings",
-        selectedWeddingId
-      );
+      const weddingRef = doc(db, "weddings", selectedWeddingId);
       await updateDoc(weddingRef, {
         ...form,
+        userId: user.uid,
         weddingDate: form.weddingDate ? new Date(form.weddingDate) : null,
       });
       setShowSuccess(true);
@@ -839,15 +807,7 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const wishRef = doc(
-        db,
-        "users",
-        user.uid,
-        "weddings",
-        selectedWeddingId,
-        "wishes",
-        wishId
-      );
+      const wishRef = doc(db, "weddings", selectedWeddingId, "wishes", wishId);
       await setDoc(wishRef, { approved: true }, { merge: true });
       setWishes(
         wishes.map((wish) =>
@@ -865,15 +825,7 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const wishRef = doc(
-        db,
-        "users",
-        user.uid,
-        "weddings",
-        selectedWeddingId,
-        "wishes",
-        wishId
-      );
+      const wishRef = doc(db, "weddings", selectedWeddingId, "wishes", wishId);
       await setDoc(wishRef, { approved: false }, { merge: true });
       setWishes(
         wishes.map((wish) =>
@@ -891,15 +843,7 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const wishRef = doc(
-        db,
-        "users",
-        user.uid,
-        "weddings",
-        selectedWeddingId,
-        "wishes",
-        wishId
-      );
+      const wishRef = doc(db, "weddings", selectedWeddingId, "wishes", wishId);
       await deleteDoc(wishRef);
       setWishes(wishes.filter((wish) => wish.id !== wishId));
     } catch (err) {
