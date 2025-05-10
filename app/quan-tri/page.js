@@ -941,7 +941,7 @@ export default function DashboardPage() {
             Tạo đám cưới mới
           </Button>
           <Button
-            variant="outline-danger"
+            variant="outline-primary"
             size="sm"
             onClick={handleLogout}
             className="btn-logout"
