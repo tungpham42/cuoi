@@ -44,7 +44,7 @@ export default function Countdown({ weddingDate }) {
   }, [weddingDate]);
 
   return (
-    <div className="wedding-section text-center py-4 my-5 mx-auto">
+    <section className="wedding-section text-center p-4 my-5 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
       <h3 className="h3 mb-3">Đếm ngược tới ngày cưới</h3>
@@ -60,6 +60,6 @@ export default function Countdown({ weddingDate }) {
           {timeLeft.minutes || 0} phút {timeLeft.seconds || 0} giây
         </p>
       )}
-    </div>
+    </section>
   );
 }

@@ -794,6 +794,7 @@ p {
 
 [role="button"][aria-roledescription="sortable"]:not(.sortable-item) {
   padding: 0 !important;
+  pointer-events: none !important;
 }
 
 .dashboard-container .form-check-label {

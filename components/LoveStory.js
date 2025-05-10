@@ -7,7 +7,7 @@ const LoveStory = ({ text }) => {
   if (!text) return null;
 
   return (
-    <section className="wedding-section my-5 py-5 mx-auto">
+    <section className="wedding-section my-5 p-5 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
       <h2 className="h2 text-center mb-4">
