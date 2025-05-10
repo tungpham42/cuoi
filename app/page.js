@@ -55,7 +55,7 @@ export default function HomePage() {
               <Link href="/dang-nhap">
                 <Button className="btn-primary fs-5 px-4">
                   <FontAwesomeIcon icon={faHeart} className="me-2" />
-                  Bắt Đầu Tạo Trang Cưới Ngay
+                  Bắt Đầu Tạo Ngay
                 </Button>
               </Link>
             </Col>
