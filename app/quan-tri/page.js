@@ -1178,14 +1178,26 @@ export default function DashboardPage() {
                     <FontAwesomeIcon icon={faLink} className="me-2" />
                     Liên kết
                   </Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="slug"
-                    value={form.slug}
-                    readOnly
-                    disabled
-                    className="form-control-disabled"
-                  />
+                  <div className="d-flex gap-2">
+                    <Form.Control
+                      type="text"
+                      name="slug"
+                      value={form.slug}
+                      readOnly
+                      disabled
+                      className="form-control-disabled"
+                    />
+                    <Button
+                      variant="success"
+                      onClick={handleRedirect}
+                      disabled={uploading || !form.slug || !selectedWeddingId}
+                      className="btn-redirect"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      <FontAwesomeIcon icon={faEye} className="me-2" />
+                      Xem
+                    </Button>
+                  </div>
                   <Form.Text className="form-text">
                     Tự động tạo từ tên cô dâu, chú rể và ngày cưới
                   </Form.Text>
