@@ -12,7 +12,6 @@ import WishList from "@/components/WishList";
 import Countdown from "@/components/Countdown";
 import QRCode from "@/components/QRCode";
 import Introduction from "@/components/Introduction";
-import LocationMap from "@/components/LocationMap";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -21,6 +20,12 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+// Dynamically import Map component with SSR disabled
+const LocationMap = dynamic(() => import("@/components/LocationMap"), {
+  ssr: false, // Disable SSR for this component
+});
 
 const SortableComponent = ({ id, children, disabled }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
