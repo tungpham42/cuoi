@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Container, Spinner, Alert, Card, Button } from "react-bootstrap"; // Added Button
+import { Container, Spinner, Alert, Card, Button } from "react-bootstrap";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { db, auth } from "@/firebase/config"; // Added auth import
-import { onAuthStateChanged } from "firebase/auth"; // Added Firebase Auth import
+import { db, auth } from "@/firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
 import WeddingHeader from "@/components/WeddingHeader";
 import Gallery from "@/components/Gallery";
 import LoveStory from "@/components/LoveStory";
@@ -11,6 +11,8 @@ import WishForm from "@/components/WishForm";
 import WishList from "@/components/WishList";
 import Countdown from "@/components/Countdown";
 import QRCode from "@/components/QRCode";
+import Introduction from "@/components/Introduction";
+import LocationMap from "@/components/LocationMap";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -18,7 +20,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import Link from "next/link"; // Added Link for navigation
+import Link from "next/link";
 
 const SortableComponent = ({ id, children, disabled }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -44,15 +46,13 @@ export default function WeddingPage({ params }) {
   const [wishes, setWishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [user, setUser] = useState(null); // Added state for user
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Listen for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
@@ -63,7 +63,6 @@ export default function WeddingPage({ params }) {
       try {
         setLoading(true);
 
-        // Query Firestore for a wedding document with the matching slug
         const weddingsRef = collection(db, "weddings");
         const q = query(weddingsRef, where("slug", "==", slug));
         const weddingSnapshot = await getDocs(q);
@@ -92,13 +91,19 @@ export default function WeddingPage({ params }) {
           showLoveStory: data.showLoveStory !== false,
           showWishForm: data.showWishForm !== false,
           showWishList: data.showWishList !== false,
-          showQRCode: data.showQRCode || false,
+          showQRCode: data.showQRCode !== false,
+          showIntroduction: data.showIntroduction !== false,
+          showLocationMap: data.showLocationMap !== false,
           bankInfo: data.bankInfo || {},
+          introduction: data.introduction || "",
+          mapInfo: data.mapInfo || { embedCode: "", address: "" },
           componentOrder: data.componentOrder || [
             "WeddingHeader",
+            "Introduction",
             "Countdown",
             "Gallery",
             "LoveStory",
+            "LocationMap",
             "QRCode",
             "WishForm",
             "WishList",
@@ -107,7 +112,6 @@ export default function WeddingPage({ params }) {
           secondaryFont: data.secondaryFont || "Lora",
         };
 
-        // Fetch wishes
         const wishesRef = collection(db, "weddings", weddingId, "wishes");
         const wishesQuery = query(wishesRef, where("approved", "==", true));
         const wishesSnap = await getDocs(wishesQuery);
@@ -143,6 +147,10 @@ export default function WeddingPage({ params }) {
     switch (componentId) {
       case "WeddingHeader":
         return <WeddingHeader data={weddingData} />;
+      case "Introduction":
+        return (
+          weddingData.showIntroduction && <Introduction form={weddingData} />
+        );
       case "Countdown":
         return (
           weddingData.showCountdown && (
@@ -158,6 +166,10 @@ export default function WeddingPage({ params }) {
           weddingData.showLoveStory && (
             <LoveStory text={weddingData.loveStory} />
           )
+        );
+      case "LocationMap":
+        return (
+          weddingData.showLocationMap && <LocationMap form={weddingData} />
         );
       case "QRCode":
         return (
