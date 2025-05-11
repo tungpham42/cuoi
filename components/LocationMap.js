@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMap } from "@fortawesome/free-solid-svg-icons";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -62,10 +62,48 @@ const extractCoordinatesFromGoogleMaps = (url) => {
   }
 };
 
+// Child component to handle map content and popup logic
+const MapContent = ({ coordinates, markerRef, form, googleMapsUrl }) => {
+  const locationMap = useMap(); // Use useMap within MapContainer context
+
+  useEffect(() => {
+    if (coordinates && markerRef.current) {
+      const popup = markerRef.current.getPopup();
+      if (popup) {
+        locationMap.openPopup(popup, coordinates);
+      }
+    }
+  }, [coordinates, locationMap, markerRef]);
+
+  return (
+    <>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
+      <Marker position={coordinates} ref={markerRef}>
+        <Popup>
+          {form.mapInfo.address || "Địa điểm đám cưới"}
+          <br />
+          <a
+            href={googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "var(--foreground)" }}
+          >
+            Xem trên Google Maps
+          </a>
+        </Popup>
+      </Marker>
+    </>
+  );
+};
+
 const LocationMap = ({ form }) => {
   const [coordinates, setCoordinates] = useState(null);
   const [googleMapsUrl, setGoogleMapsUrl] = useState("");
   const [error, setError] = useState(null);
+  const markerRef = useRef(null);
 
   // Extract coordinates from Google Maps link
   const loadCoordinates = useCallback(() => {
@@ -119,24 +157,12 @@ const LocationMap = ({ form }) => {
             scrollWheelZoom={false}
             touchZoom={false}
           >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            <MapContent
+              coordinates={coordinates}
+              markerRef={markerRef}
+              form={form}
+              googleMapsUrl={googleMapsUrl}
             />
-            <Marker position={coordinates}>
-              <Popup>
-                {form.mapInfo.address || "Địa điểm đám cưới"}
-                <br />
-                <a
-                  href={googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "var(--foreground)" }}
-                >
-                  Xem trên Google Maps
-                </a>
-              </Popup>
-            </Marker>
           </MapContainer>
         </div>
       ) : form.mapInfo.embedCode ? (
@@ -149,7 +175,7 @@ const LocationMap = ({ form }) => {
           {error || "Vui lòng cung cấp liên kết Google Maps hợp lệ."}
         </p>
       )}
-      {form.mapInfo.address && (
+      {form.mapInfo && (
         <p className="text-center mt-3" style={{ color: "var(--foreground)" }}>
           Địa chỉ: {form.mapInfo.address}
         </p>
