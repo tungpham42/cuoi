@@ -314,7 +314,7 @@ p {
 .wedding-page {
   background-image: var(--pattern) !important;
   background-position-x: center !important;
-  background-position-y: center !important;
+  background-position-y: top !important;
   background-repeat: repeat !important;
   background-size: contain !important;
   background-attachment: fixed !important;
