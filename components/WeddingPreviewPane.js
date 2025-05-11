@@ -13,8 +13,14 @@ import Gallery from "./Gallery";
 import LoveStory from "./LoveStory";
 import WishList from "./WishList";
 import QRCode from "./QRCode";
+import Introduction from "./Introduction";
+import dynamic from "next/dynamic";
 
-// Sortable component for drag-and-drop functionality
+// Dynamically import Map component with SSR disabled
+const LocationMap = dynamic(() => import("./LocationMap"), {
+  ssr: false, // Disable SSR for this component
+});
+
 const SortableComponent = ({ id, children, disabled }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id, disabled });
@@ -33,9 +39,7 @@ const SortableComponent = ({ id, children, disabled }) => {
   );
 };
 
-// Main WeddingPreviewPane component
 const WeddingPreviewPane = ({ form, wishes }) => {
-  // If no form data, render a placeholder message
   if (!form) {
     return (
       <Container fluid className="py-5">
@@ -46,12 +50,13 @@ const WeddingPreviewPane = ({ form, wishes }) => {
     );
   }
 
-  // Default values for form fields to prevent undefined errors
   const componentOrder = form.componentOrder || [
     "WeddingHeader",
+    "Introduction",
     "Countdown",
     "Gallery",
     "LoveStory",
+    "LocationMap",
     "QRCode",
     "WishList",
   ];
@@ -69,13 +74,20 @@ const WeddingPreviewPane = ({ form, wishes }) => {
   const showLoveStory = form.showLoveStory !== false;
   const showWishList = form.showWishList !== false;
   const showQRCode = form.showQRCode !== false;
+  const showIntroduction = form.showIntroduction !== false;
+  const showLocationMap = form.showLocationMap !== false;
+  const introduction = form.introduction || "";
+  const mapInfo = form.mapInfo || { embedCode: "", address: "" };
 
-  // Render individual components based on ID
   const renderComponent = (componentId) => {
     switch (componentId) {
       case "WeddingHeader":
         return brideName || groomName ? (
           <WeddingHeader data={{ brideName, groomName, ...form }} />
+        ) : null;
+      case "Introduction":
+        return showIntroduction && introduction.trim() ? (
+          <Introduction form={form} />
         ) : null;
       case "Countdown":
         return showCountdown && weddingDate ? (
@@ -88,6 +100,10 @@ const WeddingPreviewPane = ({ form, wishes }) => {
       case "LoveStory":
         return showLoveStory && loveStory.trim() ? (
           <LoveStory text={loveStory} />
+        ) : null;
+      case "LocationMap":
+        return showLocationMap && (mapInfo.embedCode || mapInfo.address) ? (
+          <LocationMap form={form} />
         ) : null;
       case "QRCode":
         return showQRCode &&

@@ -66,6 +66,8 @@ import {
   faTrash,
   faEdit,
   faPen,
+  faInfoCircle,
+  faMap,
 } from "@fortawesome/free-solid-svg-icons";
 import themes from "@/data/themes";
 import primaryFonts from "@/data/primaryFonts";
@@ -292,17 +294,26 @@ export default function DashboardPage() {
     showWishForm: true,
     showWishList: true,
     showQRCode: true,
+    showIntroduction: true,
+    showLocationMap: true,
     bankInfo: {
       bankName: "",
       accountNumber: "",
       accountHolder: "",
       description: "",
     },
+    introduction: "",
+    mapInfo: {
+      embedCode: "",
+      address: "",
+    },
     componentOrder: [
       "WeddingHeader",
+      "Introduction",
       "Countdown",
       "Gallery",
       "LoveStory",
+      "LocationMap",
       "QRCode",
       "WishForm",
       "WishList",
@@ -325,9 +336,11 @@ export default function DashboardPage() {
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",
+    Introduction: "Giới thiệu",
     Countdown: "Đếm ngược",
     Gallery: "Thư viện ảnh",
     LoveStory: "Chuyện tình yêu",
+    LocationMap: "Bản đồ",
     QRCode: "Mã QR chuyển khoản",
     WishForm: "Form lời chúc",
     WishList: "Danh sách lời chúc",
@@ -429,18 +442,27 @@ export default function DashboardPage() {
           showLoveStory: data.showLoveStory !== false,
           showWishForm: data.showWishForm !== false,
           showWishList: data.showWishList !== false,
-          showQRCode: data.showQRCode || false,
+          showQRCode: data.showQRCode !== false,
+          showIntroduction: data.showIntroduction !== false,
+          showLocationMap: data.showLocationMap !== false,
           bankInfo: {
             bankName: data.bankInfo?.bankName || "",
             accountNumber: data.bankInfo?.accountNumber || "",
             accountHolder: data.bankInfo?.accountHolder || "",
             description: data.bankInfo?.description || "",
           },
+          introduction: data.introduction || "",
+          mapInfo: {
+            embedCode: data.mapInfo?.embedCode || "",
+            address: data.mapInfo?.address || "",
+          },
           componentOrder: data.componentOrder || [
             "WeddingHeader",
+            "Introduction",
             "Countdown",
             "Gallery",
             "LoveStory",
+            "LocationMap",
             "QRCode",
             "WishForm",
             "WishList",
@@ -472,17 +494,26 @@ export default function DashboardPage() {
           showWishForm: true,
           showWishList: true,
           showQRCode: true,
+          showIntroduction: true,
+          showLocationMap: true,
           bankInfo: {
             bankName: "",
             accountNumber: "",
             accountHolder: "",
             description: "",
           },
+          introduction: "",
+          mapInfo: {
+            embedCode: "",
+            address: "",
+          },
           componentOrder: [
             "WeddingHeader",
+            "Introduction",
             "Countdown",
             "Gallery",
             "LoveStory",
+            "LocationMap",
             "QRCode",
             "WishForm",
             "WishList",
@@ -522,17 +553,26 @@ export default function DashboardPage() {
         showWishForm: true,
         showWishList: true,
         showQRCode: true,
+        showIntroduction: true,
+        showLocationMap: true,
         bankInfo: {
           bankName: "",
           accountNumber: "",
           accountHolder: "",
           description: "",
         },
+        introduction: "",
+        mapInfo: {
+          embedCode: "",
+          address: "",
+        },
         componentOrder: [
           "WeddingHeader",
+          "Introduction",
           "Countdown",
           "Gallery",
           "LoveStory",
+          "LocationMap",
           "QRCode",
           "WishForm",
           "WishList",
@@ -571,6 +611,12 @@ export default function DashboardPage() {
       setForm((prev) => ({
         ...prev,
         bankInfo: { ...prev.bankInfo, [field]: value },
+      }));
+    } else if (name.startsWith("mapInfo.")) {
+      const field = name.split(".")[1];
+      setForm((prev) => ({
+        ...prev,
+        mapInfo: { ...prev.mapInfo, [field]: value },
       }));
     } else {
       setForm((prev) => ({
@@ -657,12 +703,7 @@ export default function DashboardPage() {
       );
       if (user) {
         const weddingRef = doc(db, "weddings", selectedWeddingId);
-        updateDoc(weddingRef, { gallery: updatedGallery }).catch((err) => {
-          console.error("Firestore save error:", err);
-          setError(
-            "Lỗi khi cập nhật thư viện ảnh trong Firestore. Vui lòng thử lại."
-          );
-        });
+        updateDoc(weddingRef, { gallery: updatedGallery });
       }
       return { ...prev, gallery: updatedGallery };
     });
@@ -670,7 +711,7 @@ export default function DashboardPage() {
 
   const handleCreateWedding = async () => {
     if (!user) {
-      setError("Không thể tạo đám cưới vì chưa đăng nhập.");
+      setError("Không thể tạo đám cưới vì chưa đăng nhập。");
       return;
     }
     try {
@@ -691,17 +732,26 @@ export default function DashboardPage() {
         showWishForm: true,
         showWishList: true,
         showQRCode: true,
+        showIntroduction: true,
+        showLocationMap: true,
         bankInfo: {
           bankName: "",
           accountNumber: "",
           accountHolder: "",
           description: "",
         },
+        introduction: "",
+        mapInfo: {
+          embedCode: "",
+          address: "",
+        },
         componentOrder: [
           "WeddingHeader",
+          "Introduction",
           "Countdown",
           "Gallery",
           "LoveStory",
+          "LocationMap",
           "QRCode",
           "WishForm",
           "WishList",
@@ -721,14 +771,14 @@ export default function DashboardPage() {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
-      setError("Lỗi khi tạo đám cưới mới. Vui lòng thử lại.");
+      setError("Lỗi khi tạo đám cưới mới。Vui lòng thử lại。");
     }
   };
 
   const handleEditWeddingName = async () => {
     if (!user || !editWeddingId) {
       setError(
-        "Không thể chỉnh sửa tên đám cưới vì chưa đăng nhập hoặc chưa chọn đám cưới."
+        "Không thể chỉnh sửa tên đám cưới vì chưa đăng nhập hoặc chưa chọn đám cưới。"
       );
       return;
     }
@@ -750,13 +800,13 @@ export default function DashboardPage() {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
-      setError("Lỗi khi chỉnh sửa tên đám cưới. Vui lòng thử lại.");
+      setError("Lỗi khi chỉnh sửa tên đám cưới。Vui lòng thử lại。");
     }
   };
 
   const handleDeleteWedding = async (weddingId) => {
     if (!user) {
-      setError("Không thể xóa đám cưới vì chưa đăng nhập.");
+      setError("Không thể xóa đám cưới vì chưa đăng nhập。");
       return;
     }
     try {
@@ -769,7 +819,7 @@ export default function DashboardPage() {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
-      setError("Lỗi khi xóa đám cưới. Vui lòng thử lại.");
+      setError("Lỗi khi xóa đám cưới。Vui lòng thử lại。");
     }
   };
 
@@ -783,16 +833,16 @@ export default function DashboardPage() {
 
   const handleSave = async () => {
     if (!user) {
-      setError("Không thể lưu thông tin vì chưa đăng nhập.");
+      setError("Không thể lưu thông tin vì chưa đăng nhập。");
       return;
     }
     if (!selectedWeddingId) {
-      setError("Vui lòng chọn hoặc tạo một đám cưới để lưu.");
+      setError("Vui lòng chọn hoặc tạo một đám cưới để lưu。");
       return;
     }
     if (!form.slug) {
       setError(
-        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết."
+        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết。"
       );
       return;
     }
@@ -800,7 +850,7 @@ export default function DashboardPage() {
     const isSlugAvailable = await validateSlug(form.slug, selectedWeddingId);
     if (!isSlugAvailable) {
       setSlugError(
-        "Liên kết này đã được sử dụng. Vui lòng thay đổi tên hoặc ngày cưới."
+        "Liên kết này đã được sử dụng。Vui lòng thay đổi tên hoặc ngày cưới。"
       );
       return;
     }
@@ -816,13 +866,13 @@ export default function DashboardPage() {
       setSlugError("");
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
-      setError("Lỗi khi lưu thông tin. Vui lòng thử lại.");
+      setError("Lỗi khi lưu thông tin。Vui lòng thử lại。");
     }
   };
 
   const handleApproveWish = async (wishId) => {
     if (!selectedWeddingId) {
-      setError("Vui lòng chọn một đám cưới trước khi duyệt lời chúc.");
+      setError("Vui lòng chọn một đám cưới trước khi duyệt lời chúc。");
       return;
     }
     try {
@@ -834,13 +884,13 @@ export default function DashboardPage() {
         )
       );
     } catch (err) {
-      setError("Lỗi khi duyệt lời chúc. Vui lòng thử lại.");
+      setError("Lỗi khi duyệt lời chúc。Vui lòng thử lại。");
     }
   };
 
   const handleRejectWish = async (wishId) => {
     if (!selectedWeddingId) {
-      setError("Vui lòng chọn một đám cưới trước khi từ chối lời chúc.");
+      setError("Vui lòng chọn một đám cưới trước khi từ chối lời chúc。");
       return;
     }
     try {
@@ -852,13 +902,13 @@ export default function DashboardPage() {
         )
       );
     } catch (err) {
-      setError("Lỗi khi từ chối lời chúc. Vui lòng thử lại.");
+      setError("Lỗi khi từ chối lời chúc。Vui lòng thử lại。");
     }
   };
 
   const handleDeleteWish = async (wishId) => {
     if (!selectedWeddingId) {
-      setError("Vui lòng chọn một đám cưới trước khi xóa lời chúc.");
+      setError("Vui lòng chọn một đám cưới trước khi xóa lời chúc。");
       return;
     }
     try {
@@ -866,7 +916,7 @@ export default function DashboardPage() {
       await deleteDoc(wishRef);
       setWishes(wishes.filter((wish) => wish.id !== wishId));
     } catch (err) {
-      setError("Lỗi khi xóa lời chúc. Vui lòng thử lại.");
+      setError("Lỗi khi xóa lời chúc。Vui lòng thử lại。");
     }
   };
 
@@ -875,7 +925,7 @@ export default function DashboardPage() {
       router.push(`/dam-cuoi/${form.slug}`);
     } else {
       setError(
-        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết hợp lệ."
+        "Vui lòng nhập tên cô dâu, chú rể và ngày cưới để tạo liên kết hợp lệ。"
       );
     }
   };
@@ -893,6 +943,12 @@ export default function DashboardPage() {
 
   return (
     <>
+      <style jsx>{`
+        .sortable-map {
+          background-color: #e6f3ff;
+          border-left: 4px solid #007bff;
+        }
+      `}</style>
       <Container fluid className="dashboard-container wedding-section">
         <div className="d-flex justify-content-between mb-4">
           <Button
@@ -985,7 +1041,7 @@ export default function DashboardPage() {
           </Modal.Header>
           <Modal.Body>
             Bạn có chắc chắn muốn xóa đám cưới này? Hành động này không thể hoàn
-            tác.
+            tác。
           </Modal.Body>
           <Modal.Footer>
             <Button
@@ -1097,7 +1153,7 @@ export default function DashboardPage() {
               </div>
               {weddings.length === 0 && (
                 <p className="text-muted mt-2">
-                  Chưa có đám cưới nào. Hãy tạo một đám cưới mới!
+                  Chưa có đám cưới nào。Hãy tạo một đám cưới mới!
                 </p>
               )}
             </Form.Group>
@@ -1230,6 +1286,20 @@ export default function DashboardPage() {
                 </Row>
                 <Form.Group className="mb-3">
                   <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faInfoCircle} className="me-2" />
+                    Giới thiệu về Cô dâu Chú rể
+                  </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={4}
+                    name="introduction"
+                    value={form.introduction}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
                     <FontAwesomeIcon icon={faHeart} className="me-2" />
                     Chuyện tình yêu
                   </Form.Label>
@@ -1293,6 +1363,34 @@ export default function DashboardPage() {
                       ))}
                     </Row>
                   )}
+                </Form.Group>
+                <h3 className="section-heading">
+                  <FontAwesomeIcon icon={faMap} className="me-2" />
+                  Thông tin bản đồ
+                </h3>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
+                    Liên kết Google Maps
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="mapInfo.embedCode"
+                    value={form.mapInfo.embedCode}
+                    onChange={handleChange}
+                    className="form-control"
+                    placeholder="Dán liên kết Google Maps hoặc mã nhúng iframe"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">Địa chỉ</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="mapInfo.address"
+                    value={form.mapInfo.address}
+                    onChange={handleChange}
+                    className="form-control"
+                    placeholder="Nhập địa chỉ chi tiết"
+                  />
                 </Form.Group>
                 <h3 className="section-heading">
                   <FontAwesomeIcon icon={faMoneyBillWave} className="me-2" />
@@ -1367,6 +1465,16 @@ export default function DashboardPage() {
                     <Form.Group className="mb-3">
                       <Form.Check
                         type="switch"
+                        id="showIntroduction"
+                        name="showIntroduction"
+                        label="Giới thiệu"
+                        checked={form.showIntroduction}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
                         id="showCountdown"
                         name="showCountdown"
                         label="Đếm ngược"
@@ -1413,6 +1521,16 @@ export default function DashboardPage() {
                         name="showWishList"
                         label="Danh sách lời chúc"
                         checked={form.showWishList}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showLocationMap"
+                        name="showLocationMap"
+                        label="Bản đồ"
+                        checked={form.showLocationMap}
                         onChange={handleChange}
                       />
                     </Form.Group>
@@ -1503,7 +1621,7 @@ export default function DashboardPage() {
                     ))}
                   </ListGroup>
                 ) : (
-                  <p className="no-wishes">Chưa có lời chúc nào.</p>
+                  <p className="no-wishes">Chưa có lời chúc nào。</p>
                 )}
                 <div className="d-flex gap-2">
                   <Button
@@ -1529,7 +1647,7 @@ export default function DashboardPage() {
             ) : (
               <p className="text-muted">
                 Vui lòng chọn một đám cưới để chỉnh sửa hoặc tạo một đám cưới
-                mới.
+                mới。
               </p>
             )}
           </Card.Body>
