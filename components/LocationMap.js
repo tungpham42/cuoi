@@ -111,10 +111,10 @@ const LocationMap = ({ form }) => {
         Bản đồ
       </h2>
       {coordinates ? (
-        <div className="map-container" style={{ height: "400px" }}>
+        <div className="map-container" style={{ height: "420px" }}>
           <MapContainer
             center={coordinates}
-            zoom={15}
+            zoom={17}
             style={{ height: "100%", width: "100%" }}
             scrollWheelZoom={false}
             touchZoom={false}
