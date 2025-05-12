@@ -131,9 +131,9 @@ const ThemePreview = ({ theme }) => (
   </div>
 );
 
-const FontPreview = ({ font, isPrimary }) => (
+const FontPreview = ({ font, isPrimary, selected }) => (
   <div
-    className="card font-preview mb-0 w-100"
+    className={`card font-preview mb-0 w-100 ${selected ? "selected" : ""}`}
     style={{
       fontFamily: `"${font.value}", ${isPrimary ? "cursive" : "serif"}`,
       padding: "10px",
@@ -217,6 +217,7 @@ const CustomDropdown = ({
           theme={name === "theme" ? selectedOption : undefined}
           font={name !== "theme" ? selectedOption : undefined}
           isPrimary={isPrimary}
+          selected={true}
         />
       </div>
       {isOpen && (
@@ -239,6 +240,7 @@ const CustomDropdown = ({
                 theme={name === "theme" ? option : undefined}
                 font={name !== "theme" ? option : undefined}
                 isPrimary={isPrimary}
+                selected={option.value === value}
               />
             </div>
           ))}

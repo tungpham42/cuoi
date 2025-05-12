@@ -978,6 +978,45 @@ p {
   box-shadow: none !important;
   border-radius: 0 !important;
 }
+/* Custom Dropdown Styling */
+.custom-dropdown .dropdown-toggle {
+  cursor: pointer !important;
+}
+.custom-dropdown .dropdown-toggle:after {
+  display: none !important;
+}
+.custom-dropdown .dropdown-menu {
+  border: none !important;
+  box-shadow: 0 4px 15px var(--shadow-color) !important;
+  background-color: var(--background) !important;
+}
+.custom-dropdown .dropdown-item {
+  padding: 0 !important;
+}
+.custom-dropdown .dropdown-item.active,
+.custom-dropdown .dropdown-item:active {
+  background-color: transparent !important;
+}
+.custom-dropdown .dropdown-item .card.font-preview {
+  border: none !important;
+  box-shadow: none !important;
+}
+.custom-dropdown .dropdown-item .card.theme-preview {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Selected Font Preview Styling */
+.custom-dropdown .dropdown-item .card.font-preview.selected {
+  background-color: color-mix(
+    in srgb,
+    var(--accent) 10%,
+    var(--background)
+  ) !important;
+  border: 2px solid var(--accent) !important;
+  border-radius: 8px !important;
+}
 .wedding-id {
   padding-right: 60px !important;
 }
