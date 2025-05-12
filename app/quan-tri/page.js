@@ -110,9 +110,9 @@ const SortableItem = ({ id, label }) => {
   );
 };
 
-const ThemePreview = ({ theme }) => (
+const ThemePreview = ({ theme, selected }) => (
   <div
-    className="card theme-preview mb-0 w-100"
+    className={`card theme-preview mb-0 w-100 ${selected ? "selected" : ""}`}
     style={{
       background: `linear-gradient(to bottom right, var(--gradient-start), var(--gradient-end))`,
       padding: "10px",
@@ -217,7 +217,7 @@ const CustomDropdown = ({
           theme={name === "theme" ? selectedOption : undefined}
           font={name !== "theme" ? selectedOption : undefined}
           isPrimary={isPrimary}
-          selected={true}
+          selected={true} // Highlight the selected option in the toggle
         />
       </div>
       {isOpen && (
@@ -240,7 +240,7 @@ const CustomDropdown = ({
                 theme={name === "theme" ? option : undefined}
                 font={name !== "theme" ? option : undefined}
                 isPrimary={isPrimary}
-                selected={option.value === value}
+                selected={option.value === value} // Highlight the selected option in the menu
               />
             </div>
           ))}

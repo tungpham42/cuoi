@@ -1017,6 +1017,16 @@ p {
   border: 2px solid var(--accent) !important;
   border-radius: 8px !important;
 }
+/* Selected Theme Preview Styling */
+.custom-dropdown .dropdown-item .card.theme-preview.selected {
+  background-color: color-mix(
+    in srgb,
+    var(--accent) 10%,
+    var(--background)
+  ) !important;
+  border: 2px solid var(--accent) !important;
+  border-radius: 8px !important;
+}
 .wedding-id {
   padding-right: 60px !important;
 }
