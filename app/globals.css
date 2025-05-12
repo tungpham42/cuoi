@@ -15,6 +15,7 @@
   --shadow-color: rgba(0, 0, 0, 0.1);
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="6" fill="%23fbcfe8" fill-opacity="0.4" /><circle cx="10" cy="10" r="4" fill="%23fbcfe8" fill-opacity="0.4" /><circle cx="30" cy="30" r="4" fill="%23fbcfe8" fill-opacity="0.4" /></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="10" cy="10" r="3" fill="%23fbcfe8" fill-opacity="0.4"/><circle cx="30" cy="30" r="3" fill="%23fbcfe8" fill-opacity="0.4"/><circle cx="20" cy="20" r="4" fill="%23fbcfe8" fill-opacity="0.4"/></svg>');
 }
 
 /* Modern theme */
@@ -28,6 +29,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23bfdbfe" fill-opacity="0.4" d="M10 10h20v2H10zM10 18h20v2H10zM10 26h20v2H10z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><line x1="0" y1="40" x2="40" y2="0" stroke="%23bfdbfe" stroke-opacity="0.4" stroke-width="2"/><line x1="0" y1="20" x2="20" y2="0" stroke="%23bfdbfe" stroke-opacity="0.4" stroke-width="2"/></svg>');
 }
 
 /* Romantic theme */
@@ -40,6 +42,7 @@
   --gradient-end: #f9d2e4;
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f9a8d4" fill-opacity="0.4" d="M20 12c-2.5-3-5.5-3-8 0s-1 6 1.5 9l6.5 6.5 6.5-6.5c2.5-3 4-6 1.5-9s-5.5-3-8 0z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f9a8d4" fill-opacity="0.4" d="M10 12c-1.5-1.5-3-1-3.5 0s0 3 2 4l1.5 1.5 1.5-1.5c2-1 2.5-3 0-4z"/><path fill="%23f9a8d4" fill-opacity="0.4" d="M30 28c-1.5-1.5-3-1-3.5 0s0 3 2 4l1.5 1.5 1.5-1.5c2-1 2.5-3 0-4z"/></svg>');
 }
 
 /* Rustic theme */
@@ -52,6 +55,7 @@
   --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fed7aa" fill-opacity="0.4" d="M10 10h10v10H10zM20 20h10v10H20z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fed7aa" fill-opacity="0.4" d="M0 40L40 0h-4L0 36zM10 40L40 10h-4L10 36z"/></svg>');
 }
 
 /* Elegant theme */
@@ -64,6 +68,7 @@
   --gradient-end: #e9d5ff;
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23d8b4fe" fill-opacity="0.4" d="M20 10c3 0 5 3 3 5s-5 2-6 0-1-5 3-5zm-6 14c2 0 3 2 1 3s-4 0-4-2c0-1 1-3 3-1zm12 0c2 0 3 2 1 3s-4 0-4-2c0-1 1-3 3-1z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23d8b4fe" fill-opacity="0.4" d="M10 10c2 2 4 0 6 2s0 4-2 6c-2-2-4 0-6-2s0-4 2-6zm20 20c2 2 4 0 6 2s0 4-2 6c-2-2-4 0-6-2s0-4 2-6z"/></svg>');
 }
 
 /* Vintage theme */
@@ -76,6 +81,7 @@
   --gradient-end: #fef3c7;
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect x="8" y="8" width="24" height="24" fill="none" stroke="%23fed7aa" stroke-opacity="0.4" stroke-width="2"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect x="8" y="8" width="8" height="8" fill="none" stroke="%23fed7aa" stroke-opacity="0.4" stroke-width="2"/><rect x="24" y="24" width="8" height="8" fill="none" stroke="%23fed7aa" stroke-opacity="0.4" stroke-width="2"/></svg>');
 }
 
 /* Bohemian theme */
@@ -88,6 +94,7 @@
   --gradient-end: #fed7aa;
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fdba74" fill-opacity="0.4" d="M20 5l5 10 10 0-8 8 2 10-9-5-9 5 2-10-8-8 10 0z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fdba74" fill-opacity="0.4" d="M20 10l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM20 25l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg>');
 }
 
 /* Classic theme */
@@ -100,6 +107,7 @@
   --gradient-end: #fef9c3;
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fef08a" fill-opacity="0.4" d="M20 5l5 5h10v10l-5 5-5 5h-10v-10l5-5zM20 15l-5 5h10z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fef08a" fill-opacity="0.4" d="M20 10l5 5-5 5-5-5zM20 25l5 5-5 5-5-5z"/></svg>');
 }
 
 /* Floral theme */
@@ -112,6 +120,7 @@
   --gradient-end: #a7f3d0;
   --card-border: 1px solid var(--border-color);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="5" fill="%236ee7b7" fill-opacity="0.4" /><path fill="%236ee7b7" fill-opacity="0.4" d="M20 15c-2.5 0-3.5 2.5-2 3.5s4.5 0 5-1.5-2-2-3-2zm0 10c-2.5 0-3.5 2.5-2 3.5s4.5 0 5-1.5-2-2-3-2z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%236ee7b7" fill-opacity="0.4" d="M20 10c-2 0-3 2-1 3s4 0 4-2c0-1-1-3-3-1zm0 20c-2 0-3 2-1 3s4 0 4-2c0-1-1-3-3-1z"/></svg>');
 }
 
 /* Nautical theme */
@@ -125,6 +134,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.08);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%2393c5fd" fill-opacity="0.4" d="M10 30c2.5-2.5 7.5-7.5 10-10 2.5 2.5 7.5 7.5 10 10-2.5 2.5-7.5 7.5-10 10-2.5-2.5-7.5-7.5-10-10z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%2393c5fd" fill-opacity="0.4" d="M0 20c5-5 15-5 20 0s15 5 20 0v4c-5 5-15 5-20 0s-15-5-20 0z"/></svg>');
 }
 
 /* Artistic theme */
@@ -138,6 +148,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="10" cy="10" r="3" fill="%23c4b5fd" fill-opacity="0.4" /><circle cx="30" cy="30" r="3" fill="%23c4b5fd" fill-opacity="0.4" /><circle cx="10" cy="30" r="3" fill="%23c4b5fd" fill-opacity="0.4" /><circle cx="30" cy="10" r="3" fill="%23c4b5fd" fill-opacity="0.4" /></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23c4b5fd" fill-opacity="0.4" d="M10 30c5-10 10-10 20-5M10 20c5-5 10-5 20 0"/></svg>');
 }
 
 /* Whimsical theme */
@@ -151,6 +162,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f9a8d4" fill-opacity="0.4" d="M20 10c2 0 3 2 1 3s-4 0-4-2c0-1 1-3 3-1zm-6 14c2 0 3 2 1 3s-4 0-4-2c0-1 1-3 3-1zm12 0c2 0 3 2 1 3s-4 0-4-2c0-1 1-3 3-1z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f9a8d4" fill-opacity="0.4" d="M20 10l2 4 4 2-4 2-2 4-2-4-4-2 4-2zM10 30l2 4 4 2-4 2-2 4-2-4-4-2 4-2z"/></svg>');
 }
 
 /* Minimalist theme */
@@ -164,6 +176,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><line x1="10" y1="30" x2="30" y2="10" stroke="%23e2e8f0" stroke-opacity="0.6" stroke-width="2"/><line x1="10" y1="10" x2="30" y2="30" stroke="%23e2e8f0" stroke-opacity="0.6" stroke-width="2"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="10" cy="10" r="2" fill="%23e2e8f0" fill-opacity="0.4"/><circle cx="30" cy="30" r="2" fill="%23e2e8f0" fill-opacity="0.4"/></svg>');
 }
 
 /* Playful theme */
@@ -177,6 +190,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f3e8ff" fill-opacity="0.8" d="M20 10l5 10-5 10-5-10zM10 20l5 10-5 10-5-10zM30 20l5 10-5 10-5-10z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="10" cy="10" r="4" fill="%23f3e8ff" fill-opacity="0.4"/><rect x="25" y="25" width="6" height="6" fill="%23f3e8ff" fill-opacity="0.4"/></svg>');
 }
 
 /* Art-deco theme */
@@ -190,6 +204,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fed7aa" fill-opacity="0.4" d="M20 5l10 10-10 10-10-10zM20 15l10 10-10 10-10-10z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23fed7aa" fill-opacity="0.4" d="M20 10l5 10h-10zM20 30l5-10h-10z"/></svg>');
 }
 
 /* Enchanted theme */
@@ -203,6 +218,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23d8b4fe" fill-opacity="0.4" d="M20 5l5 5 5-5-5-5zM10 30l5-5-5-5 5 5zM30 30l-5-5 5-5-5 5z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23d8b4fe" fill-opacity="0.4" d="M20 10l2 2-2 2-2-2zM10 30l2 2-2 2-2-2zM30 30l2 2-2 2-2-2z"/></svg>');
 }
 
 /* Celestial theme */
@@ -216,6 +232,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="3" fill="%23c7d2fe" fill-opacity="0.4" /><path fill="%23c7d2fe" fill-opacity="0.4" d="M20 10l5 5-5 5-5-5zM20 25l5 5-5 5-5-5z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23c7d2fe" fill-opacity="0.4" d="M20 10l2 4 4 2-4 2-2 4-2-4-4-2 4-2zM10 30c2 0 2-2 0-2s-2 2 0 2z"/></svg>');
 }
 
 /* Tropical theme */
@@ -229,6 +246,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%235eead4" fill-opacity="0.4" d="M10 10c5 5 15 5 20 0M10 30c5-5 15-5 20 0"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%235eead4" fill-opacity="0.4" d="M10 30c5-5 10-10 20 0M10 20c5-5 10-5 20 0"/></svg>');
 }
 
 /* Fairy-tale theme */
@@ -242,6 +260,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.1);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f0abfc" fill-opacity="0.4" d="M20 10c-2 0-3 2-1 3s4 0 4-2c0-1-1-3-3-1zm0 14c-2 0-3 2-1 3s4 0 4-2c0-1-1-3-3-1z"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23f0abfc" fill-opacity="0.4" d="M20 10l3 3h-6zM10 30l3 3h-6zM30 30l3 3h-6z"/></svg>');
 }
 
 /* Base styles applied to all themes */
@@ -314,14 +333,44 @@ p {
   border-radius: 12px !important;
 }
 
-.wedding-preview,
-.wedding-page {
+/* Wedding page and preview falling effect */
+.wedding-page,
+.wedding-preview {
+  position: relative; /* Ensure pseudo-element positioning */
+  overflow: hidden; /* Prevent overflow of animated background */
   background-image: var(--pattern) !important;
   background-position-x: center !important;
   background-position-y: top !important;
   background-repeat: repeat !important;
   background-size: contain !important;
   background-attachment: fixed !important;
+}
+/* Falling effect animation */
+@keyframes falling {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100vh; /* Moves background downward */
+  }
+}
+
+.wedding-page::before,
+.wedding-preview::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(
+    --animation-tile
+  ); /* Use animation-tile for falling effect */
+  background-repeat: repeat;
+  background-size: 40px 40px; /* Match SVG size in --animation-tile */
+  animation: falling 12s linear infinite; /* Animate falling effect */
+  z-index: 0; /* Keep behind content */
+  opacity: 0.6; /* Subtle effect to complement --pattern */
 }
 
 /* Component-specific styling */
