@@ -1,3 +1,5 @@
+import BackToTop from "../../components/BackToTop";
+
 export const metadata = {
   title: "Tình Yêu Vĩnh Cửu - Quản Trị",
   description:
@@ -21,7 +23,10 @@ export const metadata = {
 export default function DashboardLayout({ children }) {
   return (
     <html lang="vi">
-      <body>{children}</body>
+      <body>
+        {children}
+        <BackToTop />
+      </body>
     </html>
   );
 }
