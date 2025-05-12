@@ -246,7 +246,7 @@ export default function WeddingPage({ params }) {
         }}
       />
       <Card className="shadow-lg border-0 mx-auto wedding-page">
-        <Card.Body>
+        <Card.Body style={{ zIndex: 1 }}>
           {user && (
             <div className="d-flex justify-content-left mb-4">
               <Link href="/quan-tri" passHref>
