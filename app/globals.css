@@ -1141,6 +1141,6 @@ p {
 
 .audio-player-list-item-icon {
   font-size: 0.8rem !important;
-  color: var(--foreground) !important;
+  color: var(--background) !important;
   opacity: 0.7 !important;
 }
