@@ -338,12 +338,12 @@ p {
 .wedding-preview {
   position: relative; /* Ensure pseudo-element positioning */
   overflow: hidden; /* Prevent overflow of animated background */
-  background-image: var(--pattern) !important;
+  /* background-image: var(--pattern) !important;
   background-position-x: center !important;
   background-position-y: top !important;
   background-repeat: repeat !important;
   background-size: contain !important;
-  background-attachment: fixed !important;
+  background-attachment: fixed !important; */
 }
 /* Falling effect animation */
 @keyframes falling {
