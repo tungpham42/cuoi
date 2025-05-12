@@ -176,7 +176,7 @@
   --card-border: 1px solid var(--border-color);
   --shadow-color: rgba(0, 0, 0, 0.05);
   --pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><line x1="10" y1="30" x2="30" y2="10" stroke="%23e2e8f0" stroke-opacity="0.6" stroke-width="2"/><line x1="10" y1="10" x2="30" y2="30" stroke="%23e2e8f0" stroke-opacity="0.6" stroke-width="2"/></svg>');
-  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="10" cy="10" r="2" fill="%23e2e8f0" fill-opacity="0.4"/><circle cx="30" cy="30" r="2" fill="%23e2e8f0" fill-opacity="0.4"/></svg>');
+  --animation-tile: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="10" cy="10" r="2" fill="%23e2e8f0" fill-opacity="0.8"/><circle cx="30" cy="30" r="2" fill="%23e2e8f0" fill-opacity="0.8"/></svg>');
 }
 
 /* Playful theme */
