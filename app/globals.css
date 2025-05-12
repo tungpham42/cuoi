@@ -1,4 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Aleo&family=Andada+Pro&family=Ballet&family=Birthstone&family=Bitter&family=Bona+Nova&family=Borel&family=Bonheur+Royale&family=Cactus+Classical+Serif&family=Corinthia&family=Cormorant+Garamond&family=Crimson+Text&family=Dancing+Script&family=Ephesis&family=Fleur+De+Leah&family=Grape+Nuts&family=Great+Vibes&family=Hahmlet&family=Hepta+Slab&family=IBM+Plex+Serif&family=Imperial+Script&family=Italianno&family=Lavishly+Yours&family=Lobster&family=Lora&family=Love+Light&family=Luxurious+Roman&family=Luxurious+Script&family=Mea+Culpa&family=Merriweather&family=MonteCarlo&family=Montagu+Slab&family=Ms+Madi&family=Noto+Serif&family=Noticia+Text&family=Oooh+Baby&family=Old+Standard+TT&family=Pinyon+Script&family=Playfair+Display&family=Playwrite+Danmark+Loopet&family=Pridi&family=Rokkitt&family=Send+Flowers&family=Taviraj&family=Times+New+Roman&family=Updock&family=Xanh+Mono&display=swap");
+/* Primary Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script&family=Great+Vibes&family=Ms+Madi&family=Borel&family=Send+Flowers&family=Pinyon+Script&family=Imperial+Script&family=Ballet&family=Italianno&family=Oooh+Baby&family=Grape+Nuts&family=Mea+Culpa&family=Fleur+De+Leah&family=Birthstone&family=Lobster&family=Updock&family=MonteCarlo&family=Lavishly+Yours&family=Corinthia&family=Bonheur+Royale&family=Ephesis&family=Luxurious+Script&family=Love+Light&display=swap");
+
+/* Secondary Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Lora&family=Merriweather&family=Playfair+Display&family=Crimson+Text&family=Old+Standard+TT&family=Taviraj&family=Hahmlet&family=Noticia+Text&family=Aleo&family=Rokkitt&family=Andada+Pro&family=Pridi&family=Montagu+Slab&family=Hepta+Slab&family=Xanh+Mono&family=Noto+Serif&family=IBM+Plex+Serif&family=Cormorant+Garamond&family=Bona+Nova&family=Bitter&display=swap");
 
 /* Base variables for default theme */
 :root {
