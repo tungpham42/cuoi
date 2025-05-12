@@ -117,7 +117,7 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
             className="audio-player-progress"
           />
           <div className="audio-player-controls">
-            <OverlayTrigger placement="top" overlay={renderTooltip("Previous")}>
+            <OverlayTrigger placement="top" overlay={renderTooltip("Trước")}>
               <Button
                 variant="outline-primary"
                 onClick={handlePrevious}
@@ -138,7 +138,7 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
                 <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
               </Button>
             </OverlayTrigger>
-            <OverlayTrigger placement="top" overlay={renderTooltip("Next")}>
+            <OverlayTrigger placement="top" overlay={renderTooltip("Sau")}>
               <Button
                 variant="outline-primary"
                 onClick={handleNext}
