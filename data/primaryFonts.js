@@ -17,5 +17,11 @@ const primaryFonts = [
   { value: "Lobster", label: "Lobster" },
   { value: "Updock", label: "Updock" },
   { value: "MonteCarlo", label: "MonteCarlo" },
+  { value: "Lavishly Yours", label: "Lavishly Yours" },
+  { value: "Corinthia", label: "Corinthia" },
+  { value: "Bonheur Royale", label: "Bonheur Royale" },
+  { value: "Ephesis", label: "Ephesis" },
+  { value: "Luxurious Script", label: "Luxurious Script" },
+  { value: "Love Light", label: "Love Light" },
 ];
 export default primaryFonts;

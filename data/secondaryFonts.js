@@ -16,5 +16,11 @@ const secondaryFonts = [
   { value: "Hepta Slab", label: "Hepta Slab" },
   { value: "Xanh Mono", label: "Xanh Mono" },
   { value: "Cactus Classical Serif", label: "Cactus Classical Serif" },
+  { value: "Noto Serif", label: "Noto Serif" },
+  { value: "IBM Plex Serif", label: "IBM Plex Serif" },
+  { value: "Cormorant Garamond", label: "Cormorant Garamond" },
+  { value: "Bona Nova", label: "Bona Nova" },
+  { value: "Luxurious Roman", label: "Luxurious Roman" },
+  { value: "Bitter", label: "Bitter" },
 ];
 export default secondaryFonts;
