@@ -12,6 +12,7 @@ import WishList from "@/components/WishList";
 import Countdown from "@/components/Countdown";
 import QRCode from "@/components/QRCode";
 import Introduction from "@/components/Introduction";
+import AudioPlayer from "@/components/AudioPlayer";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -22,9 +23,8 @@ import { CSS } from "@dnd-kit/utilities";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
-// Dynamically import Map component with SSR disabled
 const LocationMap = dynamic(() => import("@/components/LocationMap"), {
-  ssr: false, // Disable SSR for this component
+  ssr: false,
 });
 
 const SortableComponent = ({ id, children, disabled }) => {
@@ -91,6 +91,7 @@ export default function WeddingPage({ params }) {
           loveStory: data.loveStory || "",
           theme: data.theme || "romantic",
           gallery: data.gallery || [],
+          playlist: data.playlist || [],
           showCountdown: data.showCountdown !== false,
           showGallery: data.showGallery !== false,
           showLoveStory: data.showLoveStory !== false,
@@ -99,6 +100,7 @@ export default function WeddingPage({ params }) {
           showQRCode: data.showQRCode !== false,
           showIntroduction: data.showIntroduction !== false,
           showLocationMap: data.showLocationMap !== false,
+          showAudioPlayer: data.showAudioPlayer !== false,
           bankInfo: data.bankInfo || {},
           introduction: data.introduction || "",
           mapInfo: data.mapInfo || { embedCode: "", address: "" },
@@ -112,6 +114,7 @@ export default function WeddingPage({ params }) {
             "QRCode",
             "WishForm",
             "WishList",
+            "AudioPlayer",
           ],
           primaryFont: data.primaryFont || "Dancing Script",
           secondaryFont: data.secondaryFont || "Lora",
@@ -184,6 +187,17 @@ export default function WeddingPage({ params }) {
         return weddingData.showWishForm && <WishForm onSubmit={addWish} />;
       case "WishList":
         return weddingData.showWishList && <WishList wishes={wishes} />;
+      case "AudioPlayer":
+        return (
+          weddingData.showAudioPlayer &&
+          weddingData.playlist.length > 0 && (
+            <AudioPlayer
+              playlist={weddingData.playlist}
+              loop={false}
+              autoplay={true}
+            />
+          )
+        );
       default:
         return null;
     }

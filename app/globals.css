@@ -1089,3 +1089,58 @@ p {
 .wedding-id .text-light:hover {
   transform: scale(1.25) !important;
 }
+
+/* AudioPlayer-specific styling */
+.audio-player-hidden {
+  display: none !important;
+}
+
+.audio-player-progress {
+  height: 8px !important;
+  background-color: var(--border-color) !important;
+  margin-bottom: 1rem !important;
+}
+.audio-player-progress .progress-bar {
+  background-color: var(--accent) !important;
+}
+.audio-player-btn-circle {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
+}
+
+.audio-player-btn-circle:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 15px var(--shadow-color) !important;
+}
+
+.audio-player-controls {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.audio-player-list-item {
+  cursor: pointer !important;
+  font-family: "Playfair Display", serif !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+}
+
+.audio-player-list-item.active {
+  background-color: var(--accent) !important;
+}
+
+.audio-player-list-item-icon {
+  font-size: 0.8rem !important;
+  color: var(--foreground) !important;
+  opacity: 0.7 !important;
+}

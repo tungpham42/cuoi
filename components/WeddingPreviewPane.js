@@ -1,5 +1,6 @@
 "use client";
 import { Container, Card, Alert } from "react-bootstrap";
+import dynamic from "next/dynamic";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -7,6 +8,8 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+// Components
 import WeddingHeader from "./WeddingHeader";
 import Countdown from "./Countdown";
 import Gallery from "./Gallery";
@@ -14,13 +17,28 @@ import LoveStory from "./LoveStory";
 import WishList from "./WishList";
 import QRCode from "./QRCode";
 import Introduction from "./Introduction";
-import dynamic from "next/dynamic";
 
-// Dynamically import Map component with SSR disabled
-const LocationMap = dynamic(() => import("./LocationMap"), {
-  ssr: false, // Disable SSR for this component
-});
+// Dynamic imports
+const LocationMap = dynamic(() => import("./LocationMap"), { ssr: false });
+const AudioPlayer = dynamic(() => import("./AudioPlayer"), { ssr: false });
 
+// Constants
+const DEFAULT_COMPONENT_ORDER = [
+  "WeddingHeader",
+  "Introduction",
+  "Countdown",
+  "Gallery",
+  "LoveStory",
+  "LocationMap",
+  "QRCode",
+  "WishList",
+  "AudioPlayer",
+];
+const DEFAULT_PRIMARY_FONT = "Dancing Script";
+const DEFAULT_SECONDARY_FONT = "Lora";
+const DEFAULT_THEME = "romantic";
+
+// Sortable component for drag-and-drop
 const SortableComponent = ({ id, children, disabled }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id, disabled });
@@ -39,7 +57,65 @@ const SortableComponent = ({ id, children, disabled }) => {
   );
 };
 
-const WeddingPreviewPane = ({ form, wishes }) => {
+// Component rendering logic
+const renderComponent = (componentId, form, wishes) => {
+  const {
+    brideName = "",
+    groomName = "",
+    weddingDate = "",
+    gallery = [],
+    playlist = [],
+    loveStory = "",
+    bankInfo = {},
+    introduction = "",
+    mapInfo = { embedCode: "", address: "" },
+    showCountdown = true,
+    showGallery = true,
+    showLoveStory = true,
+    showWishList = true,
+    showQRCode = true,
+    showIntroduction = true,
+    showLocationMap = true,
+    showAudioPlayer = true,
+  } = form || {};
+
+  const components = {
+    WeddingHeader: () =>
+      brideName || groomName ? <WeddingHeader data={form} /> : null,
+    Introduction: () =>
+      showIntroduction && introduction.trim() ? (
+        <Introduction form={form} />
+      ) : null,
+    Countdown: () =>
+      showCountdown && weddingDate ? (
+        <Countdown weddingDate={weddingDate} />
+      ) : null,
+    Gallery: () =>
+      showGallery && gallery.length > 0 ? <Gallery images={gallery} /> : null,
+    LoveStory: () =>
+      showLoveStory && loveStory.trim() ? <LoveStory text={loveStory} /> : null,
+    LocationMap: () =>
+      showLocationMap && (mapInfo.embedCode || mapInfo.address) ? (
+        <LocationMap form={form} />
+      ) : null,
+    QRCode: () =>
+      showQRCode &&
+      bankInfo &&
+      Object.values(bankInfo).some((value) => value) ? (
+        <QRCode bankInfo={bankInfo} />
+      ) : null,
+    WishList: () =>
+      showWishList && wishes?.length > 0 ? <WishList wishes={wishes} /> : null,
+    AudioPlayer: () =>
+      showAudioPlayer && playlist.length > 0 ? (
+        <AudioPlayer playlist={playlist} />
+      ) : null,
+  };
+
+  return components[componentId]?.() || null;
+};
+
+const WeddingPreviewPane = ({ form, wishes = [] }) => {
   if (!form) {
     return (
       <Container fluid className="py-5">
@@ -50,75 +126,12 @@ const WeddingPreviewPane = ({ form, wishes }) => {
     );
   }
 
-  const componentOrder = form.componentOrder || [
-    "WeddingHeader",
-    "Introduction",
-    "Countdown",
-    "Gallery",
-    "LoveStory",
-    "LocationMap",
-    "QRCode",
-    "WishList",
-  ];
-  const primaryFont = form.primaryFont || "Dancing Script";
-  const secondaryFont = form.secondaryFont || "Lora";
-  const theme = form.theme || "romantic";
-  const brideName = form.brideName || "";
-  const groomName = form.groomName || "";
-  const weddingDate = form.weddingDate || "";
-  const gallery = form.gallery || [];
-  const loveStory = form.loveStory || "";
-  const bankInfo = form.bankInfo || {};
-  const showCountdown = form.showCountdown !== false;
-  const showGallery = form.showGallery !== false;
-  const showLoveStory = form.showLoveStory !== false;
-  const showWishList = form.showWishList !== false;
-  const showQRCode = form.showQRCode !== false;
-  const showIntroduction = form.showIntroduction !== false;
-  const showLocationMap = form.showLocationMap !== false;
-  const introduction = form.introduction || "";
-  const mapInfo = form.mapInfo || { embedCode: "", address: "" };
-
-  const renderComponent = (componentId) => {
-    switch (componentId) {
-      case "WeddingHeader":
-        return brideName || groomName ? (
-          <WeddingHeader data={{ brideName, groomName, ...form }} />
-        ) : null;
-      case "Introduction":
-        return showIntroduction && introduction.trim() ? (
-          <Introduction form={form} />
-        ) : null;
-      case "Countdown":
-        return showCountdown && weddingDate ? (
-          <Countdown weddingDate={weddingDate} />
-        ) : null;
-      case "Gallery":
-        return showGallery && gallery.length > 0 ? (
-          <Gallery images={gallery} />
-        ) : null;
-      case "LoveStory":
-        return showLoveStory && loveStory.trim() ? (
-          <LoveStory text={loveStory} />
-        ) : null;
-      case "LocationMap":
-        return showLocationMap && (mapInfo.embedCode || mapInfo.address) ? (
-          <LocationMap form={form} />
-        ) : null;
-      case "QRCode":
-        return showQRCode &&
-          bankInfo &&
-          Object.values(bankInfo).some((value) => value) ? (
-          <QRCode bankInfo={bankInfo} />
-        ) : null;
-      case "WishList":
-        return showWishList && wishes?.length > 0 ? (
-          <WishList wishes={wishes} />
-        ) : null;
-      default:
-        return null;
-    }
-  };
+  const {
+    componentOrder = DEFAULT_COMPONENT_ORDER,
+    primaryFont = DEFAULT_PRIMARY_FONT,
+    secondaryFont = DEFAULT_SECONDARY_FONT,
+    theme = DEFAULT_THEME,
+  } = form;
 
   return (
     <Container fluid className="py-5" data-theme={theme}>
@@ -159,7 +172,7 @@ const WeddingPreviewPane = ({ form, wishes }) => {
             >
               {componentOrder.map((id) => (
                 <SortableComponent key={id} id={id} disabled>
-                  {renderComponent(id)}
+                  {renderComponent(id, form, wishes)}
                 </SortableComponent>
               ))}
             </SortableContext>

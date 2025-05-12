@@ -30,7 +30,10 @@ import { db, auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { slugify } from "@/utils/slug";
-import { uploadImageToCloudinary } from "@/utils/cloudinary";
+import {
+  uploadImageToCloudinary,
+  uploadAudioToCloudinary,
+} from "@/utils/cloudinary";
 import WeddingPreviewPane from "@/components/WeddingPreviewPane";
 import {
   DndContext,
@@ -68,6 +71,7 @@ import {
   faPen,
   faInfoCircle,
   faMap,
+  faMusic,
 } from "@fortawesome/free-solid-svg-icons";
 import themes from "@/data/themes";
 import primaryFonts from "@/data/primaryFonts";
@@ -217,7 +221,7 @@ const CustomDropdown = ({
           theme={name === "theme" ? selectedOption : undefined}
           font={name !== "theme" ? selectedOption : undefined}
           isPrimary={isPrimary}
-          selected={true} // Highlight the selected option in the toggle
+          selected={true}
         />
       </div>
       {isOpen && (
@@ -240,7 +244,7 @@ const CustomDropdown = ({
                 theme={name === "theme" ? option : undefined}
                 font={name !== "theme" ? option : undefined}
                 isPrimary={isPrimary}
-                selected={option.value === value} // Highlight the selected option in the menu
+                selected={option.value === value}
               />
             </div>
           ))}
@@ -293,6 +297,7 @@ export default function DashboardPage() {
     theme: "romantic",
     slug: "",
     gallery: [],
+    playlist: [],
     showCountdown: true,
     showGallery: true,
     showLoveStory: true,
@@ -301,6 +306,7 @@ export default function DashboardPage() {
     showQRCode: true,
     showIntroduction: true,
     showLocationMap: true,
+    showAudioPlayer: true,
     bankInfo: {
       bankName: "",
       accountNumber: "",
@@ -322,13 +328,15 @@ export default function DashboardPage() {
       "QRCode",
       "WishForm",
       "WishList",
+      "AudioPlayer",
     ],
     primaryFont: "Dancing Script",
     secondaryFont: "Lora",
   });
   const [wishes, setWishes] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [audioUploading, setAudioUploading] = useState(false);
   const [error, setError] = useState("");
   const [slugError, setSlugError] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -349,6 +357,7 @@ export default function DashboardPage() {
     QRCode: "Mã QR chuyển khoản",
     WishForm: "Form lời chúc",
     WishList: "Danh sách lời chúc",
+    AudioPlayer: "Trình phát nhạc",
   };
 
   const sensors = useSensors(
@@ -442,6 +451,7 @@ export default function DashboardPage() {
           theme: data.theme || "romantic",
           slug: data.slug || "",
           gallery: data.gallery || [],
+          playlist: data.playlist || [],
           showCountdown: data.showCountdown !== false,
           showGallery: data.showGallery !== false,
           showLoveStory: data.showLoveStory !== false,
@@ -450,6 +460,7 @@ export default function DashboardPage() {
           showQRCode: data.showQRCode !== false,
           showIntroduction: data.showIntroduction !== false,
           showLocationMap: data.showLocationMap !== false,
+          showAudioPlayer: data.showAudioPlayer !== false,
           bankInfo: {
             bankName: data.bankInfo?.bankName || "",
             accountNumber: data.bankInfo?.accountNumber || "",
@@ -471,6 +482,7 @@ export default function DashboardPage() {
             "QRCode",
             "WishForm",
             "WishList",
+            "AudioPlayer",
           ],
           primaryFont: data.primaryFont || "Dancing Script",
           secondaryFont: data.secondaryFont || "Lora",
@@ -493,6 +505,7 @@ export default function DashboardPage() {
           theme: "romantic",
           slug: "",
           gallery: [],
+          playlist: [],
           showCountdown: true,
           showGallery: true,
           showLoveStory: true,
@@ -501,6 +514,7 @@ export default function DashboardPage() {
           showQRCode: true,
           showIntroduction: true,
           showLocationMap: true,
+          showAudioPlayer: true,
           bankInfo: {
             bankName: "",
             accountNumber: "",
@@ -522,6 +536,7 @@ export default function DashboardPage() {
             "QRCode",
             "WishForm",
             "WishList",
+            "AudioPlayer",
           ],
           primaryFont: "Dancing Script",
           secondaryFont: "Lora",
@@ -536,8 +551,8 @@ export default function DashboardPage() {
   useEffect(() => {
     if (user) {
       loadWeddings();
-    } // eslint-disable-next-line
-  }, [user]);
+    }
+  });
 
   useEffect(() => {
     if (selectedWeddingId) {
@@ -552,6 +567,7 @@ export default function DashboardPage() {
         theme: "romantic",
         slug: "",
         gallery: [],
+        playlist: [],
         showCountdown: true,
         showGallery: true,
         showLoveStory: true,
@@ -560,6 +576,7 @@ export default function DashboardPage() {
         showQRCode: true,
         showIntroduction: true,
         showLocationMap: true,
+        showAudioPlayer: true,
         bankInfo: {
           bankName: "",
           accountNumber: "",
@@ -581,6 +598,7 @@ export default function DashboardPage() {
           "QRCode",
           "WishForm",
           "WishList",
+          "AudioPlayer",
         ],
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
@@ -646,7 +664,7 @@ export default function DashboardPage() {
       return;
     }
 
-    setUploading(true);
+    setImageUploading(true);
     setError("");
     try {
       const uploadPromises = files.map(async (file) => {
@@ -692,9 +710,93 @@ export default function DashboardPage() {
       console.error("Cloudinary upload error:", err);
       setError(err.message || "Lỗi khi tải hình ảnh. Vui lòng thử lại.");
     } finally {
-      setUploading(false);
+      setImageUploading(false);
       e.target.value = "";
     }
+  };
+
+  const handleAudioUpload = async (e) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn hoặc tạo một đám cưới trước khi tải âm thanh.");
+      return;
+    }
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    const maxSize = 25 * 1024 * 1024;
+    const invalidFiles = files.filter((file) => file.size > maxSize);
+    if (invalidFiles.length > 0) {
+      setError("Một số tệp âm thanh vượt quá giới hạn kích thước 25MB.");
+      return;
+    }
+
+    setAudioUploading(true);
+    setError("");
+    try {
+      const uploadPromises = files.map(async (file) => {
+        const result = await uploadAudioToCloudinary(file); // Assumes audio support
+        if (result && result.secure_url) {
+          return {
+            public_id: result.public_id,
+            url: result.secure_url,
+            name: file.name.replace(/\.[^/.]+$/, ""),
+          };
+        }
+        return null;
+      });
+
+      const uploadedAudios = (await Promise.all(uploadPromises)).filter(
+        (result) => result !== null
+      );
+
+      if (uploadedAudios.length === 0) {
+        throw new Error("Không có âm thanh nào được tải lên thành công.");
+      }
+
+      setForm((prev) => {
+        const updatedPlaylist = [...prev.playlist, ...uploadedAudios];
+        if (user) {
+          const weddingRef = doc(db, "weddings", selectedWeddingId);
+          updateDoc(weddingRef, { playlist: updatedPlaylist }).catch((err) => {
+            console.error("Firestore save error:", err);
+            setError("Lỗi khi lưu âm thanh vào Firestore. Vui lòng thử lại.");
+          });
+        }
+        return { ...prev, playlist: updatedPlaylist };
+      });
+
+      if (uploadedAudios.length < files.length) {
+        setError(
+          `${uploadedAudios.length} trong số ${files.length} âm thanh được tải lên thành công. Một số âm thanh tải lên thất bại.`
+        );
+      } else {
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      }
+    } catch (err) {
+      console.error("Cloudinary upload error:", err);
+      setError(err.message || "Lỗi khi tải âm thanh. Vui lòng thử lại.");
+    } finally {
+      setAudioUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleRemoveAudio = (public_id) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn một đám cưới trước khi xóa âm thanh.");
+      return;
+    }
+    setForm((prev) => {
+      const updatedPlaylist = prev.playlist.filter(
+        (audio) => audio.public_id !== public_id
+      );
+      if (user) {
+        const weddingRef = doc(db, "weddings", selectedWeddingId);
+        updateDoc(weddingRef, { playlist: updatedPlaylist });
+      }
+      return { ...prev, playlist: updatedPlaylist };
+    });
   };
 
   const handleRemoveImage = (public_id) => {
@@ -731,6 +833,7 @@ export default function DashboardPage() {
         theme: "romantic",
         slug: "",
         gallery: [],
+        playlist: [],
         showCountdown: true,
         showGallery: true,
         showLoveStory: true,
@@ -739,6 +842,7 @@ export default function DashboardPage() {
         showQRCode: true,
         showIntroduction: true,
         showLocationMap: true,
+        showAudioPlayer: true,
         bankInfo: {
           bankName: "",
           accountNumber: "",
@@ -760,6 +864,7 @@ export default function DashboardPage() {
           "QRCode",
           "WishForm",
           "WishList",
+          "AudioPlayer",
         ],
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
@@ -1214,7 +1319,12 @@ export default function DashboardPage() {
                     <Button
                       variant="success"
                       onClick={handleRedirect}
-                      disabled={uploading || !form.slug || !selectedWeddingId}
+                      disabled={
+                        imageUploading ||
+                        audioUploading ||
+                        !form.slug ||
+                        !selectedWeddingId
+                      }
                       className="btn-redirect"
                       style={{ whiteSpace: "nowrap" }}
                     >
@@ -1327,10 +1437,10 @@ export default function DashboardPage() {
                     accept="image/*"
                     multiple
                     onChange={handleImageUpload}
-                    disabled={uploading}
+                    disabled={imageUploading}
                     className="form-control"
                   />
-                  {uploading && (
+                  {imageUploading && (
                     <Spinner
                       animation="border"
                       size="sm"
@@ -1367,6 +1477,47 @@ export default function DashboardPage() {
                         </Col>
                       ))}
                     </Row>
+                  )}
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faMusic} className="me-2" />
+                    Danh sách nhạc
+                  </Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept="audio/*"
+                    multiple
+                    onChange={handleAudioUpload}
+                    disabled={audioUploading}
+                    className="form-control"
+                  />
+                  {audioUploading && (
+                    <Spinner
+                      animation="border"
+                      size="sm"
+                      className="mt-2"
+                      variant="danger"
+                    />
+                  )}
+                  {form.playlist.length > 0 && (
+                    <ListGroup className="mt-3">
+                      {form.playlist.map((audio) => (
+                        <ListGroup.Item
+                          key={audio.public_id}
+                          className="d-flex justify-content-between align-items-center"
+                        >
+                          <span>{audio.name}</span>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleRemoveAudio(audio.public_id)}
+                          >
+                            Xóa
+                          </Button>
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
                   )}
                 </Form.Group>
                 <h3 className="section-heading">
@@ -1507,6 +1658,16 @@ export default function DashboardPage() {
                         onChange={handleChange}
                       />
                     </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showAudioPlayer"
+                        name="showAudioPlayer"
+                        label="Trình phát nhạc"
+                        checked={form.showAudioPlayer}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
@@ -1632,7 +1793,9 @@ export default function DashboardPage() {
                   <Button
                     variant="primary"
                     onClick={handleSave}
-                    disabled={uploading || !selectedWeddingId}
+                    disabled={
+                      imageUploading || audioUploading || !selectedWeddingId
+                    }
                     className="btn-save"
                   >
                     <FontAwesomeIcon icon={faSave} className="me-2" />
@@ -1641,7 +1804,12 @@ export default function DashboardPage() {
                   <Button
                     variant="success"
                     onClick={handleRedirect}
-                    disabled={uploading || !form.slug || !selectedWeddingId}
+                    disabled={
+                      imageUploading ||
+                      audioUploading ||
+                      !form.slug ||
+                      !selectedWeddingId
+                    }
                     className="btn-redirect"
                   >
                     <FontAwesomeIcon icon={faEye} className="me-2" />
