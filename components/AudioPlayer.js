@@ -184,7 +184,9 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
             </OverlayTrigger>
             <OverlayTrigger
               placement="top"
-              overlay={renderTooltip(isLooping ? "Không lặp lại" : "Lặp lại")}
+              overlay={renderTooltip(
+                isLooping ? "Không lặp lại" : "Lặp lại bài hiện tại"
+              )}
             >
               <Button
                 variant={isLooping ? "primary" : "outline-primary"}
