@@ -17,5 +17,11 @@ const themes = [
   { value: "celestial", label: "Celestial" },
   { value: "tropical", label: "Tropical" },
   { value: "fairy-tale", label: "Fairy Tale" },
+  { value: "gothic", label: "Gothic" },
+  { value: "industrial", label: "Industrial" },
+  { value: "retro", label: "Retro" },
+  { value: "zen", label: "Zen" },
+  { value: "cyberpunk", label: "Cyberpunk" },
+  { value: "baroque", label: "Baroque" },
 ];
 export default themes;
