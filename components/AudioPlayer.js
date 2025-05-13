@@ -23,7 +23,10 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
   const [isPlaying, setIsPlaying] = useState(autoplay);
   const [isLooping, setIsLooping] = useState(loop);
   const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
+  const progressBarRef = useRef(null);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -49,6 +52,8 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
         setProgress(
           (audioRef.current.currentTime / audioRef.current.duration) * 100
         );
+        setCurrentTime(audioRef.current.currentTime);
+        setDuration(audioRef.current.duration);
       }
     };
 
@@ -88,6 +93,27 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
     }
   };
 
+  const handleProgressClick = (e) => {
+    if (audioRef.current && progressBarRef.current) {
+      const rect = progressBarRef.current.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const seekPercentage = (clickX / width) * 100;
+      const seekTime = (seekPercentage / 100) * audioRef.current.duration;
+      audioRef.current.currentTime = seekTime;
+      setProgress(seekPercentage);
+      setCurrentTime(seekTime);
+    }
+  };
+
+  // Format time in MM:SS
+  const formatTime = (seconds) => {
+    if (isNaN(seconds)) return "0:00";
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
   if (!playlist || playlist.length === 0) {
     return null;
   }
@@ -111,11 +137,20 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
             onEnded={handleEnded}
             className="audio-player-hidden"
           />
-          <ProgressBar
-            now={progress}
-            variant="primary"
-            className="audio-player-progress"
-          />
+          <div
+            ref={progressBarRef}
+            onClick={handleProgressClick}
+            style={{ cursor: "pointer" }}
+          >
+            <ProgressBar
+              now={progress}
+              variant="primary"
+              className="audio-player-progress"
+            />
+          </div>
+          <div className="audio-player-time mt-2">
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </div>
           <div className="audio-player-controls">
             <OverlayTrigger placement="top" overlay={renderTooltip("Trước")}>
               <Button
