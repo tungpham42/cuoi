@@ -1,4 +1,4 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -27,6 +27,7 @@ export default function RootLayout({ children }) {
     <html lang="vi">
       <body>{children}</body>
       <GoogleAnalytics gaId="G-TY26D3X2LF" />
+      <GoogleTagManager gtmId="GTM-5R8XPP4P" />
     </html>
   );
 }
