@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="vi">
       <body>{children}</body>
+      <GoogleAnalytics gaId="G-TY26D3X2LF" />
     </html>
   );
 }
