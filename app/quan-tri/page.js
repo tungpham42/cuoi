@@ -1617,7 +1617,7 @@ export default function DashboardPage() {
                   Hiển thị thành phần
                 </h3>
                 <Row>
-                  <Col md={6}>
+                  <Col md={4}>
                     <Form.Group className="mb-3">
                       <Form.Check
                         type="switch"
@@ -1625,16 +1625,6 @@ export default function DashboardPage() {
                         name="showIntroduction"
                         label="Giới thiệu"
                         checked={form.showIntroduction}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showCountdown"
-                        name="showCountdown"
-                        label="Đếm ngược"
-                        checked={form.showCountdown}
                         onChange={handleChange}
                       />
                     </Form.Group>
@@ -1651,16 +1641,6 @@ export default function DashboardPage() {
                     <Form.Group className="mb-3">
                       <Form.Check
                         type="switch"
-                        id="showLoveStory"
-                        name="showLoveStory"
-                        label="Chuyện tình yêu"
-                        checked={form.showLoveStory}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
                         id="showAudioPlayer"
                         name="showAudioPlayer"
                         label="Trình phát nhạc"
@@ -1669,7 +1649,17 @@ export default function DashboardPage() {
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
+                  <Col md={4}>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showCountdown"
+                        name="showCountdown"
+                        label="Đếm ngược"
+                        checked={form.showCountdown}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
                     <Form.Group className="mb-3">
                       <Form.Check
                         type="switch"
@@ -1687,6 +1677,18 @@ export default function DashboardPage() {
                         name="showWishList"
                         label="Danh sách lời chúc"
                         checked={form.showWishList}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group className="mb-3">
+                      <Form.Check
+                        type="switch"
+                        id="showLoveStory"
+                        name="showLoveStory"
+                        label="Chuyện tình yêu"
+                        checked={form.showLoveStory}
                         onChange={handleChange}
                       />
                     </Form.Group>
