@@ -22,11 +22,8 @@ export default function HomePage() {
       setIsLoading(false);
       if (user) {
         router.push("/quan-tri");
-      } else {
-        router.push("/");
       }
     });
-
     return () => unsubscribe();
   }, [router]);
 
@@ -39,66 +36,78 @@ export default function HomePage() {
           </div>
         </div>
       ) : (
-        <Container className="wedding-section my-5 p-5 position-relative">
+        <Container className="wedding-section my-5 p-5 position-relative text-center">
           <div className="decorative-corner-top" />
           <div className="decorative-corner-bottom" />
-          <Row className="justify-content-center text-center mb-5">
-            <Col md={8}>
-              <h1 className="display-3 mb-4">
-                Chào Mừng Đến Với Đám Cưới Trong Mơ
+
+          {/* Hero Section */}
+          <Row className="mb-5">
+            <Col>
+              <h1 className="display-2 fw-bold mb-4 animate__animated animate__fadeInDown">
+                💍 Đám Cưới Trong Mơ Của Bạn
               </h1>
-              <h3 className="mb-4">
-                Tạo dựng một trang cưới độc đáo với thiệp mời cá nhân hóa, quản
-                lý khoảnh khắc đáng nhớ, và tổ chức mọi chi tiết một cách tinh
-                tế và dễ dàng.
+              <h3 className="mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+                Tạo ra thiệp mời tuyệt đẹp, lưu giữ những khoảnh khắc ngọt ngào
+                và quản lý sự kiện một cách chuyên nghiệp.
               </h3>
-              <Link href="/dang-nhap">
-                <Button className="btn-primary fs-5 px-4">
+              <Link href="/dang-nhap" passHref>
+                <Button className="btn-primary fs-4 px-5 py-2 animate__animated animate__pulse animate__infinite">
                   <FontAwesomeIcon icon={faHeart} className="me-2" />
                   Bắt Đầu Tạo Ngay
                 </Button>
               </Link>
             </Col>
           </Row>
+
+          {/* Features Section */}
           <Row className="g-4">
             <Col md={4}>
-              <Card className="card h-100 text-center">
+              <Card className="card h-100 text-center p-3 shadow-sm hover-shadow animate__animated animate__zoomIn">
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
-                    <FontAwesomeIcon icon={faEnvelope} className="me-2" />
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      className="me-2 text-accent"
+                    />
                     Thiệp Mời Độc Đáo
                   </Card.Title>
                   <Card.Text>
-                    Thiết kế thiệp mời riêng biệt với các chủ đề, phông chữ và
-                    màu sắc tùy chỉnh để tạo dấu ấn cho ngày trọng đại.
+                    Thiết kế các thiệp mời cá nhân hóa với phông chữ, màu sắc và
+                    chủ đề riêng.
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
             <Col md={4}>
-              <Card className="card h-100 text-center">
+              <Card className="card h-100 text-center p-3 shadow-sm hover-shadow animate__animated animate__zoomIn animate__delay-1s">
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
-                    <FontAwesomeIcon icon={faCamera} className="me-2" />
+                    <FontAwesomeIcon
+                      icon={faCamera}
+                      className="me-2 text-accent"
+                    />
                     Lưu Giữ Kỷ Niệm
                   </Card.Title>
                   <Card.Text>
-                    Tải lên và quản lý bộ sưu tập ảnh để lưu giữ và chia sẻ
-                    những khoảnh khắc đẹp nhất của bạn.
+                    Tải lên và chia sẻ bộ sưu tập ảnh đẹp nhất của bạn với bạn
+                    bè và gia đình.
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
             <Col md={4}>
-              <Card className="card h-100 text-center">
+              <Card className="card h-100 text-center p-3 shadow-sm hover-shadow animate__animated animate__zoomIn animate__delay-2s">
                 <Card.Body>
                   <Card.Title as="h3" className="h3 mb-3">
-                    <FontAwesomeIcon icon={faListCheck} className="me-2" />
+                    <FontAwesomeIcon
+                      icon={faListCheck}
+                      className="me-2 text-accent"
+                    />
                     Quản Lý Thông Minh
                   </Card.Title>
                   <Card.Text>
-                    Tổ chức thông tin chuyển khoản, lời chúc và các thành phần
-                    sự kiện với bảng điều khiển tiện lợi và dễ sử dụng.
+                    Theo dõi lời mời, chuyển khoản và lời chúc từ bảng điều
+                    khiển dễ sử dụng.
                   </Card.Text>
                 </Card.Body>
               </Card>

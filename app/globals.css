@@ -1227,3 +1227,11 @@ p {
   color: var(--background) !important;
   opacity: 0.7 !important;
 }
+.hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px var(--shadow-color);
+  transition: all 0.3s ease;
+}
+.text-accent {
+  color: var(--accent) !important;
+}

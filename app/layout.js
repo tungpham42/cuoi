@@ -1,5 +1,6 @@
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
+import "animate.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export const metadata = {
