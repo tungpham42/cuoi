@@ -34,7 +34,6 @@ export async function generateMetadata() {
 
     // If no user is authenticated, return fallback metadata
     if (!user) {
-      console.warn("No authenticated user found for Quản trị page.");
       return fallbackMetadata;
     }
 
