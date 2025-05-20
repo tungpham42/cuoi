@@ -27,14 +27,14 @@ const WishForm = ({ onSubmit }) => {
   };
 
   return (
-    <section className="wedding-section my-5 p-5 mx-auto">
+    <section className="wedding-section my-5 p-4 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
       <h2 className="h2 text-center mb-4">
         <FontAwesomeIcon icon={faGift} className="me-2" />
         Gửi lời chúc
       </h2>
-      <Form className="mx-auto px-3">
+      <Form className="mx-auto">
         {status === "success" && (
           <Alert variant="success">Cảm ơn bạn đã gửi lời chúc!</Alert>
         )}

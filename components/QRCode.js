@@ -19,7 +19,7 @@ const QRCode = ({ bankInfo }) => {
   )}&accountName=${encodeURIComponent(defaultBankInfo.accountHolder)}`;
 
   return (
-    <section className="wedding-section my-5 p-5 mx-auto">
+    <section className="wedding-section my-5 p-4 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
       <Card

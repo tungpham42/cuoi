@@ -9,7 +9,7 @@ const Introduction = ({ form }) => {
   }
 
   return (
-    <section className="wedding-section my-5 p-5 mx-auto">
+    <section className="wedding-section my-5 p-4 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
       <h2 className="h2 text-center mb-4">

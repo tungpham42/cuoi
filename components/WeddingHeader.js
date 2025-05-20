@@ -11,11 +11,12 @@ const WeddingHeader = ({ data }) => {
   const { brideName, groomName, weddingDate, location } = data;
 
   return (
-    <header className="wedding-section text-center p-5 mx-auto my-5">
+    <header className="wedding-section text-center py-5 px-0 mx-auto my-5">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
       <h1 className="h1 mb-3">
-        {brideName} <FontAwesomeIcon icon={faHeart} className="mx-2" />{" "}
+        {brideName}
+        <FontAwesomeIcon icon={faHeart} className="mx-3" />
         {groomName}
       </h1>
       <p className="mb-3">
