@@ -91,6 +91,16 @@ const DroppableSidebar = ({ children }) => {
   );
 };
 
+const DroppableWorkspace = ({ children }) => {
+  const { setNodeRef } = useDroppable({ id: "workspace" });
+
+  return (
+    <div ref={setNodeRef} className="component-container">
+      {children}
+    </div>
+  );
+};
+
 const SortableItem = ({ id, label, isActive }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -1793,7 +1803,7 @@ export default function DashboardPage() {
                     </Col>
                     <Col md={8} className="component-workspace">
                       <h5>Thành phần hiển thị</h5>
-                      <div className="component-container" id="workspace">
+                      <DroppableWorkspace>
                         <SortableContext
                           id="workspace"
                           items={activeComponents}
@@ -1808,7 +1818,7 @@ export default function DashboardPage() {
                             />
                           ))}
                         </SortableContext>
-                      </div>
+                      </DroppableWorkspace>
                     </Col>
                   </Row>
                   <DragOverlay>
