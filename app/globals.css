@@ -359,6 +359,10 @@ button {
   transition: color 0.3s ease, transform 0.2s ease;
 }
 
+button[role="tab"] {
+  color: var(--accent) !important;
+}
+
 a:hover,
 button:hover {
   color: darken(var(--accent), 10%);
