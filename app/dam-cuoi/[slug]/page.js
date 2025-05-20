@@ -24,6 +24,7 @@ import WishList from "@/components/WishList";
 import Countdown from "@/components/Countdown";
 import QRCode from "@/components/QRCode";
 import Introduction from "@/components/Introduction";
+import FallingHeart from "@/components/FallingHeart";
 
 // Dynamic imports
 const LocationMap = dynamic(() => import("@/components/LocationMap"), {
@@ -340,6 +341,7 @@ export default function WeddingPage({ params }) {
           </DndContext>
         </Card.Body>
       </Card>
+      <FallingHeart />
     </Container>
   );
 }
