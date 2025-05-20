@@ -128,10 +128,10 @@ const AudioPlayer = ({ playlist, loop = false, autoplay = false }) => {
       <div className="decorative-corner-bottom"></div>
       <Card className="border-0 shadow-sm">
         <Card.Body>
-          <h3 className="h3 mb-4">
+          <h2 className="h2 mb-4">
             <FontAwesomeIcon icon={faMusic} className="me-2" />
             Nhạc nền
-          </h3>
+          </h2>
           <audio
             ref={audioRef}
             onEnded={handleEnded}

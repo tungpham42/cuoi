@@ -47,7 +47,7 @@ export default function Countdown({ weddingDate }) {
     <section className="wedding-section text-center p-4 my-5 mx-auto">
       <div className="decorative-corner-top"></div>
       <div className="decorative-corner-bottom"></div>
-      <h3 className="h3 mb-3">Đếm ngược tới ngày cưới</h3>
+      <h2 className="h2 mb-3">Đếm ngược tới ngày cưới</h2>
       {isTimeUp ? (
         <p>
           <FontAwesomeIcon icon={faCheckCircle} className="me-2" />
