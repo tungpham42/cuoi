@@ -42,6 +42,8 @@ import {
   useSensors,
   PointerSensor,
   TouchSensor,
+  DragOverlay,
+  useDroppable,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -79,22 +81,24 @@ import secondaryFonts from "@/data/secondaryFonts";
 
 export const dynamic = "force-dynamic";
 
-const SortableItem = ({ id, label }) => {
+const DroppableSidebar = ({ children }) => {
+  const { setNodeRef } = useDroppable({ id: "sidebar" });
+
+  return (
+    <div ref={setNodeRef} className="component-container">
+      {children}
+    </div>
+  );
+};
+
+const SortableItem = ({ id, label, isActive }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
-
-  const handleDragStart = () => {
-    document.body.classList.add("no-scroll");
-  };
-
-  const handleDragEnd = () => {
-    document.body.classList.remove("no-scroll");
-  };
 
   return (
     <div
       ref={setNodeRef}
-      className="sortable-item"
+      className={`sortable-item ${isActive ? "active" : "inactive"}`}
       style={{
         transform: transform
           ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
@@ -103,10 +107,6 @@ const SortableItem = ({ id, label }) => {
       }}
       {...attributes}
       {...listeners}
-      onTouchStart={handleDragStart}
-      onTouchEnd={handleDragEnd}
-      onMouseDown={handleDragStart}
-      onMouseUp={handleDragEnd}
     >
       <FontAwesomeIcon icon={faSort} className="me-3" />
       {label}
@@ -346,6 +346,7 @@ export default function DashboardPage() {
   const [editWeddingName, setEditWeddingName] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteWeddingId, setDeleteWeddingId] = useState(null);
+  const [activeId, setActiveId] = useState(null);
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",
@@ -360,30 +361,116 @@ export default function DashboardPage() {
     AudioPlayer: "Trình phát nhạc",
   };
 
+  const componentShowFields = {
+    Introduction: "showIntroduction",
+    Countdown: "showCountdown",
+    Gallery: "showGallery",
+    LoveStory: "showLoveStory",
+    LocationMap: "showLocationMap",
+    QRCode: "showQRCode",
+    WishForm: "showWishForm",
+    WishList: "showWishList",
+    AudioPlayer: "showAudioPlayer",
+  };
+
+  const allComponents = Object.keys(componentLabels);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 5, // Reduced from 8 to make it more sensitive
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 100,
-        tolerance: 8,
+        delay: 50, // Reduced from 100 for faster touch response
+        tolerance: 5, // Reduced from 8 for more sensitivity
       },
     })
   );
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    if (active.id !== over.id) {
-      setForm((prev) => {
-        const oldIndex = prev.componentOrder.indexOf(active.id);
-        const newIndex = prev.componentOrder.indexOf(over.id);
-        const newOrder = arrayMove(prev.componentOrder, oldIndex, newIndex);
-        return { ...prev, componentOrder: newOrder };
-      });
+    setActiveId(null);
+
+    if (!over || !active.data.current?.sortable?.containerId) return;
+
+    const activeContainer = active.data.current.sortable.containerId;
+    const overContainer = over.data.current?.sortable?.containerId || over.id;
+
+    if (activeContainer === overContainer && activeContainer === "workspace") {
+      reorderWorkspace(active.id, over.id);
+    } else if (activeContainer === "workspace" && overContainer === "sidebar") {
+      moveToSidebar(active.id);
+    } else if (activeContainer === "sidebar" && overContainer === "workspace") {
+      moveToWorkspace(active.id, over.id);
     }
+  };
+
+  const reorderWorkspace = (activeId, overId) => {
+    setForm((prev) => {
+      const oldIndex = prev.componentOrder.indexOf(activeId);
+      const newIndex = prev.componentOrder.indexOf(overId);
+      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) {
+        return prev;
+      }
+      return {
+        ...prev,
+        componentOrder: arrayMove(prev.componentOrder, oldIndex, newIndex),
+      };
+    });
+  };
+
+  const moveToSidebar = (activeId) => {
+    const showField = componentShowFields[activeId];
+    if (!showField) return; // Skip components without a visibility toggle (e.g., WeddingHeader)
+
+    setForm((prev) => {
+      // Remove activeId from current position and append to end
+      const newOrder = [
+        ...prev.componentOrder.filter((id) => id !== activeId),
+        activeId,
+      ];
+      return {
+        ...prev,
+        [showField]: false, // Hide the component
+        componentOrder: newOrder, // Update order with component at the end
+      };
+    });
+  };
+
+  const moveToWorkspace = (activeId, overId) => {
+    const showField = componentShowFields[activeId];
+    if (!showField) return;
+
+    setForm((prev) => {
+      let newOrder = [...prev.componentOrder];
+      const activeIndex = newOrder.indexOf(activeId);
+      const newIndex =
+        overId === "workspace" ? newOrder.length : newOrder.indexOf(overId);
+
+      if (activeIndex !== -1) {
+        newOrder = arrayMove(
+          newOrder,
+          activeIndex,
+          newIndex === -1 ? newOrder.length : newIndex
+        );
+      } else {
+        newIndex === -1
+          ? newOrder.push(activeId)
+          : newOrder.splice(newIndex + 1, 0, activeId);
+      }
+
+      return {
+        ...prev,
+        [showField]: true,
+        componentOrder: newOrder,
+      };
+    });
   };
 
   const handleLogout = async () => {
@@ -551,8 +638,8 @@ export default function DashboardPage() {
   useEffect(() => {
     if (user) {
       loadWeddings();
-    }
-  });
+    } // eslint-disable-next-line
+  }, [user]);
 
   useEffect(() => {
     if (selectedWeddingId) {
@@ -734,7 +821,7 @@ export default function DashboardPage() {
     setError("");
     try {
       const uploadPromises = files.map(async (file) => {
-        const result = await uploadAudioToCloudinary(file); // Assumes audio support
+        const result = await uploadAudioToCloudinary(file);
         if (result && result.secure_url) {
           return {
             public_id: result.public_id,
@@ -1042,6 +1129,14 @@ export default function DashboardPage() {
 
   const approvedWishes = wishes.filter((wish) => wish.approved);
 
+  const inactiveComponents = allComponents.filter(
+    (id) => !form[componentShowFields[id]] && id !== "WeddingHeader"
+  );
+
+  const activeComponents = form.componentOrder.filter(
+    (id) => form[componentShowFields[id]] || id === "WeddingHeader"
+  );
+
   if (loading || !user) {
     return (
       <Container fluid className="loading-container">
@@ -1057,6 +1152,45 @@ export default function DashboardPage() {
         .sortable-map {
           background-color: #e6f3ff;
           border-left: 4px solid #007bff;
+        }
+        .component-sidebar {
+          background-color: #f8f9fa;
+          border-right: 1px solid #dee2e6;
+          padding: 15px;
+          min-height: 300px;
+        }
+        .component-workspace {
+          background-color: #ffffff;
+          padding: 15px;
+          min-height: 300px;
+        }
+        .sortable-item {
+          padding: 10px;
+          margin-bottom: 8px;
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          background-color: #fff;
+          cursor: grab;
+          user-select: none;
+        }
+        .sortable-item.inactive {
+          background-color: #f1f1f1;
+          opacity: 0.7;
+        }
+        .sortable-item.active {
+          background-color: #e6f3ff;
+        }
+        .component-container {
+          border: 2px dashed #dee2e6;
+          border-radius: 8px;
+          padding: 10px;
+          min-height: 200px;
+        }
+        .drag-overlay {
+          opacity: 0.8;
+          z-index: 1000;
+          background-color: #e6f3ff;
+          border: 1px solid #007bff;
         }
       `}</style>
       <Container fluid className="dashboard-container wedding-section">
@@ -1287,7 +1421,7 @@ export default function DashboardPage() {
                     </Form.Group>
                   </Col>
                   <Col md={6}>
-                    <Form.Group className="mb-3">
+                    <Form.Group>
                       <Form.Label className="form-label">
                         <FontAwesomeIcon icon={faUser} className="me-2" />
                         Chú rể
@@ -1616,125 +1750,75 @@ export default function DashboardPage() {
                   <FontAwesomeIcon icon={faEye} className="me-2" />
                   Hiển thị thành phần
                 </h3>
-                <Row>
-                  <Col md={4}>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showIntroduction"
-                        name="showIntroduction"
-                        label="Giới thiệu"
-                        checked={form.showIntroduction}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showGallery"
-                        name="showGallery"
-                        label="Thư viện ảnh"
-                        checked={form.showGallery}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showAudioPlayer"
-                        name="showAudioPlayer"
-                        label="Trình phát nhạc"
-                        checked={form.showAudioPlayer}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showCountdown"
-                        name="showCountdown"
-                        label="Đếm ngược"
-                        checked={form.showCountdown}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showWishForm"
-                        name="showWishForm"
-                        label="Form lời chúc"
-                        checked={form.showWishForm}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showWishList"
-                        name="showWishList"
-                        label="Danh sách lời chúc"
-                        checked={form.showWishList}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showLoveStory"
-                        name="showLoveStory"
-                        label="Chuyện tình yêu"
-                        checked={form.showLoveStory}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showLocationMap"
-                        name="showLocationMap"
-                        label="Bản đồ"
-                        checked={form.showLocationMap}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="switch"
-                        id="showQRCode"
-                        name="showQRCode"
-                        label="Mã QR chuyển khoản"
-                        checked={form.showQRCode}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <h3 className="section-heading">
-                  <FontAwesomeIcon icon={faSort} className="me-2" />
-                  Sắp xếp thành phần
-                </h3>
                 <DndContext
                   sensors={sensors}
                   collisionDetection={closestCenter}
+                  onDragStart={handleDragStart}
                   onDragEnd={handleDragEnd}
                 >
-                  <SortableContext
-                    items={form.componentOrder}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {form.componentOrder.map((id) => (
-                      <SortableItem
-                        key={id}
-                        id={id}
-                        label={componentLabels[id]}
-                      />
-                    ))}
-                  </SortableContext>
+                  <Row>
+                    <Col md={4} className="component-sidebar">
+                      <h5>Thành phần ẩn</h5>
+                      <DroppableSidebar>
+                        <SortableContext
+                          id="sidebar"
+                          items={inactiveComponents}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          {inactiveComponents.length > 0 ? (
+                            inactiveComponents.map((id) => (
+                              <SortableItem
+                                key={id}
+                                id={id}
+                                label={componentLabels[id]}
+                                isActive={false}
+                              />
+                            ))
+                          ) : (
+                            <div
+                              className="text-muted text-center"
+                              style={{
+                                padding: "20px",
+                                border: "2px dashed #ccc",
+                                borderRadius: "4px",
+                                backgroundColor: "#f8f9fa",
+                                minHeight: "100px",
+                              }}
+                            >
+                              Kéo thả thành phần vào đây để ẩn
+                            </div>
+                          )}
+                        </SortableContext>
+                      </DroppableSidebar>
+                    </Col>
+                    <Col md={8} className="component-workspace">
+                      <h5>Thành phần hiển thị</h5>
+                      <div className="component-container" id="workspace">
+                        <SortableContext
+                          id="workspace"
+                          items={activeComponents}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          {activeComponents.map((id) => (
+                            <SortableItem
+                              key={id}
+                              id={id}
+                              label={componentLabels[id]}
+                              isActive={true}
+                            />
+                          ))}
+                        </SortableContext>
+                      </div>
+                    </Col>
+                  </Row>
+                  <DragOverlay>
+                    {activeId ? (
+                      <div className="sortable-item drag-overlay">
+                        <FontAwesomeIcon icon={faSort} className="me-3" />
+                        {componentLabels[activeId]}
+                      </div>
+                    ) : null}
+                  </DragOverlay>
                 </DndContext>
                 <h3 className="section-heading">
                   <FontAwesomeIcon icon={faCommentDots} className="me-2" />
