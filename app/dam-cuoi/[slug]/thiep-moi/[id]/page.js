@@ -75,17 +75,17 @@ function useWeddingAndGuest(slug, guestId) {
     error: "",
   });
 
-  const updateRsvp = async (weddingId, guestId) => {
+  const updateRsvp = async (weddingId, guestId, status) => {
     if (!weddingId || !guestId) return;
     try {
       const guestRef = doc(db, `weddings/${weddingId}/guests/${guestId}`);
       await updateDoc(guestRef, {
-        rsvpStatus: "confirmed",
+        rsvpStatus: status,
         updatedAt: new Date(),
       });
       setData((prev) => ({
         ...prev,
-        guest: { ...prev.guest, rsvpStatus: "confirmed" },
+        guest: { ...prev.guest, rsvpStatus: status },
       }));
     } catch (error) {
       console.error("Error updating RSVP:", error.code, error.message);
@@ -223,7 +223,12 @@ export default function GuestPage({ params }) {
   const [showModal, setShowModal] = useState(false);
 
   const handleRsvpConfirm = async () => {
-    await updateRsvp(wedding?.id, id);
+    await updateRsvp(wedding?.id, id, "confirmed");
+    setShowModal(false);
+  };
+
+  const handleRsvpDecline = async () => {
+    await updateRsvp(wedding?.id, id, "declined");
     setShowModal(false);
   };
 
@@ -354,7 +359,7 @@ export default function GuestPage({ params }) {
               {location}
             </Card.Text>
             <Card.Text>
-              <strong>Trạng thái xác nhận tham dự: </strong>
+              <strong>Trạng thái phúc đáp: </strong>
               {rsvp}
             </Card.Text>
           </div>
@@ -366,6 +371,8 @@ export default function GuestPage({ params }) {
           >
             {rsvpStatus === "confirmed"
               ? "🎉 Đã Xác Nhận"
+              : rsvpStatus === "declined"
+              ? "❌ Đã Từ Chối"
               : "✅ Xác Nhận Tham Dự"}
           </Button>
         </Card.Body>
@@ -377,8 +384,9 @@ export default function GuestPage({ params }) {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Bạn có chắc chắn muốn xác nhận tham dự hôn lễ của {brideName} &{" "}
-            {groomName} vào ngày {weddingDate} lúc {weddingTime} tại {location}?
+            Bạn có muốn xác nhận tham dự hoặc từ chối tham dự hôn lễ của{" "}
+            {brideName} & {groomName} vào ngày {weddingDate} lúc {weddingTime}{" "}
+            tại {location}?
           </p>
           <div className="d-grid gap-2">
             <Button variant="outline-success" onClick={downloadICS}>
@@ -397,6 +405,9 @@ export default function GuestPage({ params }) {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Hủy
+          </Button>
+          <Button variant="outline-primary" onClick={handleRsvpDecline}>
+            Từ Chối
           </Button>
           <Button variant="primary" onClick={handleRsvpConfirm}>
             Xác Nhận
