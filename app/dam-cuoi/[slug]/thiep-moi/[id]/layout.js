@@ -81,10 +81,10 @@ export async function generateMetadata({ params }) {
 
     // Construct dynamic metadata
     const metadata = {
-      title: `Kính gửi ${guestName} - Hôn Lễ ${brideName} & ${groomName}`,
+      title: `Kính mời ${guestName} đến hôn lễ của ${brideName} & ${groomName}`,
       description: `Trang thông tin dành cho ${guestName} tại hôn lễ của ${brideName} và ${groomName}.`,
       openGraph: {
-        title: `Kính gửi ${guestName} - Hôn Lễ ${brideName} & ${groomName}`,
+        title: `Kính mời ${guestName} đến hôn lễ của ${brideName} & ${groomName}`,
         description: `Trang thông tin dành cho ${guestName} tại hôn lễ của ${brideName} và ${groomName}.`,
         type: "website",
         url: `https://marry.io.vn/dam-cuoi/${slug}/thiep-moi/${id}`,
