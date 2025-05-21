@@ -234,7 +234,7 @@ export default function GuestPage({ params }) {
     return (
       <Container fluid className="loading-container wedding-page">
         <div className="d-flex align-items-center justify-content-center">
-          <Spinner animation="border" variant="primary" />
+          <Spinner animation="border" variant="danger" />
           <span className="loading-text ms-2">Đang tải thông tin...</span>
         </div>
       </Container>
@@ -334,8 +334,8 @@ export default function GuestPage({ params }) {
           <Card.Text as="h2" className="h2 mb-4">
             Kính mời: <span className="text-accent">{guestName}</span>
           </Card.Text>
-          <Card.Text className="mb-4">
-            Tham dự hôn lễ của{" "}
+          <Card.Text className="mb-2">Tham dự hôn lễ của</Card.Text>
+          <Card.Text as="h3" className="mb-4">
             <strong>
               {brideName} & {groomName}
             </strong>
@@ -354,7 +354,7 @@ export default function GuestPage({ params }) {
               {location}
             </Card.Text>
             <Card.Text>
-              <strong>Trạng thái RSVP: </strong>
+              <strong>Trạng thái xác nhận tham dự: </strong>
               {rsvp}
             </Card.Text>
           </div>
