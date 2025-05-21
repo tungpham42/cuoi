@@ -110,18 +110,25 @@ const useWeddingData = (slug) => {
         const data = weddingDoc.data();
         const weddingId = weddingDoc.id;
 
-        // Format wedding data
+        // Format wedding date and time
+        const weddingDateTime = data.weddingDate
+          ? data.weddingDate.toDate()
+          : null;
         const formattedWedding = {
           id: weddingId,
           userId: data.userId || "",
           brideName: data.brideName || "",
           groomName: data.groomName || "",
-          weddingDate:
-            data.weddingDate?.toDate().toLocaleDateString("vi-VN", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            }) || "",
+          weddingDate: weddingDateTime
+            ? weddingDateTime.toISOString().split("T")[0] // e.g., "2025-05-21"
+            : "",
+          weddingTime: weddingDateTime
+            ? weddingDateTime.toLocaleTimeString("vi-VN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }) // e.g., "14:00"
+            : "",
           location: data.location || "",
           loveStory: data.loveStory || "",
           theme: data.theme || "romantic",
@@ -158,6 +165,7 @@ const useWeddingData = (slug) => {
           ],
           primaryFont: data.primaryFont || "Dancing Script",
           secondaryFont: data.secondaryFont || "Lora",
+          wishes: [], // Will be updated via useEffect
         };
 
         // Fetch approved wishes
@@ -196,8 +204,13 @@ const renderComponent = (componentId, weddingData, addWish) => {
     Introduction: () =>
       weddingData.showIntroduction && <Introduction form={weddingData} />,
     Countdown: () =>
-      weddingData.showCountdown && (
-        <Countdown weddingDate={weddingData.weddingDate} />
+      weddingData.showCountdown &&
+      weddingData.weddingDate &&
+      weddingData.weddingTime && (
+        <Countdown
+          weddingDate={weddingData.weddingDate}
+          weddingTime={weddingData.weddingTime}
+        />
       ),
     Gallery: () =>
       weddingData.showGallery && <Gallery images={weddingData.gallery} />,

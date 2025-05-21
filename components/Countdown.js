@@ -3,27 +3,27 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
-export default function Countdown({ weddingDate }) {
+export default function Countdown({ weddingDate, weddingTime }) {
   const [timeLeft, setTimeLeft] = useState({});
   const [isTimeUp, setIsTimeUp] = useState(false);
 
   useEffect(() => {
-    const parseVietnameseDate = (dateStr) => {
-      const [day, month, year] = dateStr.split("/");
-      return new Date(`${year}-${month}-${day}`);
-    };
+    if (!weddingDate || !weddingTime) {
+      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      setIsTimeUp(true);
+      return;
+    }
 
-    const countdown = setInterval(() => {
-      const targetDate =
-        typeof weddingDate === "string"
-          ? parseVietnameseDate(weddingDate)
-          : new Date(weddingDate);
-      const difference = targetDate - new Date();
+    // Create target date from weddingDate (YYYY-MM-DD) and weddingTime (HH:mm)
+    const targetDate = new Date(`${weddingDate}T${weddingTime}`);
 
-      if (isNaN(difference)) {
+    const updateCountdown = () => {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      if (difference <= 0 || isNaN(difference)) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         setIsTimeUp(true);
-        clearInterval(countdown);
         return;
       }
 
@@ -33,15 +33,13 @@ export default function Countdown({ weddingDate }) {
       const seconds = Math.floor((difference / 1000) % 60);
 
       setTimeLeft({ days, hours, minutes, seconds });
+    };
 
-      if (difference <= 0) {
-        setIsTimeUp(true);
-        clearInterval(countdown);
-      }
-    }, 1000);
+    updateCountdown(); // Initial call
+    const countdown = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(countdown);
-  }, [weddingDate]);
+  }, [weddingDate, weddingTime]);
 
   return (
     <section className="wedding-section text-center p-4 my-5 mx-auto">
@@ -56,8 +54,8 @@ export default function Countdown({ weddingDate }) {
       ) : (
         <p>
           <FontAwesomeIcon icon={faClock} className="me-2" />
-          {timeLeft.days || 0} ngày {timeLeft.hours || 0} giờ{" "}
-          {timeLeft.minutes || 0} phút {timeLeft.seconds || 0} giây
+          {timeLeft.days} ngày {timeLeft.hours} giờ {timeLeft.minutes} phút{" "}
+          {timeLeft.seconds} giây
         </p>
       )}
     </section>

@@ -63,6 +63,7 @@ const renderComponent = (componentId, form, wishes) => {
     brideName = "",
     groomName = "",
     weddingDate = "",
+    weddingTime = "",
     gallery = [],
     playlist = [],
     loveStory = "",
@@ -87,8 +88,8 @@ const renderComponent = (componentId, form, wishes) => {
         <Introduction form={form} />
       ) : null,
     Countdown: () =>
-      showCountdown && weddingDate ? (
-        <Countdown weddingDate={weddingDate} />
+      showCountdown && weddingDate && weddingTime ? (
+        <Countdown weddingDate={weddingDate} weddingTime={weddingTime} />
       ) : null,
     Gallery: () =>
       showGallery && gallery.length > 0 ? <Gallery images={gallery} /> : null,

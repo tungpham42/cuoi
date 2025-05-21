@@ -10,16 +10,17 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import Link from "next/link";
 import { db } from "@/firebase/config";
 import {
   Button,
   Form,
-  ListGroup,
   Modal,
   Row,
   Col,
   Spinner,
   Alert,
+  Card,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -29,9 +30,10 @@ import {
   faCheck,
   faTimes,
   faUsers,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
-const GuestsManager = ({ weddingId, userId }) => {
+const GuestsManager = ({ slug, weddingId, userId }) => {
   const [guests, setGuests] = useState([]);
   const [showGuestModal, setShowGuestModal] = useState(false);
   const [editingGuestId, setEditingGuestId] = useState(null);
@@ -49,7 +51,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     notes: "",
   });
 
-  // Tải danh sách khách mời từ Firestore
+  // Load guests from Firestore
   const loadGuests = useCallback(async () => {
     if (!weddingId || !userId) {
       setError("Thiếu thông tin đám cưới hoặc người dùng.");
@@ -78,7 +80,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     loadGuests();
   }, [loadGuests]);
 
-  // Xử lý thay đổi input form
+  // Handle form input changes
   const handleGuestChange = (e) => {
     const { name, value, type, checked } = e.target;
     setGuestForm((prev) => ({
@@ -87,7 +89,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     }));
   };
 
-  // Kiểm tra dữ liệu form
+  // Validate form
   const validateForm = () => {
     if (!guestForm.name.trim()) {
       setError("Tên khách mời là bắt buộc.");
@@ -104,7 +106,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     return true;
   };
 
-  // Xử lý thêm hoặc chỉnh sửa khách mời
+  // Handle adding or editing a guest
   const handleGuestSubmit = async () => {
     if (!validateForm()) return;
 
@@ -125,7 +127,6 @@ const GuestsManager = ({ weddingId, userId }) => {
       };
 
       if (editingGuestId) {
-        // Cập nhật khách mời hiện tại
         const guestRef = doc(
           db,
           "weddings",
@@ -141,7 +142,6 @@ const GuestsManager = ({ weddingId, userId }) => {
         );
         setSuccess("Cập nhật khách mời thành công!");
       } else {
-        // Thêm khách mời mới
         guestData.createdAt = new Date();
         const newGuestRef = await addDoc(guestsRef, guestData);
         setGuests((prev) => [...prev, { id: newGuestRef.id, ...guestData }]);
@@ -157,7 +157,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     }
   };
 
-  // Đặt lại form và modal
+  // Reset form and modal
   const resetForm = () => {
     setShowGuestModal(false);
     setGuestForm({
@@ -175,7 +175,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     setTimeout(() => setSuccess(""), 3000);
   };
 
-  // Xử lý chỉnh sửa khách mời
+  // Handle editing a guest
   const handleEditGuest = (guest) => {
     setGuestForm({
       name: guest.name || "",
@@ -192,7 +192,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     setError("");
   };
 
-  // Xử lý xóa khách mời
+  // Handle deleting a guest
   const handleDeleteGuest = async (guestId) => {
     if (!weddingId) {
       setError("Vui lòng chọn một đám cưới trước khi xóa khách mời.");
@@ -213,7 +213,7 @@ const GuestsManager = ({ weddingId, userId }) => {
     }
   };
 
-  // Xử lý thay đổi trạng thái RSVP
+  // Handle RSVP status change
   const handleRsvpChange = async (guestId, newStatus) => {
     if (!weddingId) {
       setError("Vui lòng chọn một đám cưới trước khi cập nhật RSVP.");
@@ -246,25 +246,38 @@ const GuestsManager = ({ weddingId, userId }) => {
   return (
     <>
       <style jsx>{`
-        .guest-list-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 15px;
-          border-radius: 8px;
-          margin-bottom: 10px;
+        .guests-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
+        }
+        .guest-card {
+          position: relative;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .guest-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px var(--shadow-color);
         }
         .guest-actions {
           display: flex;
-          gap: 12px;
-          align-items: center;
+          gap: 0.75rem;
+          justify-content: center;
+          margin-top: 1rem;
         }
         .guest-details {
-          flex-grow: 1;
+          font-size: 0.9rem;
+          line-height: 1.4;
         }
         .loading-overlay {
           opacity: 0.7;
           pointer-events: none;
+        }
+        .rsvp-status {
+          font-size: 0.85rem;
+          font-weight: bold;
+          text-transform: uppercase;
         }
       `}</style>
       <h3 className="section-heading mb-4">
@@ -299,7 +312,7 @@ const GuestsManager = ({ weddingId, userId }) => {
           setEditingGuestId(null);
           setShowGuestModal(true);
         }}
-        className="mb-4"
+        className="mb-4 btn-redirect hover-shadow"
         disabled={isLoading}
       >
         <FontAwesomeIcon icon={faUserPlus} className="me-2" />
@@ -307,94 +320,113 @@ const GuestsManager = ({ weddingId, userId }) => {
       </Button>
 
       <div className={isLoading ? "loading-overlay" : ""}>
-        <ListGroup className="mb-4">
-          {isLoading ? (
-            <ListGroup.Item className="text-center">
-              <Spinner animation="border" size="sm" /> Đang tải danh sách khách
-              mời...
-            </ListGroup.Item>
-          ) : guests.length > 0 ? (
-            guests.map((guest) => (
-              <ListGroup.Item key={guest.id} className="guest-list-item">
-                <div className="guest-details">
-                  <strong>{guest.name}</strong>
-                  {guest.contact && (
-                    <div>
-                      <small>Liên hệ: {guest.contact}</small>
+        {isLoading ? (
+          <div className="text-center">
+            <Spinner animation="border" size="sm" /> Đang tải danh sách khách
+            mời...
+          </div>
+        ) : guests.length > 0 ? (
+          <div className="guests-grid">
+            {guests.map((guest) => (
+              <Card key={guest.id} className="guest-card">
+                <Card.Body>
+                  <Card.Title className="text-accent">{guest.name}</Card.Title>
+                  <div className="guest-details">
+                    {guest.contact && (
+                      <div>
+                        <small>Liên hệ: {guest.contact}</small>
+                      </div>
+                    )}
+                    {guest.plusOne && guest.plusOneName && (
+                      <div>
+                        <small>Người đi kèm: {guest.plusOneName}</small>
+                      </div>
+                    )}
+                    {guest.dietaryRestrictions && (
+                      <div>
+                        <small>Chế độ ăn: {guest.dietaryRestrictions}</small>
+                      </div>
+                    )}
+                    {guest.tableNumber && (
+                      <div>
+                        <small>Bàn số: {guest.tableNumber}</small>
+                      </div>
+                    )}
+                    <div className="rsvp-status">
+                      <small>
+                        Trạng thái RSVP:{" "}
+                        {guest.rsvpStatus === "confirmed"
+                          ? "Xác nhận"
+                          : guest.rsvpStatus === "declined"
+                          ? "Từ chối"
+                          : "Chưa phản hồi"}
+                      </small>
                     </div>
-                  )}
-                  {guest.plusOne && guest.plusOneName && (
-                    <div>
-                      <small>Người đi kèm: {guest.plusOneName}</small>
-                    </div>
-                  )}
-                  {guest.dietaryRestrictions && (
-                    <div>
-                      <small>Chế độ ăn: {guest.dietaryRestrictions}</small>
-                    </div>
-                  )}
-                  {guest.tableNumber && (
-                    <div>
-                      <small>Bàn số: {guest.tableNumber}</small>
-                    </div>
-                  )}
-                  <small>
-                    Trạng thái RSVP:{" "}
-                    {guest.rsvpStatus === "confirmed"
-                      ? "Xác nhận"
-                      : guest.rsvpStatus === "declined"
-                      ? "Từ chối"
-                      : "Chưa phản hồi"}
-                  </small>
-                </div>
-                <div className="guest-actions">
-                  <Button
-                    variant={
-                      guest.rsvpStatus === "confirmed"
-                        ? "success"
-                        : "outline-success"
-                    }
-                    size="sm"
-                    onClick={() => handleRsvpChange(guest.id, "confirmed")}
-                    disabled={isLoading}
-                  >
-                    <FontAwesomeIcon icon={faCheck} />
-                  </Button>
-                  <Button
-                    variant={
-                      guest.rsvpStatus === "declined"
-                        ? "danger"
-                        : "outline-danger"
-                    }
-                    size="sm"
-                    onClick={() => handleRsvpChange(guest.id, "declined")}
-                    disabled={isLoading}
-                  >
-                    <FontAwesomeIcon icon={faTimes} />
-                  </Button>
-                  <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={() => handleEditGuest(guest)}
-                    disabled={isLoading}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => handleDeleteGuest(guest.id)}
-                    disabled={isLoading}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </Button>
-                </div>
-              </ListGroup.Item>
-            ))
-          ) : (
-            <ListGroup.Item>Chưa có khách mời nào được thêm.</ListGroup.Item>
-          )}
-        </ListGroup>
+                  </div>
+                  <div className="guest-actions">
+                    <Button
+                      variant={
+                        guest.rsvpStatus === "confirmed"
+                          ? "success"
+                          : "outline-success"
+                      }
+                      size="sm"
+                      onClick={() => handleRsvpChange(guest.id, "confirmed")}
+                      disabled={isLoading}
+                    >
+                      <FontAwesomeIcon icon={faCheck} />
+                    </Button>
+                    <Button
+                      variant={
+                        guest.rsvpStatus === "declined"
+                          ? "danger"
+                          : "outline-danger"
+                      }
+                      size="sm"
+                      onClick={() => handleRsvpChange(guest.id, "declined")}
+                      disabled={isLoading}
+                    >
+                      <FontAwesomeIcon icon={faTimes} />
+                    </Button>
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => handleEditGuest(guest)}
+                      disabled={isLoading}
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => handleDeleteGuest(guest.id)}
+                      disabled={isLoading}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </Button>
+                    <Link
+                      href={`/dam-cuoi/${slug}/thiep-moi/${guest.id}`}
+                      passHref
+                    >
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        className="hover-shadow"
+                        disabled={isLoading}
+                      >
+                        <FontAwesomeIcon icon={faEnvelope} />
+                      </Button>
+                    </Link>
+                  </div>
+                </Card.Body>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <Card.Body>Chưa có khách mời nào được thêm.</Card.Body>
+          </Card>
+        )}
       </div>
 
       <Modal show={showGuestModal} onHide={resetForm} centered size="lg">
@@ -529,6 +561,7 @@ const GuestsManager = ({ weddingId, userId }) => {
             variant="primary"
             onClick={handleGuestSubmit}
             disabled={isLoading}
+            className="hover-shadow"
           >
             {isLoading ? (
               <>

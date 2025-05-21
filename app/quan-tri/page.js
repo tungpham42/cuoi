@@ -79,6 +79,7 @@ import {
   faMap,
   faMusic,
   faUsers,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import themes from "@/data/themes";
 import primaryFonts from "@/data/primaryFonts";
@@ -307,7 +308,8 @@ export default function DashboardPage() {
   const [form, setForm] = useState({
     brideName: "",
     groomName: "",
-    weddingDate: "",
+    weddingDate: "", // Stores date only (e.g., "2025-05-21")
+    weddingTime: "", // Stores time only (e.g., "14:00")
     location: "",
     loveStory: "",
     theme: "romantic",
@@ -517,6 +519,9 @@ export default function DashboardPage() {
     } catch (err) {
       console.error("Error validating slug:", err);
       setError("Lỗi khi kiểm tra liên kết. Vui lòng thử lại.");
+      newIndex === -1
+        ? newOrder.push(activeId)
+        : newOrder.splice(newIndex + 1, 0, activeId);
       return false;
     }
   };
@@ -543,11 +548,22 @@ export default function DashboardPage() {
       const docSnap = await getDoc(weddingRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
+        const weddingDateTime = data.weddingDate
+          ? data.weddingDate.toDate()
+          : null;
         setForm({
           brideName: data.brideName || "",
           groomName: data.groomName || "",
-          weddingDate:
-            data.weddingDate?.toDate().toISOString().substring(0, 10) || "",
+          weddingDate: weddingDateTime
+            ? weddingDateTime.toISOString().split("T")[0]
+            : "",
+          weddingTime: weddingDateTime
+            ? weddingDateTime.toLocaleTimeString("vi-VN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })
+            : "",
           location: data.location || "",
           loveStory: data.loveStory || "",
           theme: data.theme || "romantic",
@@ -602,6 +618,7 @@ export default function DashboardPage() {
           brideName: "",
           groomName: "",
           weddingDate: "",
+          weddingTime: "",
           location: "",
           loveStory: "",
           theme: "romantic",
@@ -668,6 +685,7 @@ export default function DashboardPage() {
         brideName: "",
         groomName: "",
         weddingDate: "",
+        weddingTime: "",
         location: "",
         loveStory: "",
         theme: "romantic",
@@ -934,6 +952,7 @@ export default function DashboardPage() {
         brideName: "",
         groomName: "",
         weddingDate: null,
+        weddingTime: "",
         location: "",
         loveStory: "",
         theme: "romantic",
@@ -1073,10 +1092,15 @@ export default function DashboardPage() {
 
     try {
       const weddingRef = doc(db, "weddings", selectedWeddingId);
+      // Combine date and time for Firestore storage
+      const combinedDateTime =
+        form.weddingDate && form.weddingTime
+          ? new Date(`${form.weddingDate}T${form.weddingTime}`)
+          : null;
       await updateDoc(weddingRef, {
         ...form,
         userId: user.uid,
-        weddingDate: form.weddingDate ? new Date(form.weddingDate) : null,
+        weddingDate: combinedDateTime,
       });
       setShowSuccess(true);
       setSlugError("");
@@ -1446,22 +1470,41 @@ export default function DashboardPage() {
                         Tự động tạo từ tên cô dâu, chú rể và ngày cưới
                       </Form.Text>
                     </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label">
-                        <FontAwesomeIcon
-                          icon={faCalendarAlt}
-                          className="me-2"
-                        />
-                        Ngày cưới
-                      </Form.Label>
-                      <Form.Control
-                        type="date"
-                        name="weddingDate"
-                        value={form.weddingDate}
-                        onChange={handleChange}
-                        className="form-control"
-                      />
-                    </Form.Group>
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="form-label">
+                            <FontAwesomeIcon
+                              icon={faCalendarAlt}
+                              className="me-2"
+                            />
+                            Ngày cưới
+                          </Form.Label>
+                          <Form.Control
+                            type="date"
+                            name="weddingDate"
+                            value={form.weddingDate}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="form-label">
+                            <FontAwesomeIcon icon={faClock} className="me-2" />
+                            Giờ cưới
+                          </Form.Label>
+                          <Form.Control
+                            type="time"
+                            name="weddingTime"
+                            value={form.weddingTime}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
                     <Form.Group className="mb-3">
                       <Form.Label className="form-label">
                         <FontAwesomeIcon
@@ -1840,6 +1883,7 @@ export default function DashboardPage() {
                 </Tab>
                 <Tab eventKey="guestsManager" title="Quản lý khách mời">
                   <GuestsManager
+                    slug={form.slug}
                     weddingId={selectedWeddingId}
                     userId={user.uid}
                   />
