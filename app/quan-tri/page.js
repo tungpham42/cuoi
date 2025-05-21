@@ -27,6 +27,7 @@ import {
   query,
   where,
   addDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { db, auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
@@ -1045,8 +1046,30 @@ export default function DashboardPage() {
       return;
     }
     try {
+      const batch = writeBatch(db);
       const weddingRef = doc(db, "weddings", weddingId);
-      await deleteDoc(weddingRef);
+
+      // Delete all documents in the 'wishes' subcollection
+      const wishesRef = collection(db, "weddings", weddingId, "wishes");
+      const wishesSnap = await getDocs(wishesRef);
+      wishesSnap.docs.forEach((wishDoc) => {
+        batch.delete(doc(db, "weddings", weddingId, "wishes", wishDoc.id));
+      });
+
+      // Delete all documents in the 'guests' subcollection
+      const guestsRef = collection(db, "weddings", weddingId, "guests");
+      const guestsSnap = await getDocs(guestsRef);
+      guestsSnap.docs.forEach((guestDoc) => {
+        batch.delete(doc(db, "weddings", weddingId, "guests", guestDoc.id));
+      });
+
+      // Delete the wedding document
+      batch.delete(weddingRef);
+
+      // Commit the batch
+      await batch.commit();
+
+      // Update state
       setWeddings((prev) => prev.filter((wedding) => wedding.id !== weddingId));
       if (selectedWeddingId === weddingId) {
         setSelectedWeddingId(null);
@@ -1054,7 +1077,10 @@ export default function DashboardPage() {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
-      setError("Lỗi khi xóa đám cưới。Vui lòng thử lại。");
+      console.error("Error deleting wedding or subcollections:", err);
+      setError(
+        "Lỗi khi xóa đám cưới hoặc dữ liệu liên quan。Vui lòng thử lại。"
+      );
     }
   };
 
