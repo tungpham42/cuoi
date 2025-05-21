@@ -1,86 +1,90 @@
-import { db, auth } from "@/firebase/config";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import { db } from "@/firebase/config";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 
-export async function generateMetadata({ params }) {
-  const { slug, id } = params;
-
-  // Fallback metadata
-  const fallbackMetadata = {
+// Default metadata to use when data fetching fails or data is incomplete
+const fallbackMetadata = {
+  title: "Khách Mời - Tình Yêu Vĩnh Cửu",
+  description:
+    "Trang thông tin dành cho khách mời của hôn lễ, nơi chia sẻ những khoảnh khắc đẹp và thông tin quan trọng.",
+  openGraph: {
     title: "Khách Mời - Tình Yêu Vĩnh Cửu",
     description:
       "Trang thông tin dành cho khách mời của hôn lễ, nơi chia sẻ những khoảnh khắc đẹp và thông tin quan trọng.",
-    openGraph: {
-      title: "Khách Mời - Tình Yêu Vĩnh Cửu",
-      description:
-        "Trang thông tin dành cho khách mời của hôn lễ, nơi chia sẻ những khoảnh khắc đẹp và thông tin quan trọng.",
-      type: "website",
-      url: `https://marry.io.vn/dam-cuoi/${slug}/thiep-moi/${id}`,
-      images: [
-        {
-          url: "https://marry.io.vn/1200x630.jpg",
-          width: 1200,
-          height: 630,
-        },
-      ],
-    },
-  };
+    type: "website",
+    url: "https://marry.io.vn",
+    images: [
+      {
+        url: "https://marry.io.vn/1200x630.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+};
+
+/**
+ * Generates metadata for the guest page based on wedding and guest data.
+ * @param {Object} params - The route parameters containing slug and id.
+ * @returns {Object} Metadata object with title, description, and Open Graph data.
+ */
+export async function generateMetadata({ params }) {
+  const { slug, id } = params;
 
   try {
-    // Get the current authenticated user
-    const user = await new Promise((resolve) => {
-      onAuthStateChanged(auth, (user) => {
-        resolve(user || null); // Resolve with null if no user
-      });
-    });
-
-    // Query Firestore for the wedding document with the matching slug
+    // Query Firestore for the wedding document
     const weddingsRef = collection(db, "weddings");
     const weddingQuery = query(weddingsRef, where("slug", "==", slug));
     const weddingSnapshot = await getDocs(weddingQuery);
 
     if (weddingSnapshot.empty) {
       console.warn(`No wedding found for slug: ${slug}`);
-      return fallbackMetadata;
+      return {
+        ...fallbackMetadata,
+        openGraph: {
+          ...fallbackMetadata.openGraph,
+          url: `https://marry.io.vn/dam-cuoi/${slug}/thiep-moi/${id}`,
+        },
+      };
     }
 
-    // Get the wedding document
-    const weddingDoc = weddingSnapshot.docs[0].data();
-    const { brideName, groomName, userId } = weddingDoc;
+    // Extract wedding data
+    const weddingDoc = weddingSnapshot.docs[0];
+    const { brideName, groomName } = weddingDoc.data();
 
-    // Validate required fields
+    // Validate required wedding fields
     if (!brideName || !groomName) {
-      throw new Error("Missing brideName or groomName in wedding document");
+      console.warn("Missing brideName or groomName in wedding document");
+      return {
+        ...fallbackMetadata,
+        openGraph: {
+          ...fallbackMetadata.openGraph,
+          url: `https://marry.io.vn/dam-cuoi/${slug}/thiep-moi/${id}`,
+        },
+      };
     }
 
-    // If user is authenticated, verify they own the wedding
-    if (user && user.uid !== userId) {
-      console.warn("Authenticated user does not own this wedding.");
-      return fallbackMetadata;
-    }
+    // Query Firestore for the guest document
+    const guestDocRef = doc(db, `weddings/${weddingDoc.id}/guests/${id}`);
+    const guestDoc = await getDoc(guestDocRef);
 
-    // Query Firestore for the guest document with the matching id
-    const guestsRef = collection(
-      db,
-      `weddings/${weddingSnapshot.docs[0].id}/guests`
-    );
-    const guestQuery = query(guestsRef, where("id", "==", id));
-    const guestSnapshot = await getDocs(guestQuery);
+    // Set guest name, fallback to default if not found
+    const guestName = guestDoc.exists()
+      ? guestDoc.data().name || "Khách Mời"
+      : "Khách Mời";
 
-    let guestName = "Khách Mời";
-    if (!guestSnapshot.empty) {
-      const guestDoc = guestSnapshot.docs[0].data();
-      guestName = guestDoc.name || "Khách Mời";
-    } else {
-      console.warn(`No guest found for id: ${id}`);
-    }
-
-    // Return dynamic metadata
-    return {
-      title: `${guestName} - Hôn Lễ ${brideName} & ${groomName}`,
+    // Construct dynamic metadata
+    const metadata = {
+      title: `Kính gửi ${guestName} - Hôn Lễ ${brideName} & ${groomName}`,
       description: `Trang thông tin dành cho ${guestName} tại hôn lễ của ${brideName} và ${groomName}.`,
       openGraph: {
-        title: `${guestName} - Hôn Lễ ${brideName} & ${groomName}`,
+        title: `Kính gửi ${guestName} - Hôn Lễ ${brideName} & ${groomName}`,
         description: `Trang thông tin dành cho ${guestName} tại hôn lễ của ${brideName} và ${groomName}.`,
         type: "website",
         url: `https://marry.io.vn/dam-cuoi/${slug}/thiep-moi/${id}`,
@@ -93,9 +97,17 @@ export async function generateMetadata({ params }) {
         ],
       },
     };
+
+    return metadata;
   } catch (error) {
     console.error("Error fetching metadata from Firestore:", error);
-    return fallbackMetadata;
+    return {
+      ...fallbackMetadata,
+      openGraph: {
+        ...fallbackMetadata.openGraph,
+        url: `https://marry.io.vn/dam-cuoi/${slug}/thiep-moi/${id}`,
+      },
+    };
   }
 }
 
