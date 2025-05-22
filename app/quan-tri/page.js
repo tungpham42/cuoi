@@ -309,8 +309,8 @@ export default function DashboardPage() {
   const [form, setForm] = useState({
     brideName: "",
     groomName: "",
-    weddingDate: "", // Stores date only (e.g., "2025-05-21")
-    weddingTime: "", // Stores time only (e.g., "14:00")
+    weddingDate: "",
+    weddingTime: "",
     location: "",
     loveStory: "",
     theme: "romantic",
@@ -351,9 +351,11 @@ export default function DashboardPage() {
     ],
     primaryFont: "Dancing Script",
     secondaryFont: "Lora",
+    coverPhoto: { public_id: "", url: "" },
   });
   const [wishes, setWishes] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [coverPhotoUploading, setCoverPhotoUploading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const [audioUploading, setAudioUploading] = useState(false);
   const [error, setError] = useState("");
@@ -520,9 +522,6 @@ export default function DashboardPage() {
     } catch (err) {
       console.error("Error validating slug:", err);
       setError("Lỗi khi kiểm tra liên kết. Vui lòng thử lại.");
-      newIndex === -1
-        ? newOrder.push(activeId)
-        : newOrder.splice(newIndex + 1, 0, activeId);
       return false;
     }
   };
@@ -605,6 +604,7 @@ export default function DashboardPage() {
           ],
           primaryFont: data.primaryFont || "Dancing Script",
           secondaryFont: data.secondaryFont || "Lora",
+          coverPhoto: data.coverPhoto || { public_id: "", url: "" },
         });
 
         const wishesRef = collection(db, "weddings", weddingId, "wishes");
@@ -660,6 +660,7 @@ export default function DashboardPage() {
           ],
           primaryFont: "Dancing Script",
           secondaryFont: "Lora",
+          coverPhoto: { public_id: "", url: "" },
         });
         setWishes([]);
       }
@@ -727,6 +728,7 @@ export default function DashboardPage() {
         ],
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
+        coverPhoto: { public_id: "", url: "" },
       });
       setWishes([]);
     }
@@ -838,6 +840,71 @@ export default function DashboardPage() {
       setImageUploading(false);
       e.target.value = "";
     }
+  };
+
+  const handleCoverPhotoUpload = async (e) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn hoặc tạo một đám cưới trước khi tải ảnh bìa.");
+      return;
+    }
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const maxSize = 25 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setError("Tệp ảnh bìa vượt quá giới hạn kích thước 25MB.");
+      return;
+    }
+
+    setCoverPhotoUploading(true);
+    setError("");
+    try {
+      const result = await uploadImageToCloudinary(file);
+      if (result && result.secure_url) {
+        const newCoverPhoto = {
+          public_id: result.public_id,
+          url: result.secure_url,
+        };
+        setForm((prev) => {
+          if (user) {
+            const weddingRef = doc(db, "weddings", selectedWeddingId);
+            updateDoc(weddingRef, { coverPhoto: newCoverPhoto }).catch(
+              (err) => {
+                console.error("Firestore save error:", err);
+                setError(
+                  "Lỗi khi lưu ảnh bìa vào Firestore. Vui lòng thử lại."
+                );
+              }
+            );
+          }
+          return { ...prev, coverPhoto: newCoverPhoto };
+        });
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } else {
+        throw new Error("Không thể tải ảnh bìa lên.");
+      }
+    } catch (err) {
+      console.error("Cloudinary upload error:", err);
+      setError(err.message || "Lỗi khi tải ảnh bìa. Vui lòng thử lại.");
+    } finally {
+      setCoverPhotoUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleRemoveCoverPhoto = (public_id) => {
+    if (!selectedWeddingId) {
+      setError("Vui lòng chọn một đám cưới trước khi xóa ảnh bìa.");
+      return;
+    }
+    setForm((prev) => {
+      if (user) {
+        const weddingRef = doc(db, "weddings", selectedWeddingId);
+        updateDoc(weddingRef, { coverPhoto: { public_id: "", url: "" } });
+      }
+      return { ...prev, coverPhoto: { public_id: "", url: "" } };
+    });
   };
 
   const handleAudioUpload = async (e) => {
@@ -994,6 +1061,7 @@ export default function DashboardPage() {
         ],
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
+        coverPhoto: { public_id: "", url: "" },
         createdAt: new Date(),
         name: newWeddingName || "Đám cưới mới",
       });
@@ -1118,7 +1186,6 @@ export default function DashboardPage() {
 
     try {
       const weddingRef = doc(db, "weddings", selectedWeddingId);
-      // Combine date and time for Firestore storage
       const combinedDateTime =
         form.weddingDate && form.weddingTime
           ? new Date(`${form.weddingDate}T${form.weddingTime}`)
@@ -1127,6 +1194,7 @@ export default function DashboardPage() {
         ...form,
         userId: user.uid,
         weddingDate: combinedDateTime,
+        coverPhoto: form.coverPhoto,
       });
       setShowSuccess(true);
       setSlugError("");
@@ -1480,6 +1548,7 @@ export default function DashboardPage() {
                           variant="success"
                           onClick={handleRedirect}
                           disabled={
+                            coverPhotoUploading ||
                             imageUploading ||
                             audioUploading ||
                             !form.slug ||
@@ -1611,6 +1680,51 @@ export default function DashboardPage() {
                         onChange={handleChange}
                         className="form-control"
                       />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label">
+                        <FontAwesomeIcon icon={faImages} className="me-2" />
+                        Ảnh bìa (dùng cho Open Graph)
+                      </Form.Label>
+                      <Form.Control
+                        type="file"
+                        accept="image/*"
+                        onChange={handleCoverPhotoUpload}
+                        disabled={coverPhotoUploading}
+                        className="form-control"
+                      />
+                      {coverPhotoUploading && (
+                        <Spinner
+                          animation="border"
+                          size="sm"
+                          className="mt-2"
+                          variant="danger"
+                        />
+                      )}
+                      {form.coverPhoto.url && (
+                        <div className="mt-3">
+                          <div className="gallery-image-wrapper">
+                            <Image
+                              src={form.coverPhoto.url}
+                              alt="Cover photo"
+                              className="gallery-image"
+                              style={{ maxWidth: "200px" }}
+                            />
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() =>
+                                handleRemoveCoverPhoto(
+                                  form.coverPhoto.public_id
+                                )
+                              }
+                              className="gallery-delete-button"
+                            >
+                              Xóa
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </Form.Group>
                     <Form.Group className="mb-3">
                       <Form.Label className="form-label">
@@ -1857,6 +1971,7 @@ export default function DashboardPage() {
                               items={activeComponents}
                               strategy={verticalListSortingStrategy}
                             >
+                              {" "}
                               {activeComponents.map((id) => (
                                 <SortableItem
                                   key={id}
@@ -1883,7 +1998,10 @@ export default function DashboardPage() {
                         variant="primary"
                         onClick={handleSave}
                         disabled={
-                          imageUploading || audioUploading || !selectedWeddingId
+                          coverPhotoUploading ||
+                          imageUploading ||
+                          audioUploading ||
+                          !selectedWeddingId
                         }
                         className="btn-save"
                       >
@@ -1894,6 +2012,7 @@ export default function DashboardPage() {
                         variant="success"
                         onClick={handleRedirect}
                         disabled={
+                          coverPhotoUploading ||
                           imageUploading ||
                           audioUploading ||
                           !form.slug ||
