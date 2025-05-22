@@ -1684,7 +1684,7 @@ export default function DashboardPage() {
                     <Form.Group className="mb-3">
                       <Form.Label className="form-label">
                         <FontAwesomeIcon icon={faImages} className="me-2" />
-                        Ảnh bìa (dùng cho Open Graph)
+                        Ảnh bìa (dùng cho chia sẻ trên mạng xã hội)
                       </Form.Label>
                       <Form.Control
                         type="file"
