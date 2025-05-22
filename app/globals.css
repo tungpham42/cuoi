@@ -474,7 +474,7 @@ p {
   box-shadow: 0 4px 15px var(--shadow-color) !important;
   position: relative !important;
   overflow: hidden !important;
-  opacity: 0.95 !important;
+  opacity: 0.9 !important;
 }
 
 /* Carousel controls styling */
