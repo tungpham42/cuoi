@@ -1,6 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Container, Spinner, Alert, Card, Button } from "react-bootstrap";
+import {
+  Container,
+  Spinner,
+  Alert,
+  Card,
+  Button,
+  Modal,
+} from "react-bootstrap";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db, auth } from "@/firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
@@ -24,6 +31,7 @@ import WishList from "@/components/WishList";
 import Countdown from "@/components/Countdown";
 import QRCode from "@/components/QRCode";
 import Introduction from "@/components/Introduction";
+import FallingHeart from "@/components/FallingHeart";
 
 // Dynamic imports
 const LocationMap = dynamic(() => import("@/components/LocationMap"), {
@@ -109,18 +117,25 @@ const useWeddingData = (slug) => {
         const data = weddingDoc.data();
         const weddingId = weddingDoc.id;
 
-        // Format wedding data
+        // Format wedding date and time
+        const weddingDateTime = data.weddingDate
+          ? data.weddingDate.toDate()
+          : null;
         const formattedWedding = {
           id: weddingId,
           userId: data.userId || "",
           brideName: data.brideName || "",
           groomName: data.groomName || "",
-          weddingDate:
-            data.weddingDate?.toDate().toLocaleDateString("vi-VN", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            }) || "",
+          weddingDate: weddingDateTime
+            ? weddingDateTime.toISOString().split("T")[0]
+            : "",
+          weddingTime: weddingDateTime
+            ? weddingDateTime.toLocaleTimeString("vi-VN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })
+            : "",
           location: data.location || "",
           loveStory: data.loveStory || "",
           theme: data.theme || "romantic",
@@ -132,7 +147,6 @@ const useWeddingData = (slug) => {
           showWishForm: data.showWishForm !== false,
           showWishList: data.showWishList !== false,
           showQRCode: data.showQRCode !== false,
-          showIntroduction: data.showIntroduction !== false,
           showLocationMap: data.showLocationMap !== false,
           showAudioPlayer: data.showAudioPlayer !== false,
           bankInfo: data.bankInfo || {
@@ -145,7 +159,6 @@ const useWeddingData = (slug) => {
           mapInfo: data.mapInfo || { embedCode: "", address: "" },
           componentOrder: data.componentOrder || [
             "WeddingHeader",
-            "Introduction",
             "Countdown",
             "Gallery",
             "LoveStory",
@@ -154,9 +167,10 @@ const useWeddingData = (slug) => {
             "WishForm",
             "WishList",
             "AudioPlayer",
-          ],
+          ], // Removed Introduction from sortable components
           primaryFont: data.primaryFont || "Dancing Script",
           secondaryFont: data.secondaryFont || "Lora",
+          wishes: [],
         };
 
         // Fetch approved wishes
@@ -189,14 +203,16 @@ const useWeddingData = (slug) => {
 // Component rendering logic
 const renderComponent = (componentId, weddingData, addWish) => {
   if (!weddingData) return null;
-
   const components = {
     WeddingHeader: () => <WeddingHeader data={weddingData} />,
-    Introduction: () =>
-      weddingData.showIntroduction && <Introduction form={weddingData} />,
     Countdown: () =>
-      weddingData.showCountdown && (
-        <Countdown weddingDate={weddingData.weddingDate} />
+      weddingData.showCountdown &&
+      weddingData.weddingDate &&
+      weddingData.weddingTime && (
+        <Countdown
+          weddingDate={weddingData.weddingDate}
+          weddingTime={weddingData.weddingTime}
+        />
       ),
     Gallery: () =>
       weddingData.showGallery && <Gallery images={weddingData.gallery} />,
@@ -222,6 +238,14 @@ export default function WeddingPage({ params }) {
   const { slug } = params;
   const user = useAuth();
   const { weddingData, wishes, loading, error } = useWeddingData(slug);
+  const [showModal, setShowModal] = useState(false);
+
+  // Open modal on page load if introduction is available
+  useEffect(() => {
+    if (weddingData?.introduction) {
+      setShowModal(true);
+    }
+  }, [weddingData]);
 
   // Update wishes in weddingData for rendering
   useEffect(() => {
@@ -340,6 +364,27 @@ export default function WeddingPage({ params }) {
           </DndContext>
         </Card.Body>
       </Card>
+      {weddingData?.introduction && (
+        <Modal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          centered
+          data-theme={weddingData.theme}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Chào mừng đến với đám cưới của chúng tôi</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Introduction form={weddingData} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={() => setShowModal(false)}>
+              Đóng
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+      <FallingHeart />
     </Container>
   );
 }
