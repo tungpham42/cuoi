@@ -57,10 +57,10 @@ export async function generateMetadata({ params }) {
 
       // Return dynamic metadata
       return {
-        title: `Tình Yêu Vĩnh Cửu - ${brideName} & ${groomName}`,
+        title: `Đám cưới của ${brideName} và ${groomName}`,
         description: `Chào mừng bạn đến với trang web hôn lễ của ${brideName} và ${groomName}, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.`,
         openGraph: {
-          title: `Tình Yêu Vĩnh Cửu - ${brideName} & ${groomName}`,
+          title: `Đám cưới của ${brideName} và ${groomName}`,
           description:
             "Chào mừng bạn đến với trang web hôn lễ của chúng tôi, nơi lưu giữ những khoảnh khắc đẹp nhất của tình yêu và hạnh phúc.",
           type: "website",
