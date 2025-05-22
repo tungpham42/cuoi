@@ -20,6 +20,7 @@ import QRCode from "./QRCode";
 // Dynamic imports
 const LocationMap = dynamic(() => import("./LocationMap"), { ssr: false });
 const AudioPlayer = dynamic(() => import("./AudioPlayer"), { ssr: false });
+const KeyDates = dynamic(() => import("./KeyDates"), { ssr: false });
 
 // Constants
 const DEFAULT_COMPONENT_ORDER = [
@@ -31,6 +32,7 @@ const DEFAULT_COMPONENT_ORDER = [
   "QRCode",
   "WishList",
   "AudioPlayer",
+  "KeyDates",
 ];
 const DEFAULT_PRIMARY_FONT = "Dancing Script";
 const DEFAULT_SECONDARY_FONT = "Lora";
@@ -64,6 +66,7 @@ const renderComponent = (componentId, form, wishes) => {
     weddingTime = "",
     gallery = [],
     playlist = [],
+    keyDates = [],
     loveStory = "",
     bankInfo = {},
     mapInfo = { embedCode: "", address: "" },
@@ -74,6 +77,7 @@ const renderComponent = (componentId, form, wishes) => {
     showQRCode = true,
     showLocationMap = true,
     showAudioPlayer = true,
+    showKeyDates = true,
   } = form || {};
 
   const components = {
@@ -102,6 +106,10 @@ const renderComponent = (componentId, form, wishes) => {
     AudioPlayer: () =>
       showAudioPlayer && playlist.length > 0 ? (
         <AudioPlayer playlist={playlist} />
+      ) : null,
+    KeyDates: () =>
+      showKeyDates && keyDates.length > 0 ? (
+        <KeyDates keyDates={keyDates} />
       ) : null,
   };
 

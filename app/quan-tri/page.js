@@ -325,6 +325,7 @@ export default function DashboardPage() {
     showQRCode: true,
     showLocationMap: true,
     showAudioPlayer: true,
+    showKeyDates: true,
     bankInfo: {
       bankName: "",
       accountNumber: "",
@@ -336,6 +337,7 @@ export default function DashboardPage() {
       embedCode: "",
       address: "",
     },
+    keyDates: [],
     componentOrder: [
       "WeddingHeader",
       "Countdown",
@@ -346,6 +348,7 @@ export default function DashboardPage() {
       "WishForm",
       "WishList",
       "AudioPlayer",
+      "KeyDates",
     ],
     primaryFont: "Dancing Script",
     secondaryFont: "Lora",
@@ -366,6 +369,15 @@ export default function DashboardPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteWeddingId, setDeleteWeddingId] = useState(null);
   const [activeId, setActiveId] = useState(null);
+  const [showKeyDatesModal, setShowKeyDatesModal] = useState(false);
+  const [editKeyDateIndex, setEditKeyDateIndex] = useState(null);
+  const [keyDateForm, setKeyDateForm] = useState({
+    title: "",
+    date: "",
+    time: "",
+    description: "",
+    mapInfo: { embedCode: "", address: "" },
+  });
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",
@@ -377,6 +389,7 @@ export default function DashboardPage() {
     WishForm: "Form lời chúc",
     WishList: "Danh sách lời chúc",
     AudioPlayer: "Trình phát nhạc",
+    KeyDates: "Lịch các ngày trọng đại",
   };
 
   const componentShowFields = {
@@ -388,6 +401,7 @@ export default function DashboardPage() {
     WishForm: "showWishForm",
     WishList: "showWishList",
     AudioPlayer: "showAudioPlayer",
+    KeyDates: "showKeyDates",
   };
 
   const allComponents = Object.keys(componentLabels);
@@ -574,6 +588,7 @@ export default function DashboardPage() {
           showQRCode: data.showQRCode !== false,
           showLocationMap: data.showLocationMap !== false,
           showAudioPlayer: data.showAudioPlayer !== false,
+          showKeyDates: data.showKeyDates !== false,
           bankInfo: {
             bankName: data.bankInfo?.bankName || "",
             accountNumber: data.bankInfo?.accountNumber || "",
@@ -585,6 +600,7 @@ export default function DashboardPage() {
             embedCode: data.mapInfo?.embedCode || "",
             address: data.mapInfo?.address || "",
           },
+          keyDates: data.keyDates || [],
           componentOrder: data.componentOrder || [
             "WeddingHeader",
             "Countdown",
@@ -595,6 +611,7 @@ export default function DashboardPage() {
             "WishForm",
             "WishList",
             "AudioPlayer",
+            "KeyDates",
           ],
           primaryFont: data.primaryFont || "Dancing Script",
           secondaryFont: data.secondaryFont || "Lora",
@@ -628,6 +645,7 @@ export default function DashboardPage() {
           showQRCode: true,
           showLocationMap: true,
           showAudioPlayer: true,
+          showKeyDates: true,
           bankInfo: {
             bankName: "",
             accountNumber: "",
@@ -639,6 +657,7 @@ export default function DashboardPage() {
             embedCode: "",
             address: "",
           },
+          keyDates: [],
           componentOrder: [
             "WeddingHeader",
             "Countdown",
@@ -649,6 +668,7 @@ export default function DashboardPage() {
             "WishForm",
             "WishList",
             "AudioPlayer",
+            "KeyDates",
           ],
           primaryFont: "Dancing Script",
           secondaryFont: "Lora",
@@ -694,6 +714,7 @@ export default function DashboardPage() {
         showQRCode: true,
         showLocationMap: true,
         showAudioPlayer: true,
+        showKeyDates: true,
         bankInfo: {
           bankName: "",
           accountNumber: "",
@@ -705,6 +726,7 @@ export default function DashboardPage() {
           embedCode: "",
           address: "",
         },
+        keyDates: [],
         componentOrder: [
           "WeddingHeader",
           "Countdown",
@@ -715,6 +737,7 @@ export default function DashboardPage() {
           "WishForm",
           "WishList",
           "AudioPlayer",
+          "KeyDates",
         ],
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
@@ -764,6 +787,53 @@ export default function DashboardPage() {
         [name]: type === "checkbox" ? checked : value,
       }));
     }
+  };
+
+  const handleKeyDateChange = (e) => {
+    const { name, value } = e.target;
+    if (name.startsWith("mapInfo.")) {
+      const field = name.split(".")[1];
+      setKeyDateForm((prev) => ({
+        ...prev,
+        mapInfo: { ...prev.mapInfo, [field]: value },
+      }));
+    } else {
+      setKeyDateForm((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleKeyDateSubmit = () => {
+    setForm((prev) => {
+      const newKeyDates = [...prev.keyDates];
+      if (editKeyDateIndex !== null) {
+        newKeyDates[editKeyDateIndex] = { ...keyDateForm };
+      } else {
+        newKeyDates.push({ ...keyDateForm });
+      }
+      return { ...prev, keyDates: newKeyDates };
+    });
+    setKeyDateForm({
+      title: "",
+      date: "",
+      time: "",
+      description: "",
+      mapInfo: { embedCode: "", address: "" },
+    });
+    setEditKeyDateIndex(null);
+    setShowKeyDatesModal(false);
+  };
+
+  const handleEditKeyDate = (index) => {
+    setKeyDateForm({ ...form.keyDates[index] });
+    setEditKeyDateIndex(index);
+    setShowKeyDatesModal(true);
+  };
+
+  const handleRemoveKeyDate = (index) => {
+    setForm((prev) => ({
+      ...prev,
+      keyDates: prev.keyDates.filter((_, i) => i !== index),
+    }));
   };
 
   const handleImageUpload = async (e) => {
@@ -1025,6 +1095,7 @@ export default function DashboardPage() {
         showQRCode: true,
         showLocationMap: true,
         showAudioPlayer: true,
+        showKeyDates: true,
         bankInfo: {
           bankName: "",
           accountNumber: "",
@@ -1036,6 +1107,7 @@ export default function DashboardPage() {
           embedCode: "",
           address: "",
         },
+        keyDates: [],
         componentOrder: [
           "WeddingHeader",
           "Countdown",
@@ -1046,6 +1118,7 @@ export default function DashboardPage() {
           "WishForm",
           "WishList",
           "AudioPlayer",
+          "KeyDates",
         ],
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
@@ -1183,6 +1256,8 @@ export default function DashboardPage() {
         userId: user.uid,
         weddingDate: combinedDateTime,
         coverPhoto: form.coverPhoto,
+        keyDates: form.keyDates,
+        showKeyDates: form.showKeyDates,
       });
       setShowSuccess(true);
       setSlugError("");
@@ -1374,6 +1449,98 @@ export default function DashboardPage() {
             </Button>
             <Button variant="primary" onClick={handleConfirmDelete}>
               Xóa
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={showKeyDatesModal}
+          onHide={() => setShowKeyDatesModal(false)}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {editKeyDateIndex !== null
+                ? "Chỉnh sửa ngày trọng đại"
+                : "Thêm ngày trọng đại"}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>Tiêu đề sự kiện</Form.Label>
+              <Form.Control
+                type="text"
+                name="title"
+                value={keyDateForm.title}
+                onChange={handleKeyDateChange}
+                placeholder="Nhập tiêu đề sự kiện"
+              />
+            </Form.Group>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Ngày</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="date"
+                    value={keyDateForm.date}
+                    onChange={handleKeyDateChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Giờ</Form.Label>
+                  <Form.Control
+                    type="time"
+                    name="time"
+                    value={keyDateForm.time}
+                    onChange={handleKeyDateChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group className="mb-3">
+              <Form.Label>Mô tả</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="description"
+                value={keyDateForm.description}
+                onChange={handleKeyDateChange}
+                placeholder="Nhập mô tả sự kiện (tùy chọn)"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Liên kết Google Maps</Form.Label>
+              <Form.Control
+                type="text"
+                name="mapInfo.embedCode"
+                value={keyDateForm.mapInfo.embedCode}
+                onChange={handleKeyDateChange}
+                placeholder="Dán liên kết Google Maps hoặc mã nhúng iframe"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Địa chỉ</Form.Label>
+              <Form.Control
+                type="text"
+                name="mapInfo.address"
+                value={keyDateForm.mapInfo.address}
+                onChange={handleKeyDateChange}
+                placeholder="Nhập địa chỉ chi tiết"
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowKeyDatesModal(false)}
+            >
+              Hủy
+            </Button>
+            <Button variant="primary" onClick={handleKeyDateSubmit}>
+              {editKeyDateIndex !== null ? "Lưu" : "Thêm"}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -1907,6 +2074,78 @@ export default function DashboardPage() {
                       </Col>
                     </Row>
                     <h3 className="section-heading">
+                      <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+                      Lịch các ngày trọng đại
+                    </h3>
+                    <Form.Group className="mb-3">
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          setKeyDateForm({
+                            title: "",
+                            date: "",
+                            time: "",
+                            description: "",
+                            mapInfo: { embedCode: "", address: "" },
+                          });
+                          setEditKeyDateIndex(null);
+                          setShowKeyDatesModal(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faPlus} className="me-2" />
+                        Thêm ngày trọng đại
+                      </Button>
+                      {form.keyDates.length > 0 && (
+                        <ListGroup className="mt-3">
+                          {form.keyDates.map((keyDate, index) => (
+                            <ListGroup.Item
+                              key={index}
+                              className="d-flex justify-content-between align-items-center"
+                            >
+                              <div>
+                                <strong>{keyDate.title}</strong>
+                                <br />
+                                <small>
+                                  {keyDate.date} {keyDate.time}
+                                </small>
+                                {keyDate.description && (
+                                  <>
+                                    <br />
+                                    <small>{keyDate.description}</small>
+                                  </>
+                                )}
+                                {keyDate.mapInfo?.address && (
+                                  <>
+                                    <br />
+                                    <small>
+                                      Địa chỉ: {keyDate.mapInfo.address}
+                                    </small>
+                                  </>
+                                )}
+                              </div>
+                              <div>
+                                <Button
+                                  variant="outline-secondary"
+                                  size="sm"
+                                  className="me-2"
+                                  onClick={() => handleEditKeyDate(index)}
+                                >
+                                  <FontAwesomeIcon icon={faPen} />
+                                </Button>
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleRemoveKeyDate(index)}
+                                >
+                                  <FontAwesomeIcon icon={faTrash} />
+                                </Button>
+                              </div>
+                            </ListGroup.Item>
+                          ))}
+                        </ListGroup>
+                      )}
+                    </Form.Group>
+                    <h3 className="section-heading">
                       <FontAwesomeIcon icon={faEye} className="me-2" />
                       Hiển thị thành phần
                     </h3>
@@ -1959,7 +2198,6 @@ export default function DashboardPage() {
                               items={activeComponents}
                               strategy={verticalListSortingStrategy}
                             >
-                              {" "}
                               {activeComponents.map((id) => (
                                 <SortableItem
                                   key={id}
