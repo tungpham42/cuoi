@@ -358,23 +358,22 @@ export default function WeddingPage() {
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            .wedding-page,
-            .wedding-page p,
-            .wedding-page span {
+            p,
+            span {
               font-family: "${weddingData.secondaryFont}", serif !important;
             }
-            .wedding-page h1,
-            .wedding-page h2,
-            .wedding-page h3,
-            .wedding-page h4,
-            .wedding-page h5,
-            .wedding-page h6,
-            .wedding-page .h1,
-            .wedding-page .h2,
-            .wedding-page .h3,
-            .wedding-page .h4,
-            .wedding-page .h5,
-            .wedding-page .h6 {
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6,
+            .h1,
+            .h2,
+            .h3,
+            .h4,
+            .h5,
+            .h6 {
               font-family: "${weddingData.primaryFont}", cursive !important;
             }
           `,
@@ -413,9 +412,7 @@ export default function WeddingPage() {
           data-theme={weddingData.theme}
         >
           <Modal.Header closeButton>
-            <Modal.Title>
-              Chào mừng quý vị đến với hôn lễ của chúng tôi
-            </Modal.Title>
+            <Modal.Title>Chào mừng đến với hôn lễ của chúng tôi</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Introduction form={weddingData} />
