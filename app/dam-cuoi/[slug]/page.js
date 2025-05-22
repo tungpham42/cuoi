@@ -413,14 +413,16 @@ export default function WeddingPage() {
           data-theme={weddingData.theme}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Welcome to Our Wedding</Modal.Title>
+            <Modal.Title>
+              Chào mừng quý vị đến với hôn lễ của chúng tôi
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Introduction form={weddingData} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={() => setShowModal(false)}>
-              Close
+              Đóng
             </Button>
           </Modal.Footer>
         </Modal>

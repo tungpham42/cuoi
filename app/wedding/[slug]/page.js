@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   Container,
   Spinner,
@@ -11,7 +12,6 @@ import {
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db, auth } from "@/firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { DndContext, closestCenter } from "@dnd-kit/core";
@@ -24,15 +24,14 @@ import { CSS } from "@dnd-kit/utilities";
 
 // Components
 import WeddingHeader from "@/components/WeddingHeader";
+import Countdown from "@/components/Countdown";
 import Gallery from "@/components/Gallery";
 import LoveStory from "@/components/LoveStory";
+import QRCode from "@/components/QRCode";
 import WishForm from "@/components/WishForm";
 import WishList from "@/components/WishList";
-import Countdown from "@/components/Countdown";
-import QRCode from "@/components/QRCode";
 import Introduction from "@/components/Introduction";
 import FallingHeart from "@/components/FallingHeart";
-
 // Dynamic imports
 const LocationMap = dynamic(() => import("@/components/LocationMap"), {
   ssr: false,
@@ -40,8 +39,62 @@ const LocationMap = dynamic(() => import("@/components/LocationMap"), {
 const AudioPlayer = dynamic(() => import("@/components/AudioPlayer"), {
   ssr: false,
 });
+const KeyDates = dynamic(() => import("@/components/KeyDates"), {
+  ssr: false,
+});
 
-// Sortable component for drag-and-drop
+// Constants
+const DEFAULT_COMPONENT_ORDER = [
+  "WeddingHeader",
+  "Countdown",
+  "Gallery",
+  "LoveStory",
+  "LocationMap",
+  "QRCode",
+  "WishForm",
+  "WishList",
+  "AudioPlayer",
+  "KeyDates",
+  "Introduction",
+];
+
+const DEFAULT_WEDDING_DATA = {
+  id: "",
+  userId: "",
+  brideName: "",
+  groomName: "",
+  weddingDate: "",
+  weddingTime: "",
+  location: "",
+  loveStory: "",
+  theme: "romantic",
+  gallery: [],
+  playlist: [],
+  showCountdown: true,
+  showGallery: true,
+  showLoveStory: true,
+  showWishForm: true,
+  showWishList: true,
+  showQRCode: true,
+  showLocationMap: true,
+  showAudioPlayer: true,
+  showKeyDates: true,
+  bankInfo: {
+    bankName: "",
+    accountNumber: "",
+    accountHolder: "",
+    description: "",
+  },
+  introduction: "",
+  mapInfo: { embedCode: "", address: "" },
+  keyDates: [],
+  componentOrder: DEFAULT_COMPONENT_ORDER,
+  primaryFont: "Dancing Script",
+  secondaryFont: "Lora",
+  wishes: [],
+};
+
+// Sortable Component
 const SortableComponent = ({ id, children, disabled }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id, disabled });
@@ -60,7 +113,7 @@ const SortableComponent = ({ id, children, disabled }) => {
   );
 };
 
-// Authentication hook
+// Authentication Hook
 const useAuth = () => {
   const [user, setUser] = useState(null);
   const router = useRouter();
@@ -68,177 +121,181 @@ const useAuth = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
       auth,
-      (currentUser) => {
-        setUser(currentUser);
-      },
+      (currentUser) => setUser(currentUser),
       (error) => {
         console.error("Auth error:", error);
         router.push("/");
       }
     );
-
     return () => unsubscribe();
   }, [router]);
 
   return user;
 };
 
-// Wedding data hook
+// Wedding Data Hook
 const useWeddingData = (slug) => {
   const [weddingData, setWeddingData] = useState(null);
   const [wishes, setWishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!slug) {
-      setError("Liên kết không hợp lệ.");
+      setError("Invalid link.");
       setLoading(false);
       return;
     }
 
-    const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      // Fetch wedding data
+      const weddingsRef = collection(db, "weddings");
+      const q = query(weddingsRef, where("slug", "==", slug));
+      const weddingSnapshot = await getDocs(q);
+
+      if (weddingSnapshot.empty) {
+        throw new Error("No wedding found for this link.");
+      }
+
+      const weddingDoc = weddingSnapshot.docs[0];
+      const data = weddingDoc.data();
+      const weddingId = weddingDoc.id;
+
+      // Format wedding date and time
+      const weddingDateTime = data.weddingDate?.toDate() || null;
+      const formattedWedding = {
+        ...DEFAULT_WEDDING_DATA,
+        id: weddingId,
+        userId: data.userId || "",
+        brideName: data.brideName || "",
+        groomName: data.groomName || "",
+        weddingDate: weddingDateTime
+          ? weddingDateTime.toISOString().split("T")[0]
+          : "",
+        weddingTime: weddingDateTime
+          ? weddingDateTime.toLocaleTimeString("vi-VN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })
+          : "",
+        location: data.location || "",
+        loveStory: data.loveStory || "",
+        theme: data.theme || "romantic",
+        gallery: data.gallery || [],
+        playlist: data.playlist || [],
+        showCountdown: data.showCountdown !== false,
+        showGallery: data.showGallery !== false,
+        showLoveStory: data.showLoveStory !== false,
+        showWishForm: data.showWishForm !== false,
+        showWishList: data.showWishList !== false,
+        showQRCode: data.showQRCode !== false,
+        showLocationMap: data.showLocationMap !== false,
+        showAudioPlayer: data.showAudioPlayer !== false,
+        showKeyDates: data.showKeyDates !== false,
+        bankInfo: data.bankInfo || DEFAULT_WEDDING_DATA.bankInfo,
+        introduction: data.introduction || "",
+        mapInfo: data.mapInfo || DEFAULT_WEDDING_DATA.mapInfo,
+        keyDates: data.keyDates || [],
+        componentOrder: data.componentOrder || DEFAULT_COMPONENT_ORDER,
+        primaryFont: data.primaryFont || "Dancing Script",
+        secondaryFont: data.secondaryFont || "Lora",
+      };
+
+      // Fetch approved wishes
+      const wishesRef = collection(db, "weddings", weddingId, "wishes");
+      const wishesQuery = query(wishesRef, where("approved", "==", true));
+      const wishesSnap = await getDocs(wishesQuery);
+      const wishesList = wishesSnap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setWeddingData(formattedWedding);
+      setWishes(wishesList);
+    } catch (err) {
+      console.error("Error fetching wedding data:", err);
+      setError(err.message || "Failed to load wedding data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { weddingData, wishes, loading, error, setWishes };
+};
+
+// Component Rendering Logic
+const getComponentRenderer = (weddingData, addWish) => ({
+  WeddingHeader: () => <WeddingHeader data={weddingData} />,
+  Countdown: () =>
+    weddingData.showCountdown &&
+    weddingData.weddingDate &&
+    weddingData.weddingTime && (
+      <Countdown
+        weddingDate={weddingData.weddingDate}
+        weddingTime={weddingData.weddingTime}
+      />
+    ),
+  Gallery: () =>
+    weddingData.showGallery && <Gallery images={weddingData.gallery} />,
+  LoveStory: () =>
+    weddingData.showLoveStory && <LoveStory text={weddingData.loveStory} />,
+  LocationMap: () =>
+    weddingData.showLocationMap && <LocationMap form={weddingData} />,
+  QRCode: () =>
+    weddingData.showQRCode && <QRCode bankInfo={weddingData.bankInfo} />,
+  WishForm: () => weddingData.showWishForm && <WishForm onSubmit={addWish} />,
+  WishList: () =>
+    weddingData.showWishList && <WishList wishes={weddingData.wishes} />,
+  AudioPlayer: () =>
+    weddingData.showAudioPlayer && (
+      <AudioPlayer playlist={weddingData.playlist} />
+    ),
+  KeyDates: () =>
+    weddingData.showKeyDates &&
+    weddingData.keyDates.length > 0 && (
+      <KeyDates keyDates={weddingData.keyDates} />
+    ),
+  Introduction: () => <Introduction form={weddingData} />,
+});
+
+// Main Component
+export default function WeddingPage() {
+  const { slug } = useParams();
+  const user = useAuth();
+  const { weddingData, wishes, loading, error, setWishes } =
+    useWeddingData(slug);
+  const [showModal, setShowModal] = useState(false);
+
+  // Memoize component renderer
+  const componentRenderer = useMemo(() => {
+    const addWish = async ({ name, message }) => {
+      if (!weddingData?.id) {
+        console.error("No wedding ID available for adding wish.");
+        return;
+      }
       try {
-        setLoading(true);
-        setError("");
-
-        // Fetch wedding data
-        const weddingsRef = collection(db, "weddings");
-        const q = query(weddingsRef, where("slug", "==", slug));
-        const weddingSnapshot = await getDocs(q);
-
-        if (weddingSnapshot.empty) {
-          throw new Error(
-            "Không tìm thấy thông tin đám cưới với liên kết này."
-          );
-        }
-
-        const weddingDoc = weddingSnapshot.docs[0];
-        const data = weddingDoc.data();
-        const weddingId = weddingDoc.id;
-
-        // Format wedding date and time
-        const weddingDateTime = data.weddingDate
-          ? data.weddingDate.toDate()
-          : null;
-        const formattedWedding = {
-          id: weddingId,
-          userId: data.userId || "",
-          brideName: data.brideName || "",
-          groomName: data.groomName || "",
-          weddingDate: weddingDateTime
-            ? weddingDateTime.toISOString().split("T")[0]
-            : "",
-          weddingTime: weddingDateTime
-            ? weddingDateTime.toLocaleTimeString("vi-VN", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              })
-            : "",
-          location: data.location || "",
-          loveStory: data.loveStory || "",
-          theme: data.theme || "romantic",
-          gallery: data.gallery || [],
-          playlist: data.playlist || [],
-          showCountdown: data.showCountdown !== false,
-          showGallery: data.showGallery !== false,
-          showLoveStory: data.showLoveStory !== false,
-          showWishForm: data.showWishForm !== false,
-          showWishList: data.showWishList !== false,
-          showQRCode: data.showQRCode !== false,
-          showLocationMap: data.showLocationMap !== false,
-          showAudioPlayer: data.showAudioPlayer !== false,
-          bankInfo: data.bankInfo || {
-            bankName: "",
-            accountNumber: "",
-            accountHolder: "",
-            description: "",
-          },
-          introduction: data.introduction || "",
-          mapInfo: data.mapInfo || { embedCode: "", address: "" },
-          componentOrder: data.componentOrder || [
-            "WeddingHeader",
-            "Countdown",
-            "Gallery",
-            "LoveStory",
-            "LocationMap",
-            "QRCode",
-            "WishForm",
-            "WishList",
-            "AudioPlayer",
-          ], // Removed Introduction from sortable components
-          primaryFont: data.primaryFont || "Dancing Script",
-          secondaryFont: data.secondaryFont || "Lora",
-          wishes: [],
-        };
-
-        // Fetch approved wishes
-        const wishesRef = collection(db, "weddings", weddingId, "wishes");
-        const wishesQuery = query(wishesRef, where("approved", "==", true));
-        const wishesSnap = await getDocs(wishesQuery);
-        const wishesList = wishesSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setWeddingData(formattedWedding);
-        setWishes(wishesList);
+        const wishesRef = collection(db, "weddings", weddingData.id, "wishes");
+        await addDoc(wishesRef, {
+          name,
+          message,
+          createdAt: new Date(),
+          approved: false,
+        });
       } catch (err) {
-        console.error("Error fetching wedding data:", err);
-        setError(
-          err.message || "Lỗi khi tải thông tin đám cưới. Vui lòng thử lại."
-        );
-      } finally {
-        setLoading(false);
+        console.error("Error adding wish:", err);
       }
     };
 
-    fetchData();
-  }, [slug]);
-
-  return { weddingData, wishes, loading, error };
-};
-
-// Component rendering logic
-const renderComponent = (componentId, weddingData, addWish) => {
-  if (!weddingData) return null;
-  const components = {
-    WeddingHeader: () => <WeddingHeader data={weddingData} />,
-    Countdown: () =>
-      weddingData.showCountdown &&
-      weddingData.weddingDate &&
-      weddingData.weddingTime && (
-        <Countdown
-          weddingDate={weddingData.weddingDate}
-          weddingTime={weddingData.weddingTime}
-        />
-      ),
-    Gallery: () =>
-      weddingData.showGallery && <Gallery images={weddingData.gallery} />,
-    LoveStory: () =>
-      weddingData.showLoveStory && <LoveStory text={weddingData.loveStory} />,
-    LocationMap: () =>
-      weddingData.showLocationMap && <LocationMap form={weddingData} />,
-    QRCode: () =>
-      weddingData.showQRCode && <QRCode bankInfo={weddingData.bankInfo} />,
-    WishForm: () => weddingData.showWishForm && <WishForm onSubmit={addWish} />,
-    WishList: () =>
-      weddingData.showWishList && <WishList wishes={weddingData.wishes} />,
-    AudioPlayer: () =>
-      weddingData.showAudioPlayer && (
-        <AudioPlayer playlist={weddingData.playlist} />
-      ),
-  };
-
-  return components[componentId]?.() || null;
-};
-
-export default function WeddingPage({ params }) {
-  const { slug } = params;
-  const user = useAuth();
-  const { weddingData, wishes, loading, error } = useWeddingData(slug);
-  const [showModal, setShowModal] = useState(false);
+    return getComponentRenderer(weddingData, addWish);
+  }, [weddingData]);
 
   // Open modal on page load if introduction is available
   useEffect(() => {
@@ -247,31 +304,12 @@ export default function WeddingPage({ params }) {
     }
   }, [weddingData]);
 
-  // Update wishes in weddingData for rendering
+  // Update wishes in weddingData
   useEffect(() => {
     if (weddingData) {
       weddingData.wishes = wishes;
     }
   }, [wishes, weddingData]);
-
-  // Handle wish submission
-  const addWish = async (name, message) => {
-    if (!weddingData?.id) {
-      console.error("No wedding ID available for adding wish.");
-      return;
-    }
-    try {
-      const wishesRef = collection(db, "weddings", weddingData.id, "wishes");
-      await addDoc(wishesRef, {
-        name,
-        message,
-        createdAt: new Date(),
-        approved: false,
-      });
-    } catch (err) {
-      console.error("Error adding wish:", err);
-    }
-  };
 
   if (loading) {
     return (
@@ -280,7 +318,7 @@ export default function WeddingPage({ params }) {
         className="d-flex align-items-center justify-content-center min-vh-100"
       >
         <Spinner animation="border" variant="danger" />
-        <span className="ms-2 h3">Đang tải...</span>
+        <span className="ms-2 h3">Loading...</span>
       </Container>
     );
   }
@@ -298,12 +336,11 @@ export default function WeddingPage({ params }) {
         >
           <Card.Body className="p-4">
             <Alert variant="danger">
-              {error ||
-                "Không có dữ liệu để hiển thị. Vui lòng kiểm tra liên kết."}
+              {error || "No data to display. Please check the link."}
             </Alert>
             <Link href="/" passHref>
               <Button variant="primary" className="w-100">
-                Quay lại trang chủ
+                Back to Home
               </Button>
             </Link>
           </Card.Body>
@@ -311,6 +348,10 @@ export default function WeddingPage({ params }) {
       </Container>
     );
   }
+
+  const componentOrder = weddingData.componentOrder.filter((id) =>
+    DEFAULT_COMPONENT_ORDER.includes(id)
+  );
 
   return (
     <Container fluid className="p-0" data-theme={weddingData.theme}>
@@ -345,26 +386,26 @@ export default function WeddingPage({ params }) {
             <div className="d-flex justify-content-left mb-4">
               <Link href="/quan-tri" passHref>
                 <Button variant="outline-primary">
-                  Quay lại trang quản trị
+                  Quay về trang quản trị
                 </Button>
               </Link>
             </div>
           )}
           <DndContext collisionDetection={closestCenter}>
             <SortableContext
-              items={weddingData.componentOrder}
+              items={componentOrder}
               strategy={verticalListSortingStrategy}
             >
-              {weddingData.componentOrder.map((id) => (
+              {componentOrder.map((id) => (
                 <SortableComponent key={id} id={id} disabled>
-                  {renderComponent(id, weddingData, addWish)}
+                  {componentRenderer[id]?.()}
                 </SortableComponent>
               ))}
             </SortableContext>
           </DndContext>
         </Card.Body>
       </Card>
-      {weddingData?.introduction && (
+      {weddingData.introduction && (
         <Modal
           show={showModal}
           onHide={() => setShowModal(false)}
@@ -372,7 +413,9 @@ export default function WeddingPage({ params }) {
           data-theme={weddingData.theme}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Chào mừng đến với đám cưới của chúng tôi</Modal.Title>
+            <Modal.Title>
+              Chào mừng quý vị đến với hôn lễ của chúng tôi
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Introduction form={weddingData} />
