@@ -32,6 +32,7 @@ import WishForm from "@/components/WishForm";
 import WishList from "@/components/WishList";
 import Introduction from "@/components/Introduction";
 import FallingHeart from "@/components/FallingHeart";
+
 // Dynamic imports
 const LocationMap = dynamic(() => import("@/components/LocationMap"), {
   ssr: false,
@@ -92,6 +93,7 @@ const DEFAULT_WEDDING_DATA = {
   primaryFont: "Dancing Script",
   secondaryFont: "Lora",
   wishes: [],
+  backgroundImage: "", // Added backgroundImage field
 };
 
 // Sortable Component
@@ -203,6 +205,7 @@ const useWeddingData = (slug) => {
         componentOrder: data.componentOrder || DEFAULT_COMPONENT_ORDER,
         primaryFont: data.primaryFont || "Dancing Script",
         secondaryFont: data.secondaryFont || "Lora",
+        backgroundImage: data.backgroundImage || "", // Load backgroundImage
       };
 
       // Fetch approved wishes
@@ -354,7 +357,11 @@ export default function WeddingPage() {
   );
 
   return (
-    <Container fluid className="p-0" data-theme={weddingData.theme}>
+    <Container
+      fluid
+      className="p-0 wedding-page-container"
+      data-theme={weddingData.theme}
+    >
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -381,7 +388,14 @@ export default function WeddingPage() {
           `,
         }}
       />
-      <Card className="shadow-lg border-0 mx-auto wedding-page">
+      <Card
+        className="shadow-lg border-0 mx-auto wedding-page"
+        style={{
+          backgroundImage: weddingData.backgroundImage
+            ? `url(/backgrounds/${weddingData.backgroundImage})`
+            : undefined,
+        }}
+      >
         <Card.Body style={{ zIndex: 1 }}>
           {user && (
             <div className="d-flex justify-content-left mb-4">

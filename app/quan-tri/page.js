@@ -81,12 +81,19 @@ import {
   faMusic,
   faUsers,
   faClock,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import themes from "@/data/themes";
 import primaryFonts from "@/data/primaryFonts";
 import secondaryFonts from "@/data/secondaryFonts";
 
 export const dynamic = "force-dynamic";
+
+// Background images list
+const backgroundImages = Array.from({ length: 24 }, (_, i) => ({
+  value: `${i + 1}.jpg`,
+  label: `Ảnh nền ${i + 1}`,
+}));
 
 const DroppableSidebar = ({ children }) => {
   const { setNodeRef } = useDroppable({ id: "sidebar" });
@@ -137,6 +144,10 @@ const ThemePreview = ({ theme, selected }) => (
     style={{
       background: `linear-gradient(to bottom right, var(--gradient-start), var(--gradient-end))`,
       padding: "10px",
+      height: "100px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     }}
     data-theme={theme.value}
   >
@@ -169,6 +180,36 @@ const FontPreview = ({ font, isPrimary, selected }) => (
       }}
     >
       {font.label}
+    </div>
+  </div>
+);
+
+const BackgroundPreview = ({ background, selected }) => (
+  <div
+    className={`card background-preview mb-0 w-100 ${
+      selected ? "selected" : ""
+    }`}
+    style={{
+      padding: "10px",
+      backgroundImage: `url(/backgrounds/${background.value})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      height: "100px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <div
+      style={{
+        fontSize: "14px",
+        color: "#fff",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        padding: "5px 10px",
+        borderRadius: "4px",
+      }}
+    >
+      {background.label}
     </div>
   </div>
 );
@@ -220,14 +261,22 @@ const CustomDropdown = ({
     <div className="custom-dropdown" ref={dropdownRef}>
       <Form.Label className="form-label">
         <FontAwesomeIcon
-          icon={name === "theme" ? faPalette : faFont}
+          icon={
+            name === "theme"
+              ? faPalette
+              : name === "backgroundImage"
+              ? faImage
+              : faFont
+          }
           className="me-2"
         />
         {name === "theme"
           ? "Chủ đề"
           : name === "primaryFont"
           ? "Font tiêu đề (Cursive)"
-          : "Font nội dung (Serif)"}
+          : name === "secondaryFont"
+          ? "Font nội dung (Serif)"
+          : "Ảnh nền"}
       </Form.Label>
       <div
         className="dropdown-toggle"
@@ -236,7 +285,12 @@ const CustomDropdown = ({
       >
         <PreviewComponent
           theme={name === "theme" ? selectedOption : undefined}
-          font={name !== "theme" ? selectedOption : undefined}
+          font={
+            name === "primaryFont" || name === "secondaryFont"
+              ? selectedOption
+              : undefined
+          }
+          background={name === "backgroundImage" ? selectedOption : undefined}
           isPrimary={isPrimary}
           selected={true}
         />
@@ -259,7 +313,12 @@ const CustomDropdown = ({
             >
               <PreviewComponent
                 theme={name === "theme" ? option : undefined}
-                font={name !== "theme" ? option : undefined}
+                font={
+                  name === "primaryFont" || name === "secondaryFont"
+                    ? option
+                    : undefined
+                }
+                background={name === "backgroundImage" ? option : undefined}
                 isPrimary={isPrimary}
                 selected={option.value === value}
               />
@@ -353,6 +412,7 @@ export default function DashboardPage() {
     primaryFont: "Dancing Script",
     secondaryFont: "Lora",
     coverPhoto: { public_id: "", url: "" },
+    backgroundImage: "", // New field for background image
   });
   const [wishes, setWishes] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -616,6 +676,7 @@ export default function DashboardPage() {
           primaryFont: data.primaryFont || "Dancing Script",
           secondaryFont: data.secondaryFont || "Lora",
           coverPhoto: data.coverPhoto || { public_id: "", url: "" },
+          backgroundImage: data.backgroundImage || "", // Load background image
         });
 
         const wishesRef = collection(db, "weddings", weddingId, "wishes");
@@ -673,6 +734,7 @@ export default function DashboardPage() {
           primaryFont: "Dancing Script",
           secondaryFont: "Lora",
           coverPhoto: { public_id: "", url: "" },
+          backgroundImage: "",
         });
         setWishes([]);
       }
@@ -742,6 +804,7 @@ export default function DashboardPage() {
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
         coverPhoto: { public_id: "", url: "" },
+        backgroundImage: "",
       });
       setWishes([]);
     }
@@ -1123,6 +1186,7 @@ export default function DashboardPage() {
         primaryFont: "Dancing Script",
         secondaryFont: "Lora",
         coverPhoto: { public_id: "", url: "" },
+        backgroundImage: "",
         createdAt: new Date(),
         name: newWeddingName || "Đám cưới mới",
       });
@@ -1258,6 +1322,7 @@ export default function DashboardPage() {
         coverPhoto: form.coverPhoto,
         keyDates: form.keyDates,
         showKeyDates: form.showKeyDates,
+        backgroundImage: form.backgroundImage,
       });
       setShowSuccess(true);
       setSlugError("");
@@ -1772,7 +1837,7 @@ export default function DashboardPage() {
                       />
                     </Form.Group>
                     <Row>
-                      <Col md={4}>
+                      <Col md={6}>
                         <Form.Group className="mb-3">
                           <CustomDropdown
                             name="theme"
@@ -1783,7 +1848,22 @@ export default function DashboardPage() {
                           />
                         </Form.Group>
                       </Col>
-                      <Col md={4}>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <CustomDropdown
+                            name="backgroundImage"
+                            value={
+                              form.backgroundImage || backgroundImages[0].value
+                            }
+                            options={backgroundImages}
+                            onChange={handleChange}
+                            previewComponent={BackgroundPreview}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={6}>
                         <Form.Group className="mb-3">
                           <CustomDropdown
                             name="primaryFont"
@@ -1795,7 +1875,7 @@ export default function DashboardPage() {
                           />
                         </Form.Group>
                       </Col>
-                      <Col md={4}>
+                      <Col md={6}>
                         <Form.Group className="mb-3">
                           <CustomDropdown
                             name="secondaryFont"

@@ -163,7 +163,14 @@ const WeddingPreviewPane = ({ form, wishes = [] }) => {
           `,
         }}
       />
-      <Card className="shadow-lg border-0 mx-auto wedding-preview">
+      <Card
+        className="shadow-lg border-0 mx-auto wedding-preview"
+        style={{
+          backgroundImage: form.backgroundImage
+            ? `url(/backgrounds/${form.backgroundImage})`
+            : undefined,
+        }}
+      >
         <Card.Title className="text-center mt-4 h2">
           Xem trước giao diện đám cưới
         </Card.Title>

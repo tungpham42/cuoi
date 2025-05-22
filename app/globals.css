@@ -425,12 +425,14 @@ p {
 .wedding-preview {
   position: relative; /* Ensure pseudo-element positioning */
   overflow: hidden; /* Prevent overflow of animated background */
-  /* background-image: var(--pattern) !important;
+  /* background-image: var(--pattern) !important; */
   background-position-x: center !important;
-  background-position-y: top !important;
-  background-repeat: repeat !important;
-  background-size: contain !important;
-  background-attachment: fixed !important; */
+  background-position-y: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  min-height: 100vh !important;
+  position: relative !important;
 }
 /* Falling effect animation */
 @keyframes falling {
@@ -442,7 +444,7 @@ p {
   }
 }
 
-.wedding-page::before,
+/* .wedding-page::before,
 .wedding-preview::before {
   content: "";
   position: absolute;
@@ -452,13 +454,13 @@ p {
   bottom: 0;
   background-image: var(
     --animation-tile
-  ); /* Use animation-tile for falling effect */
+  );
   background-repeat: repeat;
-  background-size: 40px 40px; /* Match SVG size in --animation-tile */
-  animation: falling 12s linear infinite; /* Animate falling effect */
-  z-index: 0; /* Keep behind content */
-  opacity: 0.6; /* Subtle effect to complement --pattern */
-}
+  background-size: 40px 40px;
+  animation: falling 12s linear infinite;
+  z-index: 0;
+  opacity: 0.6;
+} */
 
 /* Component-specific styling */
 .wedding-section {
@@ -472,7 +474,7 @@ p {
   box-shadow: 0 4px 15px var(--shadow-color) !important;
   position: relative !important;
   overflow: hidden !important;
-  opacity: 0.8 !important;
+  opacity: 0.95 !important;
 }
 
 /* Carousel controls styling */
@@ -1105,6 +1107,10 @@ p {
 .custom-dropdown .dropdown-item:active {
   background-color: transparent !important;
 }
+.custom-dropdown .dropdown-item .card.background-preview {
+  border: none !important;
+  box-shadow: none !important;
+}
 .custom-dropdown .dropdown-item .card.font-preview {
   border: none !important;
   box-shadow: none !important;
@@ -1143,6 +1149,16 @@ p {
   border-radius: 0 !important;
 }
 
+/* Selected Background Preview Styling */
+.custom-dropdown .dropdown-item .card.background-preview.selected {
+  background-color: color-mix(
+    in srgb,
+    var(--accent) 10%,
+    var(--background)
+  ) !important;
+  border: 2px solid var(--accent) !important;
+  border-radius: 8px !important;
+}
 /* Selected Font Preview Styling */
 .custom-dropdown .dropdown-item .card.font-preview.selected {
   background-color: color-mix(
