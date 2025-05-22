@@ -1,7 +1,7 @@
 "use client";
 
 const Introduction = ({ form }) => {
-  if (!form.showIntroduction || !form.introduction?.trim()) {
+  if (!form.introduction?.trim()) {
     return null;
   }
 

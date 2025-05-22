@@ -147,7 +147,6 @@ const useWeddingData = (slug) => {
           showWishForm: data.showWishForm !== false,
           showWishList: data.showWishList !== false,
           showQRCode: data.showQRCode !== false,
-          showIntroduction: data.showIntroduction !== false,
           showLocationMap: data.showLocationMap !== false,
           showAudioPlayer: data.showAudioPlayer !== false,
           bankInfo: data.bankInfo || {
@@ -243,7 +242,7 @@ export default function WeddingPage({ params }) {
 
   // Open modal on page load if introduction is available
   useEffect(() => {
-    if (weddingData?.showIntroduction && weddingData?.introduction) {
+    if (weddingData?.introduction) {
       setShowModal(true);
     }
   }, [weddingData]);
@@ -365,7 +364,7 @@ export default function WeddingPage({ params }) {
           </DndContext>
         </Card.Body>
       </Card>
-      {weddingData.showIntroduction && (
+      {weddingData?.introduction && (
         <Modal
           show={showModal}
           onHide={() => setShowModal(false)}

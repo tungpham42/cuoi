@@ -323,7 +323,6 @@ export default function DashboardPage() {
     showWishForm: true,
     showWishList: true,
     showQRCode: true,
-    showIntroduction: true,
     showLocationMap: true,
     showAudioPlayer: true,
     bankInfo: {
@@ -339,7 +338,6 @@ export default function DashboardPage() {
     },
     componentOrder: [
       "WeddingHeader",
-      "Introduction",
       "Countdown",
       "Gallery",
       "LoveStory",
@@ -371,7 +369,6 @@ export default function DashboardPage() {
 
   const componentLabels = {
     WeddingHeader: "Tiêu đề đám cưới",
-    Introduction: "Giới thiệu",
     Countdown: "Đếm ngược",
     Gallery: "Thư viện ảnh",
     LoveStory: "Chuyện tình yêu",
@@ -383,7 +380,6 @@ export default function DashboardPage() {
   };
 
   const componentShowFields = {
-    Introduction: "showIntroduction",
     Countdown: "showCountdown",
     Gallery: "showGallery",
     LoveStory: "showLoveStory",
@@ -576,7 +572,6 @@ export default function DashboardPage() {
           showWishForm: data.showWishForm !== false,
           showWishList: data.showWishList !== false,
           showQRCode: data.showQRCode !== false,
-          showIntroduction: data.showIntroduction !== false,
           showLocationMap: data.showLocationMap !== false,
           showAudioPlayer: data.showAudioPlayer !== false,
           bankInfo: {
@@ -592,7 +587,6 @@ export default function DashboardPage() {
           },
           componentOrder: data.componentOrder || [
             "WeddingHeader",
-            "Introduction",
             "Countdown",
             "Gallery",
             "LoveStory",
@@ -632,7 +626,6 @@ export default function DashboardPage() {
           showWishForm: true,
           showWishList: true,
           showQRCode: true,
-          showIntroduction: true,
           showLocationMap: true,
           showAudioPlayer: true,
           bankInfo: {
@@ -648,7 +641,6 @@ export default function DashboardPage() {
           },
           componentOrder: [
             "WeddingHeader",
-            "Introduction",
             "Countdown",
             "Gallery",
             "LoveStory",
@@ -700,7 +692,6 @@ export default function DashboardPage() {
         showWishForm: true,
         showWishList: true,
         showQRCode: true,
-        showIntroduction: true,
         showLocationMap: true,
         showAudioPlayer: true,
         bankInfo: {
@@ -716,7 +707,6 @@ export default function DashboardPage() {
         },
         componentOrder: [
           "WeddingHeader",
-          "Introduction",
           "Countdown",
           "Gallery",
           "LoveStory",
@@ -1033,7 +1023,6 @@ export default function DashboardPage() {
         showWishForm: true,
         showWishList: true,
         showQRCode: true,
-        showIntroduction: true,
         showLocationMap: true,
         showAudioPlayer: true,
         bankInfo: {
@@ -1049,7 +1038,6 @@ export default function DashboardPage() {
         },
         componentOrder: [
           "WeddingHeader",
-          "Introduction",
           "Countdown",
           "Gallery",
           "LoveStory",

@@ -16,7 +16,6 @@ import Gallery from "./Gallery";
 import LoveStory from "./LoveStory";
 import WishList from "./WishList";
 import QRCode from "./QRCode";
-import Introduction from "./Introduction";
 
 // Dynamic imports
 const LocationMap = dynamic(() => import("./LocationMap"), { ssr: false });
@@ -25,7 +24,6 @@ const AudioPlayer = dynamic(() => import("./AudioPlayer"), { ssr: false });
 // Constants
 const DEFAULT_COMPONENT_ORDER = [
   "WeddingHeader",
-  "Introduction",
   "Countdown",
   "Gallery",
   "LoveStory",
@@ -68,14 +66,12 @@ const renderComponent = (componentId, form, wishes) => {
     playlist = [],
     loveStory = "",
     bankInfo = {},
-    introduction = "",
     mapInfo = { embedCode: "", address: "" },
     showCountdown = true,
     showGallery = true,
     showLoveStory = true,
     showWishList = true,
     showQRCode = true,
-    showIntroduction = true,
     showLocationMap = true,
     showAudioPlayer = true,
   } = form || {};
@@ -83,10 +79,6 @@ const renderComponent = (componentId, form, wishes) => {
   const components = {
     WeddingHeader: () =>
       brideName || groomName ? <WeddingHeader data={form} /> : null,
-    Introduction: () =>
-      showIntroduction && introduction.trim() ? (
-        <Introduction form={form} />
-      ) : null,
     Countdown: () =>
       showCountdown && weddingDate && weddingTime ? (
         <Countdown weddingDate={weddingDate} weddingTime={weddingTime} />
