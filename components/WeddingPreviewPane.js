@@ -141,7 +141,9 @@ const WeddingPreviewPane = ({ form, wishes = [] }) => {
           __html: `
             .wedding-preview,
             .wedding-preview p,
-            .wedding-preview span {
+            .wedding-preview span,
+            .wedding-preview button,
+            .wedding-preview a {
               font-family: "${secondaryFont}", serif !important;
             }
             .wedding-preview h1,

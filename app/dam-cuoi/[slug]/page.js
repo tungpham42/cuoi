@@ -359,7 +359,9 @@ export default function WeddingPage() {
         dangerouslySetInnerHTML={{
           __html: `
             p,
-            span {
+            span,
+            button,
+            a {
               font-family: "${weddingData.secondaryFont}", serif !important;
             }
             h1,
