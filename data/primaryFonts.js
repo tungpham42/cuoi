@@ -1,7 +1,7 @@
 const primaryFonts = [
   { value: "Dancing Script", label: "Dancing Script" },
   { value: "Great Vibes", label: "Great Vibes" },
-  { value: "Playwrite Danmark Loopet", label: "Playwrite Danmark Loopet" },
+  { value: "Splash", label: "Splash" },
   { value: "Ms Madi", label: "Ms Madi" },
   { value: "Borel", label: "Borel" },
   { value: "Send Flowers", label: "Send Flowers" },
