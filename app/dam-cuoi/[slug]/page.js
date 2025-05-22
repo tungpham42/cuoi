@@ -318,7 +318,7 @@ export default function WeddingPage() {
         className="d-flex align-items-center justify-content-center min-vh-100"
       >
         <Spinner animation="border" variant="danger" />
-        <span className="ms-2 h3">Loading...</span>
+        <span className="ms-2 h3">Đang tải...</span>
       </Container>
     );
   }
