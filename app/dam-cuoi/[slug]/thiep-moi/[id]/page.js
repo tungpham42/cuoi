@@ -19,6 +19,7 @@ import {
   Alert,
   Modal,
 } from "react-bootstrap";
+import { formatDateTime } from "@/utils/dateTime";
 
 const fallbackWedding = {
   brideName: "Cô Dâu",
@@ -31,28 +32,6 @@ const fallbackWedding = {
 const fallbackGuest = {
   name: "Khách Mời",
   rsvpStatus: "Chưa phản hồi",
-};
-
-const formatDate = (date) => {
-  if (date instanceof Timestamp) {
-    return date.toDate().toLocaleDateString("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  }
-  return date || fallbackWedding.weddingDate;
-};
-
-const formatTime = (date) => {
-  if (date instanceof Timestamp) {
-    return date.toDate().toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  }
-  return date || fallbackWedding.weddingTime;
 };
 
 const formatRsvpStatus = (status) => {
@@ -271,13 +250,14 @@ export default function GuestPage({ params }) {
     location = fallbackWedding.location,
   } = wedding;
 
-  const weddingDate = formatDate(rawWeddingDate);
-  const weddingTime = formatTime(rawWeddingTime);
   const {
     name: guestName = fallbackGuest.name,
     rsvpStatus = fallbackGuest.rsvpStatus,
   } = guest;
   const rsvp = formatRsvpStatus(rsvpStatus);
+
+  // Use formatDateTime to combine date and time
+  const formattedDateTime = formatDateTime(rawWeddingDate, rawWeddingTime);
 
   const [hour, minute] = rawWeddingTime.split(":").map(Number);
   const startDate = new Date(`${rawWeddingDate}T${rawWeddingTime}`);
@@ -333,11 +313,11 @@ export default function GuestPage({ params }) {
         style={{ maxWidth: "600px" }}
       >
         <Card.Body className="p-5 text-center">
-          <Card.Title as="h1" className="card-title h1 mb-4">
+          <Card.Title as="h1" className="card-title h1 mb-4 fw-bolder">
             Thiệp Mời Hôn Lễ
           </Card.Title>
           <Card.Text as="h2" className="h2 mb-4">
-            Kính mời: <span className="text-accent">{guestName}</span>
+            Kính mời: <span className="text-accent fw-bolder">{guestName}</span>
           </Card.Text>
           <Card.Text className="mb-2">Tham dự hôn lễ của</Card.Text>
           <Card.Text as="h3" className="mb-4">
@@ -347,12 +327,8 @@ export default function GuestPage({ params }) {
           </Card.Text>
           <div className="mb-4">
             <Card.Text>
-              <strong>Ngày: </strong>
-              {weddingDate}
-            </Card.Text>
-            <Card.Text>
-              <strong>Giờ: </strong>
-              {weddingTime}
+              <strong>Ngày và giờ: </strong>
+              {formattedDateTime}
             </Card.Text>
             <Card.Text>
               <strong>Địa điểm: </strong>
@@ -385,8 +361,7 @@ export default function GuestPage({ params }) {
         <Modal.Body>
           <p>
             Bạn có muốn xác nhận tham dự hoặc từ chối tham dự hôn lễ của{" "}
-            {brideName} & {groomName} vào ngày {weddingDate} lúc {weddingTime}{" "}
-            tại {location}?
+            {brideName} & {groomName} vào {formattedDateTime} tại {location}?
           </p>
           <div className="d-grid gap-2">
             <Button variant="outline-success" onClick={downloadICS}>

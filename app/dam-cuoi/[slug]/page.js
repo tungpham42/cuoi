@@ -198,7 +198,7 @@ const useWeddingData = (slug) => {
 // Component rendering logic
 const renderComponent = (componentId, weddingData, addWish) => {
   if (!weddingData) return null;
-
+  console.log(weddingData.weddingDate);
   const components = {
     WeddingHeader: () => <WeddingHeader data={weddingData} />,
     Introduction: () =>

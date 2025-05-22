@@ -6,17 +6,10 @@ import {
   faCalendarAlt,
   faMapMarkerAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { formatDateTime } from "@/utils/dateTime";
 
 const WeddingHeader = ({ data }) => {
   const { brideName, groomName, weddingDate, weddingTime, location } = data;
-
-  // Format date and time for display (e.g., "21/05/2025, 14:00")
-  const formatDateTime = (date, time) => {
-    if (!date) return "";
-    const [year, month, day] = date.split("-");
-    const formattedDate = `${day}/${month}/${year}`;
-    return time ? `${formattedDate}, ${time}` : formattedDate;
-  };
 
   const dateTimeDisplay = formatDateTime(weddingDate, weddingTime);
 
