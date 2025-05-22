@@ -2087,73 +2087,6 @@ export default function DashboardPage() {
                       />
                     </Form.Group>
                     <h3 className="section-heading">
-                      <FontAwesomeIcon
-                        icon={faMoneyBillWave}
-                        className="me-2"
-                      />
-                      Thông tin chuyển khoản
-                    </h3>
-                    <Row>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Tên ngân hàng
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="bankInfo.bankName"
-                            value={form.bankInfo.bankName}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Số tài khoản
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="bankInfo.accountNumber"
-                            value={form.bankInfo.accountNumber}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Chủ tài khoản
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="bankInfo.accountHolder"
-                            value={form.bankInfo.accountHolder}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Nội dung chuyển khoản
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="bankInfo.description"
-                            value={form.bankInfo.description}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <h3 className="section-heading">
                       <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
                       Lịch các ngày trọng đại
                     </h3>
@@ -2225,6 +2158,73 @@ export default function DashboardPage() {
                         </ListGroup>
                       )}
                     </Form.Group>
+                    <h3 className="section-heading">
+                      <FontAwesomeIcon
+                        icon={faMoneyBillWave}
+                        className="me-2"
+                      />
+                      Thông tin chuyển khoản
+                    </h3>
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="form-label">
+                            Tên ngân hàng
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="bankInfo.bankName"
+                            value={form.bankInfo.bankName}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="form-label">
+                            Số tài khoản
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="bankInfo.accountNumber"
+                            value={form.bankInfo.accountNumber}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="form-label">
+                            Chủ tài khoản
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="bankInfo.accountHolder"
+                            value={form.bankInfo.accountHolder}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="form-label">
+                            Nội dung chuyển khoản
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="bankInfo.description"
+                            value={form.bankInfo.description}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
                     <h3 className="section-heading">
                       <FontAwesomeIcon icon={faEye} className="me-2" />
                       Hiển thị thành phần
