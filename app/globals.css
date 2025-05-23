@@ -471,6 +471,12 @@ p {
   position: relative !important;
   overflow: hidden !important;
   opacity: 0.9 !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.wedding-section:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 8px 25px var(--shadow-color) !important;
 }
 
 /* Carousel controls styling */
