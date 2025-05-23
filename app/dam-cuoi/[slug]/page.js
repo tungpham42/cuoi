@@ -397,7 +397,7 @@ export default function WeddingPage() {
         }}
       >
         <Card.Body style={{ zIndex: 1 }}>
-          {user && (
+          {user && user.uid === weddingData.userId && (
             <div className="d-flex justify-content-left mb-4">
               <Link href="/quan-tri" passHref>
                 <Button variant="outline-primary">
