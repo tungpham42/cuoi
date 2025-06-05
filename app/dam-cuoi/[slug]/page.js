@@ -368,7 +368,9 @@ export default function WeddingPage() {
             p,
             span,
             button,
-            a {
+            a,
+            .modal-content,
+            .modal-body {
               font-family: "${weddingData.secondaryFont}", serif !important;
             }
             h1,
@@ -382,7 +384,8 @@ export default function WeddingPage() {
             .h3,
             .h4,
             .h5,
-            .h6 {
+            .h6,
+            .modal-title {
               font-family: "${weddingData.primaryFont}", cursive !important;
             }
           `,

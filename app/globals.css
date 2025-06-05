@@ -1257,3 +1257,33 @@ p {
 .text-accent {
   color: var(--accent) !important;
 }
+
+.modal-content {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border: var(--card-border) !important;
+  box-shadow: 0 4px 20px var(--shadow-color) !important;
+  border-radius: 12px !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.modal-title {
+  color: var(--foreground) !important;
+  font-size: 1.6rem !important;
+}
+
+.modal-body {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.modal-header .btn-close {
+  filter: invert(0.7); /* Ensures close button is visible on all backgrounds */
+}
