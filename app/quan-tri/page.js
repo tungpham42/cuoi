@@ -363,6 +363,7 @@ export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [weddings, setWeddings] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
   const [selectedWeddingId, setSelectedWeddingId] = useState(null);
   const [activeTab, setActiveTab] = useState("weddingDetails");
   const [form, setForm] = useState({
@@ -1301,11 +1302,14 @@ export default function DashboardPage() {
       return;
     }
 
+    setIsSaving(true); // <-- Đang lưu
+
     const isSlugAvailable = await validateSlug(form.slug, selectedWeddingId);
     if (!isSlugAvailable) {
       setSlugError(
         "Liên kết này đã được sử dụng。Vui lòng thay đổi tên hoặc ngày cưới。"
       );
+      setIsSaving(false); // <-- Dừng trạng thái đang lưu
       return;
     }
 
@@ -1329,6 +1333,8 @@ export default function DashboardPage() {
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
       setError("Lỗi khi lưu thông tin。Vui lòng thử lại。");
+    } finally {
+      setIsSaving(false); // <-- Kết thúc lưu
     }
   };
 
@@ -2304,6 +2310,7 @@ export default function DashboardPage() {
                         variant="primary"
                         onClick={handleSave}
                         disabled={
+                          isSaving ||
                           coverPhotoUploading ||
                           imageUploading ||
                           audioUploading ||
@@ -2311,8 +2318,21 @@ export default function DashboardPage() {
                         }
                         className="btn-save"
                       >
-                        <FontAwesomeIcon icon={faSave} className="me-2" />
-                        Lưu thông tin
+                        {isSaving ? (
+                          <>
+                            <Spinner
+                              animation="border"
+                              size="sm"
+                              className="me-2"
+                            />
+                            Đang lưu...
+                          </>
+                        ) : (
+                          <>
+                            <FontAwesomeIcon icon={faSave} className="me-2" />
+                            Lưu thông tin
+                          </>
+                        )}
                       </Button>
                       <Button
                         variant="success"
