@@ -19,6 +19,7 @@ import {
   Alert,
   Modal,
 } from "react-bootstrap";
+import Link from "next/link";
 import { formatDateTime } from "@/utils/dateTime";
 
 const fallbackWedding = {
@@ -420,6 +421,17 @@ export default function GuestPage({ params }) {
             <Card.Text>
               <strong>Trạng thái phúc đáp: </strong>
               {rsvp}
+            </Card.Text>
+            <Card.Text className="mt-4 small text-muted">
+              Xem toàn bộ thông tin tại{" "}
+              <Link
+                href={`/dam-cuoi/${slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-decoration-underline text-accent"
+              >
+                trang đám cưới
+              </Link>
             </Card.Text>
           </div>
           <Button
