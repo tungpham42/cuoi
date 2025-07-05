@@ -227,8 +227,51 @@ export default function GuestPage({ params }) {
 
   if (error || !wedding || !guest) {
     return (
-      <Container fluid className="loading-container wedding-page">
-        <Card className="wedding-section" style={{ maxWidth: "600px" }}>
+      <Container
+        fluid
+        className="loading-container wedding-page"
+        data-theme={wedding.theme}
+        style={{
+          backgroundImage: wedding?.backgroundImage
+            ? `url(/backgrounds/${wedding.backgroundImage}) !important`
+            : undefined,
+        }}
+      >
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+            p,
+            span,
+            button,
+            a,
+            .modal-content,
+            .modal-body {
+              font-family: "${wedding.secondaryFont}", serif !important;
+            }
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6,
+            .h1,
+            .h2,
+            .h3,
+            .h4,
+            .h5,
+            .h6,
+            .modal-title {
+              font-family: "${wedding.primaryFont}", cursive !important;
+            }
+          `,
+          }}
+        />
+        <Card
+          className="wedding-section"
+          style={{
+            maxWidth: "600px",
+          }}
+        >
           <Card.Body className="p-5 text-center">
             <Alert variant="danger" className="mb-4">
               {error || "Không tìm thấy thông tin hôn lễ hoặc khách mời."}
@@ -306,11 +349,51 @@ export default function GuestPage({ params }) {
     <Container
       fluid
       className="wedding-page d-flex justify-content-center"
-      style={{ minHeight: "100vh" }}
+      style={{
+        backgroundImage: wedding.backgroundImage
+          ? `url(/backgrounds/${wedding.backgroundImage})`
+          : undefined,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        minHeight: "100dvh",
+      }}
+      data-theme={wedding.theme}
     >
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            p,
+            span,
+            button,
+            a,
+            .modal-content,
+            .modal-body {
+              font-family: "${wedding.secondaryFont}", serif !important;
+            }
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6,
+            .h1,
+            .h2,
+            .h3,
+            .h4,
+            .h5,
+            .h6,
+            .modal-title {
+              font-family: "${wedding.primaryFont}", cursive !important;
+            }
+          `,
+        }}
+      />
       <Card
         className="wedding-section hover-shadow animate__animated animate__fadeInDown m-auto"
-        style={{ maxWidth: "600px" }}
+        style={{
+          maxWidth: "600px",
+        }}
       >
         <Card.Body className="p-5 text-center">
           <Card.Title as="h1" className="card-title h1 mb-4 fw-bolder">
@@ -353,7 +436,6 @@ export default function GuestPage({ params }) {
           </Button>
         </Card.Body>
       </Card>
-
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Xác Nhận Tham Dự</Modal.Title>
